@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.system.dao.TSysPermsMapper">
+
+<sql id="BaseColumnList" >
+        pk_perms_id,
+        p_id,
+        menu_name,
+        path,
+        perms_code,
+        type,
+        create_time,
+        modify_time,
+        modify_username,
+        fk_user_id,
+  </sql>
+    <!--通过主键查询单个-->
+    <select id="selectById" resultType="com.hjy.system.entity.TSysPerms" parameterType="com.hjy.system.entity.TSysPerms">
+        select * from "liuchun"."t_sys_perms" where "pk_perms_id" = #{pk_perms_id,jdbcType=VARCHAR}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysPerms" parameterType="com.hjy.system.entity.TSysPerms">
+        select * from "liuchun"."t_sys_perms"
+        <where>
+            <if test="pk_perms_id != null and pk_perms_id != ''">
+                and "pk_perms_id" = #{pk_perms_id,jdbcType=VARCHAR}
+            </if>
+            <if test="p_id != null and p_id != ''">
+                and "p_id" = #{p_id,jdbcType=VARCHAR}
+            </if>
+            <if test="menu_name != null and menu_name != ''">
+                and "menu_name" = #{menu_name,jdbcType=VARCHAR}
+            </if>
+            <if test="path != null and path != ''">
+                and "path" = #{path,jdbcType=VARCHAR}
+            </if>
+            <if test="perms_code != null and perms_code != ''">
+                and "perms_code" = #{perms_code,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null and type != ''">
+                and "type" = #{type,jdbcType=VARCHAR}
+            </if>
+            <if test="create_time != null">
+                and "create_time" = #{create_time,jdbcType=TIMESTAMP}
+            </if>
+            <if test="modify_time != null">
+                and "modify_time" = #{modify_time,jdbcType=TIMESTAMP}
+            </if>
+            <if test="modify_username != null and modify_username != ''">
+                and "modify_username" = #{modify_username,jdbcType=VARCHAR}
+            </if>
+            <if test="fk_user_id != null">
+                and "fk_user_id" = #{fk_user_id,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into "liuchun"."t_sys_perms"(pk_perms_id,p_id, menu_name, path, perms_code, type, create_time, modify_time, modify_username, fk_user_id)
+        values (#{pk_perms_id},#{p_id}, #{menu_name}, #{path}, #{perms_code}, #{type}, #{create_time}, #{modify_time}, #{modify_username}, #{fk_user_id})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysPerms">
+        insert into "liuchun"."t_sys_perms"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="pk_perms_id != null and pk_perms_id != ''">
+                "pk_perms_id",
+        </if>
+            <if test="p_id != null and p_id != ''">
+                "p_id",
+        </if>
+        <if test="menu_name != null and menu_name != ''">
+                "menu_name",
+        </if>
+        <if test="path != null and path != ''">
+                "path",
+        </if>
+        <if test="perms_code != null and perms_code != ''">
+                "perms_code",
+        </if>
+        <if test="type != null and type != ''">
+                "type",
+        </if>
+        <if test="create_time != null">
+                "create_time",
+        </if>
+        <if test="modify_time != null">
+                "modify_time",
+        </if>
+        <if test="modify_username != null and modify_username != ''">
+                "modify_username",
+        </if>
+        <if test="fk_user_id != null and fk_user_id != ''">
+                "fk_user_id",
+        </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pk_perms_id != null and pk_perms_id != ''">
+                #{pk_perms_id,jdbcType=VARCHAR},
+            </if>
+            <if test="p_id != null">
+            #{p_id,jdbcType=VARCHAR},
+            </if>
+                    <if test="menu_name != null and menu_name != ''">
+                #{menu_name,jdbcType=VARCHAR},
+            </if>
+                    <if test="path != null and path != ''">
+                #{path,jdbcType=VARCHAR},
+            </if>
+                    <if test="perms_code != null and perms_code != ''">
+                #{perms_code,jdbcType=VARCHAR},
+            </if>
+                    <if test="type != null and type != ''">
+                #{type,jdbcType=VARCHAR},
+            </if>
+                    <if test="create_time != null">
+                #{create_time,jdbcType=TIMESTAMP},
+            </if>
+                    <if test="modify_time != null">
+                #{modify_time,jdbcType=TIMESTAMP},
+            </if>
+                    <if test="modify_username != null and modify_username != ''">
+                #{modify_username,jdbcType=VARCHAR},
+            </if>
+                    <if test="fk_user_id != null and fk_user_id != ''">
+                #{fk_user_id,jdbcType=VARCHAR},
+            </if>
+                </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateById" parameterType="com.hjy.system.entity.TSysPerms">
+        update "liuchun"."t_sys_perms"
+        <set>
+            <if test="p_id != null and p_id != ''">
+                "p_id" = #{p_id,jdbcType=VARCHAR},
+            </if>
+            <if test="menu_name != null and menu_name != ''">
+                "menu_name" = #{menu_name,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null and path != ''">
+                "path" = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="perms_code != null and perms_code != ''">
+                "perms_code" = #{perms_code,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != ''">
+                "type" = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="create_time != null">
+                "create_time" = #{create_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modify_time != null">
+                "modify_time" = #{modify_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modify_username != null and modify_username != ''">
+                "modify_username" = #{modify_username,jdbcType=VARCHAR},
+            </if>
+            <if test="fk_user_id != null and fk_user_id != ''">
+                "fk_user_id" = #{fk_user_id,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where "pk_perms_id" = #{pk_perms_id,jdbcType=VARCHAR}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="com.hjy.system.entity.TSysPerms">
+        delete from "liuchun"."t_sys_perms" where "pk_perms_id" = #{pk_perms_id,jdbcType=VARCHAR}
+    </delete>
+    <!--查询所有行数据-->
+    <select id="selectAll" resultType="com.hjy.system.entity.TSysPerms">
+        select * from "liuchun"."t_sys_perms"
+    </select>
+    <select id="selectDistributeByrole_id" resultType="java.lang.String"
+            parameterType="java.lang.String">
+        select "fk_perms_id" from "liuchun"."re_role_perms" where "fk_role_id" = #{fk_role_id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>
