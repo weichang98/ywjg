@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.hall.dao.THallJiashizhengMapper">
+
+<sql id="BaseColumnList" >
+        pk_jiashi_id,
+        applicant,
+        Idcard,
+        handle_people,
+        business_type,
+        dept_name,
+        withdraw_type,
+        withdraw_time,
+        lack,
+        remarks,
+  </sql>
+    <!--通过主键查询单个-->
+    <select id="selectById" resultType="com.hjy.hall.entity.THallJiashizheng" parameterType="com.hjy.hall.entity.THallJiashizheng">
+        select
+          pk_jiashi_id, applicant, Idcard, handle_people, business_type, dept_name, withdraw_type, withdraw_time, lack, remarks        from "c##root"."t_hall_jiashizheng"
+        where "pk_jiashi_id" = #{pkJiashiId,jdbcType=VARCHAR}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAllByEntity" resultType="com.hjy.hall.entity.THallJiashizheng" parameterType="com.hjy.hall.entity.THallJiashizheng">
+        select * from "c##root"."t_hall_jiashizheng"
+        <where>
+            <if test="pkJiashiId != null and pkJiashiId != ''">
+                and "pk_jiashi_id" = #{pkJiashiId,jdbcType=VARCHAR}
+            </if>
+            <if test="applicant != null and applicant != ''">
+                and "applicant" = #{applicant,jdbcType=VARCHAR}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                and "Idcard" = #{idcard,jdbcType=VARCHAR}
+            </if>
+            <if test="handlePeople != null and handlePeople != ''">
+                and "handle_people" = #{handlePeople,jdbcType=VARCHAR}
+            </if>
+            <if test="businessType != null and businessType != ''">
+                and "business_type" = #{businessType,jdbcType=VARCHAR}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and "dept_name" = #{deptName,jdbcType=VARCHAR}
+            </if>
+            <if test="withdrawType != null and withdrawType != ''">
+                and "withdraw_type" = #{withdrawType,jdbcType=VARCHAR}
+            </if>
+            <if test="withdrawTime != null">
+                and "withdraw_time" = #{withdrawTime,jdbcType=DATE}
+            </if>
+            <if test="lack != null and lack != ''">
+                and "lack" = #{lack,jdbcType=VARCHAR}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and "remarks" = #{remarks,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into "c##root"."t_hall_jiashizheng"(applicant, Idcard, handle_people, business_type, dept_name, withdraw_type, withdraw_time, lack, remarks)
+        values (#{applicant}, #{idcard}, #{handlePeople}, #{businessType}, #{deptName}, #{withdrawType}, #{withdrawTime}, #{lack}, #{remarks})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hjy.hall.entity.THallJiashizheng">
+        insert into "c##root"."t_hall_jiashizheng"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="applicant != null and applicant != ''">
+                "applicant",
+        </if>
+        <if test="idcard != null and idcard != ''">
+                "Idcard",
+        </if>
+        <if test="handlePeople != null and handlePeople != ''">
+                "handle_people",
+        </if>
+        <if test="businessType != null and businessType != ''">
+                "business_type",
+        </if>
+        <if test="deptName != null and deptName != ''">
+                "dept_name",
+        </if>
+        <if test="withdrawType != null and withdrawType != ''">
+                "withdraw_type",
+        </if>
+        <if test="withdrawTime != null">
+                "withdraw_time",
+        </if>
+        <if test="lack != null and lack != ''">
+                "lack",
+        </if>
+        <if test="remarks != null and remarks != ''">
+                "remarks",
+        </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+                    <if test="applicant != null and applicant != ''">
+                #{applicant,jdbcType=VARCHAR},
+            </if>
+                    <if test="idcard != null and idcard != ''">
+                #{idcard,jdbcType=VARCHAR},
+            </if>
+                    <if test="handlePeople != null and handlePeople != ''">
+                #{handlePeople,jdbcType=VARCHAR},
+            </if>
+                    <if test="businessType != null and businessType != ''">
+                #{businessType,jdbcType=VARCHAR},
+            </if>
+                    <if test="deptName != null and deptName != ''">
+                #{deptName,jdbcType=VARCHAR},
+            </if>
+                    <if test="withdrawType != null and withdrawType != ''">
+                #{withdrawType,jdbcType=VARCHAR},
+            </if>
+                    <if test="withdrawTime != null">
+                #{withdrawTime,jdbcType=DATE},
+            </if>
+                    <if test="lack != null and lack != ''">
+                #{lack,jdbcType=VARCHAR},
+            </if>
+                    <if test="remarks != null and remarks != ''">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+                </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateById" parameterType="com.hjy.hall.entity.THallJiashizheng">
+        update "c##root"."t_hall_jiashizheng"
+        <set>
+            <if test="applicant != null and applicant != ''">
+                "applicant" = #{applicant,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null and idcard != ''">
+                "Idcard" = #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="handlePeople != null and handlePeople != ''">
+                "handle_people" = #{handlePeople,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null and businessType != ''">
+                "business_type" = #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="deptName != null and deptName != ''">
+                "dept_name" = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawType != null and withdrawType != ''">
+                "withdraw_type" = #{withdrawType,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawTime != null">
+                "withdraw_time" = #{withdrawTime,jdbcType=DATE},
+            </if>
+            <if test="lack != null and lack != ''">
+                "lack" = #{lack,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                "remarks" = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where "pk_jiashi_id" = #{pkJiashiId,jdbcType=VARCHAR}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="com.hjy.hall.entity.THallJiashizheng">
+        delete from "c##root"."t_hall_jiashizheng" where "pk_jiashi_id" = #{pkJiashiId,jdbcType=VARCHAR}
+    </delete>
+    <!--查询所有行数据-->
+    <select id="selectAll" resultType="com.hjy.hall.entity.THallJiashizheng">
+        select * from "c##root"."t_hall_jiashizheng"
+    </select>
+
+</mapper>
