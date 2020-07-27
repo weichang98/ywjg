@@ -18,70 +18,70 @@ import java.util.List;
  */
 @Service
 public class TSysUserServiceImpl implements TSysUserService {
-@Autowired
-private TSysUserMapper tSysUserMapper;
+    @Autowired
+    private TSysUserMapper tSysUserMapper;
 
-/**
- * 通过ID查询单条数据
- *
- * @param pkUserId 主键
- * @return 实例对象
- */
-@Override
-public TSysUser selectById(Object pkUserId) throws Exception{
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param pkUserId 主键
+     * @return 实例对象
+     */
+    @Override
+    public TSysUser selectById(Object pkUserId) throws Exception{
         return this.tSysUserMapper.selectById(pkUserId);
-        }
+    }
 
-/**
- * 新增数据
- *
- * @param tSysUser 实例对象
- * @return 实例对象
- */
-@Override
-public int insert(TSysUser tSysUser) throws Exception{
+    /**
+     * 新增数据
+     *
+     * @param tSysUser 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public int insert(TSysUser tSysUser) throws Exception{
         tSysUser.setPk_user_id(IDUtils.currentTimeMillis());
         tSysUser.setCreate_time(new Date());
         tSysUser.setModify_time(new Date());
         return tSysUserMapper.insertSelective(tSysUser);
-        }
+    }
 
-/**
- * 修改数据
- *
- * @param tSysUser 实例对象
- * @return 实例对象
- */
-@Override
-public int updateById(TSysUser tSysUser) throws Exception{
+    /**
+     * 修改数据
+     *
+     * @param tSysUser 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public int updateById(TSysUser tSysUser) throws Exception{
         return tSysUserMapper.updateById(tSysUser);
-        }
+    }
 
-/**
- * 通过主键删除数据
- *
- * @param pkUserId 主键
- * @return 是否成功
- */
-@Override
-public int deleteById(Object pkUserId) throws Exception{
+    /**
+     * 通过主键删除数据
+     *
+     * @param pkUserId 主键
+     * @return 是否成功
+     */
+    @Override
+    public int deleteById(Object pkUserId) throws Exception{
         return tSysUserMapper.deleteById(pkUserId);
-        }
+    }
 
-/**
- * 查询多条数据
- * @return 对象列表
- */
-@Override
-public List<TSysUser> selectAll() throws Exception{
+    /**
+     * 查询多条数据
+     * @return 对象列表
+     */
+    @Override
+    public List<TSysUser> selectAll() throws Exception{
         return this.tSysUserMapper.selectAll();
-        }
-/**
- * 通过实体查询多条数据
- * @return 对象列表
- */
-@Override
-public List<TSysUser> selectAllByEntity(TSysUser tSysUser) throws Exception{
+    }
+    /**
+     * 通过实体查询多条数据
+     * @return 对象列表
+     */
+    @Override
+    public List<TSysUser> selectAllByEntity(TSysUser tSysUser) throws Exception{
         return this.tSysUserMapper.selectAllByEntity(tSysUser);
-        }
-        }
+    }
+}
