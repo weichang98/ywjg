@@ -108,7 +108,7 @@ public class THallJiashizhengController {
     @DeleteMapping("/tHallJiashizheng/del")
     public CommonResult tHallJiashizhengDel(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
-        String idStr = String.valueOf(jsonObject.get("pk_id"));
+        String idStr = String.valueOf(jsonObject.get("pk_jiashi_id"));
         try {
             //
             tHallJiashizhengService.deleteById(idStr);
@@ -128,7 +128,7 @@ public class THallJiashizhengController {
     @GetMapping("/tHallJiashizheng/getOne")
     public CommonResult tHallJiashizhenggetOne(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
-        String idStr = String.valueOf(jsonObject.get("pk_id"));
+        String idStr = String.valueOf(jsonObject.get("pk_jiashi_id"));
         try {
             //
             THallJiashizheng tHallJiashizheng = tHallJiashizhengService.selectById(idStr);

@@ -17,7 +17,7 @@
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallJidongche" parameterType="com.hjy.hall.entity.THallJidongche">
         select
-          pk_jidongche_id, dept_name, withdraw_type, applicant, business_type, number_type, number, lack, handle_people, withdraw_time        from "c##root"."t_hall_jidongche"
+          "pk_jidongche_id", "dept_name", "withdraw_type", "applicant", "business_type", "number_type", "number", "lack", "handle_people", "withdraw_time"        from "c##root"."t_hall_jidongche"
         where "pk_jidongche_id" = #{pkJidongcheId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
