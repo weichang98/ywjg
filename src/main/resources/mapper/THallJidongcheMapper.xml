@@ -65,6 +65,9 @@
     <insert id="insertSelective" parameterType="com.hjy.hall.entity.THallJidongche">
         insert into "c##root"."t_hall_jidongche"
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pkJidongcheId != null and pkJidongcheId != ''">
+                "pk_jidongche_id",
+            </if>
         <if test="deptName != null and deptName != ''">
                 "dept_name",
         </if>
@@ -94,6 +97,9 @@
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pkJidongcheId != null and pkJidongcheId != ''">
+                #{pkJidongcheId,jdbcType=VARCHAR},
+            </if>
                     <if test="deptName != null and deptName != ''">
                 #{deptName,jdbcType=VARCHAR},
             </if>

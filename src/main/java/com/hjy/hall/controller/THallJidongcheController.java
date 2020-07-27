@@ -30,7 +30,7 @@ public class THallJidongcheController {
     /**
      * 1 跳转到新增页面
      */
-    @GetMapping(value = "/tHallJidongche/addPage")
+    @GetMapping(value = "/hall/jidongche/addPage")
     public CommonResult tHallJidongcheAddPage() throws FebsException {
         try {
             //
@@ -48,7 +48,7 @@ public class THallJidongcheController {
      * @param tHallJidongche 实体对象
      * @return 新增结果
      */
-    @PostMapping("/tHallJidongche/add")
+    @PostMapping("/hall/jidongche/add")
     public CommonResult tHallJidongcheAdd(@RequestBody THallJidongche tHallJidongche) throws FebsException {
         System.err.println(tHallJidongche);
         try {
@@ -67,7 +67,7 @@ public class THallJidongcheController {
      *
      * @return 所有数据
      */
-    @GetMapping("/tHallJidongche/list")
+    @GetMapping("/hall/jidongche/list")
     public CommonResult tHallJidongcheList() throws FebsException {
         try {
             //
@@ -86,7 +86,7 @@ public class THallJidongcheController {
      *
      * @return 所有数据
      */
-    @GetMapping("/tHallJidongche/listByEntity")
+    @GetMapping("/hall/jidongche/listByEntity")
     public CommonResult tHallJidongcheListByEntity(@RequestBody THallJidongche tHallJidongche) throws FebsException {
         try {
             //
@@ -105,7 +105,7 @@ public class THallJidongcheController {
      *
      * @return 删除结果
      */
-    @DeleteMapping("/tHallJidongche/del")
+    @DeleteMapping("/hall/jidongche/del")
     public CommonResult tHallJidongcheDel(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr = String.valueOf(jsonObject.get("pk_jidongche_id"));
@@ -125,7 +125,7 @@ public class THallJidongcheController {
      *
      * @return 单条数据
      */
-    @GetMapping("/tHallJidongche/getOne")
+    @GetMapping("/hall/jidongche/getOne")
     public CommonResult tHallJidongchegetOne(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr = String.valueOf(jsonObject.get("pk_jidongche_id"));
@@ -147,7 +147,7 @@ public class THallJidongcheController {
      * @param tHallJidongche 实体对象
      * @return 修改结果
      */
-    @PutMapping("/tHallJidongche/update")
+    @PutMapping("/hall/jidongche/update")
     public CommonResult tHallJidongcheUpdate(@RequestBody THallJidongche tHallJidongche) throws FebsException {
         System.err.println(tHallJidongche);
         try {
