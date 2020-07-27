@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.system.dao.TSysRoleMapper">
+
+<sql id="BaseColumnList" >
+        pk_role_id,
+        role_name,
+        role_desc,
+        create_date,
+        enable_status,
+        modify_time,
+  </sql>
+    <!--通过主键查询单个-->
+    <select id="selectById" resultType="com.hjy.system.entity.TSysRole">
+        select * from "liuchun"."t_sys_role"
+        where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysRole">
+        select * from "liuchun"."t_sys_role"
+        <where>
+            <if test="pk_role_id != null and pk_role_id != ''">
+                and "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+            </if>
+            <if test="role_name != null and role_name != ''">
+                and "role_name" like '%${role_name}%'
+            </if>
+            <if test="role_desc != null and role_desc != ''">
+                and "role_desc" = #{role_desc,jdbcType=VARCHAR}
+            </if>
+            <if test="enable_status != null">
+                and enable_status = #{enable_status,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="pk_role_id" useGeneratedKeys="true">
+        insert into t_sys_role(pk_role_id,role_name, role_desc, create_date, enable_status, modify_time)
+        values (#{pk_role_id},#{role_name}, #{role_desc}, #{create_date}, #{enable_status}, #{modify_time})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysRole">
+        insert into "liuchun"."t_sys_role"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk_role_id != null and pk_role_id != ''">
+                "pk_role_id",
+            </if>
+        <if test="role_name != null and role_name != ''">
+                "role_name",
+        </if>
+        <if test="role_desc != null and role_desc != ''">
+                "role_desc",
+        </if>
+        <if test="create_date != null">
+                "create_date",
+        </if>
+        <if test="enable_status != null">
+                "enable_status",
+        </if>
+        <if test="modify_time != null">
+                "modify_time",
+        </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+                    <if test="pk_role_id != null and pk_role_id != ''">
+                #{pk_role_id,jdbcType=VARCHAR},
+            </if>
+            <if test="role_name != null and role_name != ''">
+                #{role_name,jdbcType=VARCHAR},
+            </if>
+                    <if test="role_desc != null and role_desc != ''">
+                #{role_desc,jdbcType=VARCHAR},
+            </if>
+                    <if test="create_date != null">
+                #{create_date,jdbcType=DATE},
+            </if>
+                    <if test="enable_status != null">
+                #{enable_status,jdbcType=INTEGER},
+            </if>
+                    <if test="modify_time != null">
+                #{modify_time,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="addRoleMenu">
+        insert into "liuchun"."re_role_perms"("pk_rolePerms_id","fk_role_id","fk_perms_id")
+        values (#{pk_rolePerms_id},#{fk_role_id},#{fk_perms_id})
+    </insert>
+    <!--通过主键修改数据-->
+    <update id="updateById">
+        update "liuchun"."t_sys_role"
+        <set>
+            <if test="role_name != null and role_name != ''">
+                "role_name" = #{role_name,jdbcType=VARCHAR},
+            </if>
+            <if test="role_desc != null and role_desc != ''">
+                "role_desc" = #{role_desc,jdbcType=VARCHAR},
+            </if>
+            <if test="create_date != null">
+                "create_date" = #{create_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enable_status != null">
+                "enable_status" = #{enable_status,jdbcType=INTEGER},
+            </if>
+            <if test="modify_time != null">
+                "modify_time" = #{modify_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from "liuchun"."t_sys_role" where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteRolePermsByRoleId" parameterType="java.lang.String">
+        delete from "liuchun"."re_role_perms" where "fk_role_id" =#{fk_role_id,jdbcType=VARCHAR}
+    </delete>
+    <!--查询所有行数据-->
+    <select id="selectAll" resultType="com.hjy.system.entity.TSysRole">
+        select * from "liuchun"."t_sys_role"
+    </select>
+    <select id="selectUserRoleByrole_id" resultType="java.lang.String" parameterType="java.lang.String">
+        select "fk_user_id" from "liuchun"."re_user_role" where "fk_role_id" = #{fk_role_id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>
