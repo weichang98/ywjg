@@ -13,11 +13,9 @@ public interface TSysUserService {
 
     /**
      * 通过ID查询单条数据
-     *
-     * @param pkUserId 主键
      * @return 实例对象
      */
-    TSysUser selectById(Object pkUserId)throws Exception;
+    TSysUser selectById(String pkUserId)throws Exception;
 
 
     /**
@@ -41,7 +39,7 @@ public interface TSysUserService {
      * @param pkUserId 主键
      * @return 是否成功
      */
-    int deleteById(Object pkUserId) throws Exception;
+    int deleteById(String pkUserId) throws Exception;
 
     /**
      * 查询所有数据
@@ -53,5 +51,12 @@ public interface TSysUserService {
      * @return list
      */
      List<TSysUser> selectAllByEntity(TSysUser tSysUser)throws Exception;
-     
+    /**
+     * 通过userId查询已分配角色数据
+     */
+    String selectUserRoleByUserId(String fk_user_id);
+    /**
+     * 通过userId删除已分配角色数据
+     */
+    int deleteUserRoleByUserId(String fk_user_id);
 }

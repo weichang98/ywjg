@@ -4,11 +4,13 @@ import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.system.entity.TSysPerms;
 import com.hjy.system.entity.TSysRole;
+import com.hjy.system.entity.TSysUser;
 import com.hjy.system.service.TSysPermsService;
 import com.hjy.system.service.TSysRoleService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.system.service.TSysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ public class TSysRoleController {
     private TSysRoleService tSysRoleService;
     @Autowired
     private TSysPermsService tSysPermsService;
+    @Autowired
+    private TSysUserService tSysUserService;
 
     /**
      * 1 跳转到新增页面
@@ -174,7 +178,6 @@ public class TSysRoleController {
             jsonObject.put("permsList",permsList);
             //查询已分配的菜单并进行回显
             List<String> permsXZList = tSysPermsService.selectDistributeByrole_id(roleIdStr);
-            System.err.println("permsXZList:"+permsXZList);
             jsonObject.put("ids",permsXZList);
             return new CommonResult(200,"success","获取已分配菜单权限成功!",jsonObject);
         } catch (Exception e) {
@@ -189,14 +192,15 @@ public class TSysRoleController {
     @PostMapping("/system/role/distribute")
     public CommonResult FPRoleMenu(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
-        String roleIdStr=String.valueOf(json.get("fk_role_id"));
+        String fk_role_id=String.valueOf(json.get("fk_role_id"));
         JSONArray jsonArray = json.getJSONArray("ids");
-        String str1 = jsonArray.toString();
+        String permsIdsStr = jsonArray.toString();
+        List<String> idList = JSONArray.parseArray(permsIdsStr,String.class);
         try {
             //通过role_id删除原有的perms
-            tSysRoleService.deleteRolePermsByRoleId(roleIdStr);
+            tSysRoleService.deleteRolePermsByRoleId(fk_role_id);
             //添加选中的权限菜单
-            tSysRoleService.addRoleMenu(roleIdStr,str1);
+            tSysRoleService.addRoleMenuByList(fk_role_id,idList);
             return new CommonResult(200,"success","分配菜单权限成功!",null);
         } catch (Exception e) {
             String message = "分配菜单权限失败";
@@ -217,12 +221,11 @@ public class TSysRoleController {
             TSysRole role = tSysRoleService.selectById(roleIdStr);
             jsonObject.put("role",role);
             //查找所有用户
-//            List<TSysPerms> permsList = tSysPermsService.selectAll();
-//            jsonObject.put("permsList",permsList);
+            List<TSysUser> tSysUserList = tSysUserService.selectAll();
+            jsonObject.put("userList",tSysUserList);
             //查询已分配的用户角色并进行回显
             List<String> userRoleList = tSysRoleService.selectUserRoleByrole_id(roleIdStr);
-            System.err.println("userRoleList:"+userRoleList);
-            jsonObject.put("users",userRoleList);
+            jsonObject.put("ids",userRoleList);
             return new CommonResult(200,"success","获取角色已分配用户成功!",jsonObject);
         } catch (Exception e) {
             String message = "获取角色已分配用户失败";
@@ -230,4 +233,27 @@ public class TSysRoleController {
             throw new FebsException(message);
         }
     }
+    /**
+     * 6 给角色下发用户
+     */
+    @PostMapping("/system/role/addUser")
+    public CommonResult systemRoleAddUser(@RequestBody String parm) throws FebsException{
+        JSONObject jsonObject = JSON.parseObject(parm);
+        String fk_role_id=String.valueOf(jsonObject.get("fk_role_id"));
+        JSONArray jsonArray = jsonObject.getJSONArray("ids");
+        String userIdsStr = jsonArray.toString();
+        List<String> idList = JSONArray.parseArray(userIdsStr,String.class);
+        try {
+            //删除原有的用户角色
+            tSysRoleService.deleteUserRoleByRoleId(fk_role_id);
+            //添加用户角色
+            tSysRoleService.addUserRoleByList(fk_role_id,idList);
+            return new CommonResult(200,"success","角色添加用户成功!",jsonObject);
+        } catch (Exception e) {
+            String message = "角色添加用户失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
 }

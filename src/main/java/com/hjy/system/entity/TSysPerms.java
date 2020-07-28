@@ -14,32 +14,32 @@ import lombok.Data;
 @Data
 public class TSysPerms implements Serializable {
     private static final long serialVersionUID = -72432537446108401L;
-        private String pk_perms_id;
+        private String pkPermsId;
         /**
     * 父级菜单
-    */    private String p_id;
+    */    private String pId;
         /**
     * 菜单名称
-    */    private String menu_name;
+    */    private String menuName;
         /**
     * 路由路径
     */    private String path;
         /**
     * 权限码
-    */    private String perms_code;
+    */    private String permsCode;
         /**
     * 菜单类型，菜单或按钮
     */    private String type;
         /**
     * 创建时间
-    */    private Date create_time;
+    */    private Date createTime;
         /**
     * 修改时间
-    */    private Date modify_time;
+    */    private Date modifyTime;
         /**
     * 修改人名字
-    */    private String modify_username;
+    */    private String modifyUsername;
         /**
     * 修改人id
-    */    private String fk_user_id;
+    */    private String fkUserId;
 }

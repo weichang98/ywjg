@@ -20,16 +20,16 @@
         on_line,
   </sql>
     <!--通过主键查询单个-->
-    <select id="selectById" resultType="com.hjy.system.entity.TSysUser" parameterType="com.hjy.system.entity.TSysUser">
+    <select id="selectById" resultType="com.hjy.system.entity.TSysUser" parameterType="java.lang.String">
         select * from "liuchun"."t_sys_user"
-        where "pk_user_id" = #{pk_user_id,jdbcType=VARCHAR}
+        where "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysUser" parameterType="com.hjy.system.entity.TSysUser">
         select * from "liuchun"."t_sys_user"
         <where>
-            <if test="pk_user_id != null">
-                and "pk_user_id" = #{pk_user_id,jdbcType=VARCHAR}
+            <if test="pkUserId != null">
+                and "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
             </if>
             <if test="username != null and username != ''">
                 and "username" like '%${username}%'
@@ -37,11 +37,11 @@
             <if test="password != null and password != ''">
                 and "password" = #{password,jdbcType=VARCHAR}
             </if>
-            <if test="last_login_date != null">
-                and "last_login_date" = #{last_login_date,jdbcType=TIMESTAMP}
+            <if test="lastLoginDate != null">
+                and "last_login_date" = #{lastLoginDate,jdbcType=TIMESTAMP}
             </if>
-            <if test="fk_dept_id != null">
-                and "fk_dept_id" = #{fk_dept_id,jdbcType=VARCHAR}
+            <if test="fkDeptId != null">
+                and "fk_dept_id" = #{fkDeptId,jdbcType=VARCHAR}
             </if>
             <if test="email != null and email != ''">
                 and "email" = #{email,jdbcType=VARCHAR}
@@ -49,29 +49,29 @@
             <if test="tel != null and tel != ''">
                 and "tel" = #{tel,jdbcType=VARCHAR}
             </if>
-            <if test="enable_status != null">
+            <if test="enableStatus != null">
                 and "enable_status" = #{enableStatus,jdbcType=VARCHAR}
             </if>
-            <if test="create_time != null">
-                and "create_time" = #{create_time,jdbcType=TIMESTAMP}
+            <if test="createTime != null">
+                and "create_time" = #{createTime,jdbcType=TIMESTAMP}
             </if>
             <if test="IDcard != null and IDcard != ''">
                 and "IDcard" = #{IDcard,jdbcType=VARCHAR}
             </if>
-            <if test="modify_time != null">
-                and "modify_time" = #{modify_time,jdbcType=TIMESTAMP}
+            <if test="modifyTime != null">
+                and "modify_time" = #{modifyTime,jdbcType=TIMESTAMP}
             </if>
-            <if test="full_name != null and full_name != ''">
-                and "full_name" = #{full_name,jdbcType=VARCHAR}
+            <if test="fullName != null and fullName != ''">
+                and "full_name" = #{fullName,jdbcType=VARCHAR}
             </if>
-            <if test="police_num != null and police_num != ''">
-                and "police_num" = #{police_num,jdbcType=VARCHAR}
+            <if test="policeNum != null and policeNum != ''">
+                and "police_num" = #{policeNum,jdbcType=VARCHAR}
             </if>
             <if test="unit != null and unit != ''">
                 and "unit" = #{unit,jdbcType=VARCHAR}
             </if>
-            <if test="on_line != null">
-                and "on_line" = #{on_line,jdbcType=VARCHAR}
+            <if test="onLine != null">
+                and "on_line" = #{onLine,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -79,12 +79,12 @@
     <!--新增所有列-->
     <insert id="insert">
         insert into "liuchun"."t_sys_user"("pk_user_id","username", "password", "last_login_date", "fk_dept_id", "email", "tel", "enable_status", "create_time", "IDcard", "modify_time", "full_name", "police_num", "unit", "on_line")
-        values (#{pk_user_id}, #{username}, #{password}, #{last_login_date}, #{fk_dept_id}, #{email}, #{tel}, #{enable_status}, #{create_time}, #{IDcard}, #{modify_time}, #{full_name}, #{police_num}, #{unit}, #{on_line})
+        values (#{pkUserId}, #{username}, #{password}, #{lastLoginDate}, #{fkDeptId}, #{email}, #{tel}, #{enableStatus}, #{createTime}, #{IDcard}, #{modifyTime}, #{fullName}, #{policeNum}, #{unit}, #{onLine})
     </insert>
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysUser">
         insert into "liuchun"."t_sys_user"
         <trim prefix="(" suffix=")" suffixOverrides=",">
-        <if test="pk_user_id != null and pk_user_id != ''">
+        <if test="pkUserId != null and pkUserId != ''">
                 "pk_user_id",
         </if>
         <if test="username != null and username != ''">
@@ -93,10 +93,10 @@
         <if test="password != null and password != ''">
                 "password",
         </if>
-        <if test="last_login_date != null">
+        <if test="lastLoginDate != null">
                 "last_login_date",
         </if>
-        <if test="fk_dept_id != null">
+        <if test="fkDeptId != null">
                 "fk_dept_id",
         </if>
         <if test="email != null and email != ''">
@@ -105,34 +105,34 @@
         <if test="tel != null and tel != ''">
                 "tel",
         </if>
-        <if test="enable_status != null">
+        <if test="enableStatus != null">
                 "enable_status",
         </if>
-        <if test="create_time != null">
+        <if test="createTime != null">
                 "create_time",
         </if>
         <if test="IDcard != null and IDcard != ''">
                 "IDcard",
         </if>
-        <if test="modify_time != null">
+        <if test="modifyTime != null">
                 "modify_time",
         </if>
-        <if test="full_name != null and full_name != ''">
+        <if test="fullName != null and fullName != ''">
                 "full_name",
         </if>
-        <if test="police_num != null and police_num != ''">
+        <if test="policeNum != null and policeNum != ''">
                 "police_num",
         </if>
         <if test="unit != null and unit != ''">
                 "unit",
         </if>
-        <if test="on_line != null">
+        <if test="onLine != null">
                 "on_line",
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="pk_user_id != null and pk_user_id != ''">
-                #{pk_user_id,jdbcType=VARCHAR},
+            <if test="pkUserId != null and pkUserId != ''">
+                #{pkUserId,jdbcType=VARCHAR},
             </if>
             <if test="username != null and username != ''">
                 #{username,jdbcType=VARCHAR},
@@ -140,11 +140,11 @@
                     <if test="password != null and password != ''">
                 #{password,jdbcType=VARCHAR},
             </if>
-                    <if test="last_login_date != null">
-                #{last_login_date,jdbcType=VARCHAR},
+                    <if test="lastLoginDate != null">
+                #{lastLoginDate,jdbcType=VARCHAR},
             </if>
-                    <if test="fk_dept_id != null">
-                #{fk_dept_id,jdbcType=VARCHAR},
+                    <if test="fkDeptId != null">
+                #{fkDeptId,jdbcType=VARCHAR},
             </if>
                     <if test="email != null and email != ''">
                 #{email,jdbcType=VARCHAR},
@@ -152,29 +152,29 @@
                     <if test="tel != null and tel != ''">
                 #{tel,jdbcType=VARCHAR},
             </if>
-                    <if test="enable_status != null">
-                #{enable_status,jdbcType=VARCHAR},
+                    <if test="enableStatus != null">
+                #{enableStatus,jdbcType=VARCHAR},
             </if>
-                    <if test="create_time != null">
-                #{create_time,jdbcType=TIMESTAMP},
+                    <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
             </if>
                     <if test="IDcard != null and IDcard != ''">
                 #{IDcard,jdbcType=VARCHAR},
             </if>
-                    <if test="modify_time != null">
-                #{modify_time,jdbcType=TIMESTAMP},
+                    <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
             </if>
-                    <if test="full_name != null and full_name != ''">
-                #{full_name,jdbcType=VARCHAR},
+                    <if test="fullName != null and fullName != ''">
+                #{fullName,jdbcType=VARCHAR},
             </if>
-                    <if test="police_num != null and police_num != ''">
-                #{police_num,jdbcType=VARCHAR},
+                    <if test="policeNum != null and policeNum != ''">
+                #{policeNum,jdbcType=VARCHAR},
             </if>
                     <if test="unit != null and unit != ''">
                 #{unit,jdbcType=VARCHAR},
             </if>
-                    <if test="on_line != null">
-                #{on_line,jdbcType=VARCHAR},
+                    <if test="onLine != null">
+                #{onLine,jdbcType=VARCHAR},
             </if>
                 </trim>
     </insert>
@@ -189,11 +189,11 @@
             <if test="password != null and password != ''">
                 "password" = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="last_login_date != null">
-                "last_login_date" = #{last_login_date,jdbcType=TIMESTAMP},
+            <if test="lastLoginDate != null">
+                "last_login_date" = #{lastLoginDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="fk_dept_id != null">
-                "fk_dept_id" = #{fk_dept_id,jdbcType=VARCHAR},
+            <if test="fkDeptId != null">
+                "fk_dept_id" = #{fkDeptId,jdbcType=VARCHAR},
             </if>
             <if test="email != null and email != ''">
                 "email" = #{email,jdbcType=VARCHAR},
@@ -201,41 +201,47 @@
             <if test="tel != null and tel != ''">
                 "tel" = #{tel,jdbcType=VARCHAR},
             </if>
-            <if test="enable_status != null">
-                "enable_status" = #{enable_status,jdbcType=VARCHAR},
+            <if test="enableStatus != null">
+                "enable_status" = #{enableStatus,jdbcType=VARCHAR},
             </if>
-            <if test="create_time != null">
-                "create_time" = #{create_time,jdbcType=TIMESTAMP},
+            <if test="createTime != null">
+                "create_time" = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="IDcard != null and IDcard != ''">
                 "IDcard" = #{IDcard,jdbcType=VARCHAR},
             </if>
-            <if test="modify_time != null">
-                "modify_time" = #{modify_time,jdbcType=TIMESTAMP},
+            <if test="modifyTime != null">
+                "modify_time" = #{modifyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="full_name != null and full_name != ''">
-                "full_name" = #{full_name,jdbcType=VARCHAR},
+            <if test="fullName != null and fullName != ''">
+                "full_name" = #{fullName,jdbcType=VARCHAR},
             </if>
-            <if test="police_num != null and police_num != ''">
-                "police_num" = #{police_num,jdbcType=VARCHAR},
+            <if test="policeNum != null and policeNum != ''">
+                "police_num" = #{policeNum,jdbcType=VARCHAR},
             </if>
             <if test="unit != null and unit != ''">
                 "unit" = #{unit,jdbcType=VARCHAR},
             </if>
-            <if test="on_line != null">
-                "on_line" = #{on_line,jdbcType=VARCHAR},
+            <if test="onLine != null">
+                "on_line" = #{onLine,jdbcType=VARCHAR},
             </if>
         </set>
-        where "pk_user_id" = #{pk_user_id,jdbcType=VARCHAR}
+        where "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
     </update>
 
     <!--通过主键删除-->
-    <delete id="deleteById" parameterType="com.hjy.system.entity.TSysUser">
-        delete from "liuchun"."t_sys_user" where "pk_user_id" = #{pk_user_id,jdbcType=VARCHAR}
+    <delete id="deleteById" parameterType="java.lang.String">
+        delete from "liuchun"."t_sys_user" where "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteUserRoleByUserId">
+        delete from "liuchun"."re_user_role" where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
     </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.system.entity.TSysUser">
         select * from "liuchun"."t_sys_user"
+    </select>
+    <select id="selectUserRoleByUserId" resultType="java.lang.String" parameterType="java.lang.String">
+        select "fk_role_id" from "liuchun"."re_user_role" where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
     </select>
 
 </mapper>

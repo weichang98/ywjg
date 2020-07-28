@@ -40,9 +40,9 @@ public class TSysPermsServiceImpl implements TSysPermsService {
      */
     @Override
     public int insert(TSysPerms tSysPerms) {
-        tSysPerms.setPk_perms_id(IDUtils.currentTimeMillis());
-        tSysPerms.setCreate_time(new Date());
-        tSysPerms.setModify_time(new Date());
+        tSysPerms.setPkPermsId(IDUtils.currentTimeMillis());
+        tSysPerms.setCreateTime(new Date());
+        tSysPerms.setModifyTime(new Date());
         return tSysPermsMapper.insertSelective(tSysPerms);
     }
 
@@ -54,7 +54,10 @@ public class TSysPermsServiceImpl implements TSysPermsService {
      */
     @Override
     public int updateById(TSysPerms tSysPerms) {
-        tSysPerms.setModify_time(new Date());
+        tSysPerms.setModifyTime(new Date());
+        //修改人
+//        tSysPerms.setModifyUsername();
+//        tSysPerms.setFkUserId();
         return tSysPermsMapper.updateById(tSysPerms);
     }
 

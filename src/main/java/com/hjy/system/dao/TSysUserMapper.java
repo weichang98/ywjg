@@ -18,7 +18,7 @@ public interface TSysUserMapper {
      * @param pkUserId 主键
      * @return 实例对象
      */
-    TSysUser selectById(Object pkUserId);
+    TSysUser selectById(@Param("pkUserId") String pkUserId);
 
     /**
      * 新增数据
@@ -43,7 +43,7 @@ public interface TSysUserMapper {
      * @param pkUserId 主键
      * @return 影响行数
      */
-    int deleteById(Object pkUserId);
+    int deleteById(@Param("pkUserId")String pkUserId);
 
     /**
      * 查询所有行数据
@@ -52,9 +52,19 @@ public interface TSysUserMapper {
     List<TSysUser> selectAll();
      /**
      * 通过实体作为筛选条件查询
-     *
      * @param tSysUser 实例对象
      * @return 对象列表
      */
     List<TSysUser> selectAllByEntity(TSysUser tSysUser);
+    /**
+     * 通过userid查询用户角色信息
+     * @param fk_user_id
+     * @return role_id
+     */
+    String selectUserRoleByUserId(@Param("fkUserId") String fk_user_id);
+    /**
+     * 通过user_id删除已分配角色数据
+     * @param fk_user_id
+     */
+    int deleteUserRoleByUserId(@Param("fkUserId")String fk_user_id);
 }

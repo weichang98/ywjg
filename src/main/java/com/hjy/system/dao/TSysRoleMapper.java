@@ -1,5 +1,7 @@
 package com.hjy.system.dao;
 
+import com.hjy.system.entity.ReRolePerms;
+import com.hjy.system.entity.ReUserRole;
 import com.hjy.system.entity.TSysRole;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -59,12 +61,33 @@ public interface TSysRoleMapper {
      * 通过roleId删除原有的所有菜单
      * @param fk_role_id
      */
-    int deleteRolePermsByRoleId(@Param("fk_role_id") String fk_role_id);
+    int deleteRolePermsByRoleId(@Param("fkRoleId") String fk_role_id);
 
     int addRoleMenu(@Param("pk_rolePerms_id")String pk_rolePerms_id,@Param("fk_role_id")String fk_role_id, @Param("fk_perms_id")String fk_perms_id);
     /**
      * 通过roleId查询为该角色的所有用户
      * @param fk_role_id
      */
-    List<String> selectUserRoleByrole_id(@Param("fk_role_id")String fk_role_id);
+    List<String> selectUserRoleByrole_id(@Param("fkRoleId")String fk_role_id);
+    /**
+     * 通过roleId删除用户角色
+     */
+    int deleteUserRoleByRoleId(@Param("fkRoleId")String fk_role_id);
+    /**
+     * 添加用户角色
+     */
+    int addUserRole(@Param("pk_userRole_id")String pk_userRole_id,@Param("fk_user_id") String fk_user_id,@Param("fk_role_id") String fk_role_id);
+    /**
+     * 批量添加用户角色
+     */
+    int addUserRoleByList(@Param("idList")List<ReUserRole> idList);
+    /**
+     * 批量添加角色权限
+     */
+    int addRoleMenuByList(@Param("idList")List<ReRolePerms> rolePermsList);
+    /**
+     * 添加用户角色
+     * @param userRole 实体对象
+     */
+    int addUserRoleByUserRole(ReUserRole userRole);
 }

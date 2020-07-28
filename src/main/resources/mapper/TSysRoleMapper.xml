@@ -13,23 +13,23 @@
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.system.entity.TSysRole">
         select * from "liuchun"."t_sys_role"
-        where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+        where "pk_role_id" = #{pkRoleId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysRole">
         select * from "liuchun"."t_sys_role"
         <where>
-            <if test="pk_role_id != null and pk_role_id != ''">
-                and "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+            <if test="pkRoleId != null and pkRoleId != ''">
+                and "pk_role_id" = #{pkRoleId,jdbcType=VARCHAR}
             </if>
-            <if test="role_name != null and role_name != ''">
-                and "role_name" like '%${role_name}%'
+            <if test="roleName != null and roleName != ''">
+                and "role_name" like '%${roleName}%'
             </if>
-            <if test="role_desc != null and role_desc != ''">
-                and "role_desc" = #{role_desc,jdbcType=VARCHAR}
+            <if test="roleDesc != null and roleDesc != ''">
+                and "role_desc" = #{roleDesc,jdbcType=VARCHAR}
             </if>
-            <if test="enable_status != null">
-                and enable_status = #{enable_status,jdbcType=INTEGER}
+            <if test="enableStatus != null">
+                and enable_status = #{enableStatus,jdbcType=INTEGER}
             </if>
         </where>
     </select>
@@ -42,86 +42,127 @@
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysRole">
         insert into "liuchun"."t_sys_role"
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="pk_role_id != null and pk_role_id != ''">
+            <if test="pkRoleId != null and pkRoleId != ''">
                 "pk_role_id",
             </if>
-        <if test="role_name != null and role_name != ''">
+        <if test="roleName != null and roleName != ''">
                 "role_name",
         </if>
-        <if test="role_desc != null and role_desc != ''">
+        <if test="roleDesc != null and roleDesc != ''">
                 "role_desc",
         </if>
-        <if test="create_date != null">
+        <if test="createDate != null">
                 "create_date",
         </if>
-        <if test="enable_status != null">
+        <if test="enableStatus != null">
                 "enable_status",
         </if>
-        <if test="modify_time != null">
+        <if test="modifyTime != null">
                 "modify_time",
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-                    <if test="pk_role_id != null and pk_role_id != ''">
-                #{pk_role_id,jdbcType=VARCHAR},
+                    <if test="pkRoleId != null and pkRoleId != ''">
+                #{pkRoleId,jdbcType=VARCHAR},
             </if>
-            <if test="role_name != null and role_name != ''">
-                #{role_name,jdbcType=VARCHAR},
+            <if test="roleName != null and roleName != ''">
+                #{roleName,jdbcType=VARCHAR},
             </if>
-                    <if test="role_desc != null and role_desc != ''">
-                #{role_desc,jdbcType=VARCHAR},
+                    <if test="roleDesc != null and roleDesc != ''">
+                #{roleDesc,jdbcType=VARCHAR},
             </if>
-                    <if test="create_date != null">
-                #{create_date,jdbcType=DATE},
+                    <if test="createDate != null">
+                #{createDate,jdbcType=DATE},
             </if>
-                    <if test="enable_status != null">
-                #{enable_status,jdbcType=INTEGER},
+                    <if test="enableStatus != null">
+                #{enableStatus,jdbcType=INTEGER},
             </if>
-                    <if test="modify_time != null">
-                #{modify_time,jdbcType=DATE},
+                    <if test="modifyTime != null">
+                #{modifyTime,jdbcType=DATE},
             </if>
         </trim>
     </insert>
-    <insert id="addRoleMenu">
+    <insert id="addRoleMenu" parameterType="java.lang.String">
         insert into "liuchun"."re_role_perms"("pk_rolePerms_id","fk_role_id","fk_perms_id")
         values (#{pk_rolePerms_id},#{fk_role_id},#{fk_perms_id})
+    </insert>
+    <insert id="addUserRole" parameterType="java.lang.String">
+        insert into "liuchun"."re_user_role"("pk_userRole_id","fk_user_id","fk_role_id")
+        values (#{pk_userRole_id},#{fk_user_id},#{fk_role_id})
+    </insert>
+    <insert id="addUserRoleByList" parameterType="list">
+        insert ALL
+        <foreach collection="idList" item="item" separator="">
+            INTO
+            "liuchun"."re_user_role"("pk_userRole_id","fk_user_id","fk_role_id")
+            values
+            (
+            #{item.pk_userRole_id, jdbcType=VARCHAR},
+            #{item.fk_user_id, jdbcType=VARCHAR},
+            #{item.fk_role_id, jdbcType=VARCHAR}
+            )
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    <insert id="addRoleMenuByList">
+        insert ALL
+        <foreach collection="idList" item="item" separator="">
+            INTO
+            "liuchun"."re_role_perms"("pk_rolePerms_id","fk_role_id","fk_perms_id")
+            values
+            (
+            #{item.pk_rolePerms_id, jdbcType=VARCHAR},
+            #{item.fk_role_id, jdbcType=VARCHAR},
+            #{item.fk_perms_id, jdbcType=VARCHAR}
+            )
+        </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+    <insert id="addUserRoleByUserRole" parameterType="com.hjy.system.entity.ReUserRole">
+       insert into "liuchun"."re_user_role"("pk_userRole_id","fk_user_id","fk_role_id")
+        values (#{pk_userRole_id},#{fk_user_id},#{fk_role_id})
     </insert>
     <!--通过主键修改数据-->
     <update id="updateById">
         update "liuchun"."t_sys_role"
         <set>
-            <if test="role_name != null and role_name != ''">
-                "role_name" = #{role_name,jdbcType=VARCHAR},
+            <if test="roleName != null and roleName != ''">
+                "role_name" = #{roleName,jdbcType=VARCHAR},
             </if>
-            <if test="role_desc != null and role_desc != ''">
-                "role_desc" = #{role_desc,jdbcType=VARCHAR},
+            <if test="roleDesc != null and roleDesc != ''">
+                "role_desc" = #{roleDesc,jdbcType=VARCHAR},
             </if>
-            <if test="create_date != null">
-                "create_date" = #{create_date,jdbcType=TIMESTAMP},
+            <if test="createDate != null">
+                "create_date" = #{createDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="enable_status != null">
-                "enable_status" = #{enable_status,jdbcType=INTEGER},
+            <if test="enableStatus != null">
+                "enable_status" = #{enableStatus,jdbcType=INTEGER},
             </if>
-            <if test="modify_time != null">
-                "modify_time" = #{modify_time,jdbcType=TIMESTAMP},
+            <if test="modifyTime != null">
+                "modify_time" = #{modifyTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+        where "pk_role_id" = #{pkRoleId,jdbcType=VARCHAR}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from "liuchun"."t_sys_role" where "pk_role_id" = #{pk_role_id,jdbcType=VARCHAR}
+        delete from "liuchun"."t_sys_role" where "pk_role_id" = #{pkRoleId,jdbcType=VARCHAR}
     </delete>
+<!--    通过roleId删除原有的所有菜单-->
     <delete id="deleteRolePermsByRoleId" parameterType="java.lang.String">
-        delete from "liuchun"."re_role_perms" where "fk_role_id" =#{fk_role_id,jdbcType=VARCHAR}
+        delete from "liuchun"."re_role_perms" where "fk_role_id" =#{fkRoleId,jdbcType=VARCHAR}
+    </delete>
+<!--    通过roleId删除用户角色-->
+    <delete id="deleteUserRoleByRoleId" parameterType="java.lang.String">
+        delete from "liuchun"."re_user_role" where "fk_role_id" =#{fkRoleId,jdbcType=VARCHAR}
     </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.system.entity.TSysRole">
         select * from "liuchun"."t_sys_role"
     </select>
     <select id="selectUserRoleByrole_id" resultType="java.lang.String" parameterType="java.lang.String">
-        select "fk_user_id" from "liuchun"."re_user_role" where "fk_role_id" = #{fk_role_id,jdbcType=VARCHAR}
+        select "fk_user_id" from "liuchun"."re_user_role" where "fk_role_id" = #{fkRoleId,jdbcType=VARCHAR}
     </select>
 
 </mapper>

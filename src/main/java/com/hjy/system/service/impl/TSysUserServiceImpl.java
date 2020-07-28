@@ -23,12 +23,10 @@ public class TSysUserServiceImpl implements TSysUserService {
 
     /**
      * 通过ID查询单条数据
-     *
-     * @param pkUserId 主键
      * @return 实例对象
      */
     @Override
-    public TSysUser selectById(Object pkUserId) throws Exception{
+    public TSysUser selectById(String pkUserId) throws Exception{
         return this.tSysUserMapper.selectById(pkUserId);
     }
 
@@ -40,9 +38,9 @@ public class TSysUserServiceImpl implements TSysUserService {
      */
     @Override
     public int insert(TSysUser tSysUser) throws Exception{
-        tSysUser.setPk_user_id(IDUtils.currentTimeMillis());
-        tSysUser.setCreate_time(new Date());
-        tSysUser.setModify_time(new Date());
+        tSysUser.setPkUserId(IDUtils.currentTimeMillis());
+        tSysUser.setCreateTime(new Date());
+        tSysUser.setModifyTime(new Date());
         return tSysUserMapper.insertSelective(tSysUser);
     }
 
@@ -64,7 +62,7 @@ public class TSysUserServiceImpl implements TSysUserService {
      * @return 是否成功
      */
     @Override
-    public int deleteById(Object pkUserId) throws Exception{
+    public int deleteById(String pkUserId) throws Exception{
         return tSysUserMapper.deleteById(pkUserId);
     }
 
@@ -83,5 +81,15 @@ public class TSysUserServiceImpl implements TSysUserService {
     @Override
     public List<TSysUser> selectAllByEntity(TSysUser tSysUser) throws Exception{
         return this.tSysUserMapper.selectAllByEntity(tSysUser);
+    }
+
+    @Override
+    public String selectUserRoleByUserId(String fk_user_id) {
+        return tSysUserMapper.selectUserRoleByUserId(fk_user_id);
+    }
+
+    @Override
+    public int deleteUserRoleByUserId(String fk_user_id) {
+        return tSysUserMapper.deleteUserRoleByUserId(fk_user_id);
     }
 }

@@ -14,25 +14,25 @@ import lombok.Data;
 @Data
 public class TSysRole implements Serializable {
     private static final long serialVersionUID = -45694671485464516L;
-    private String pk_role_id;
+    private String pkRoleId;
     /**
     * 角色名称
     */
-    private String role_name;
+    private String roleName;
     /**
     * 角色描述
     */
-    private String role_desc;
+    private String roleDesc;
     /**
     * 创建时间
     */
-    private Date create_date;
+    private Date createDate;
     /**
     * 启用状态，1启用，0禁用
     */
-    private Integer enable_status;
+    private Integer enableStatus;
     /**
     * 修改时间
     */
-    private Date modify_time;
+    private Date modifyTime;
 }

@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class TSysUser implements Serializable {
     private static final long serialVersionUID = -90457638690976393L;
-        private String pk_user_id;
+        private String pkUserId;
         /**
     * 用户名
     */    private String username;
@@ -23,10 +23,10 @@ public class TSysUser implements Serializable {
     */    private String password;
         /**
     * 最后一次登录时间
-    */    private Date last_login_date;
+    */    private Date lastLoginDate;
         /**
     * 部门id
-    */    private String fk_dept_id;
+    */    private String fkDeptId;
         /**
     * 邮箱
     */    private String email;
@@ -35,26 +35,26 @@ public class TSysUser implements Serializable {
     */    private String tel;
         /**
     * 状态,1启用 0禁用
-    */    private String enable_status;
+    */    private String enableStatus;
         /**
     * 创建时间
-    */    private Date create_time;
+    */    private Date createTime;
         /**
     * 身份证
     */    private String IDcard;
         /**
     * 修改时间
-    */    private Date modify_time;
+    */    private Date modifyTime;
         /**
     * 真实姓名
-    */    private String full_name;
+    */    private String fullName;
         /**
     * 警号
-    */    private String police_num;
+    */    private String policeNum;
         /**
     * 单位
     */    private String unit;
         /**
     * 在线状态，1在线0离线
-    */    private String on_line;
+    */    private String onLine;
 }

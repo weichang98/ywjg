@@ -1,5 +1,6 @@
 package com.hjy.system.service;
 
+import com.hjy.system.entity.ReUserRole;
 import com.hjy.system.entity.TSysRole;
 import java.util.List;
 
@@ -61,6 +62,26 @@ public interface TSysRoleService {
      * 添加角色权限
      */
     int addRoleMenu(String fk_role_id,String str1);
+    /**
+     * 批量添加角色权限
+     */
+    int addRoleMenuByList(String fk_role_id, List<String> idList);
 
     List<String> selectUserRoleByrole_id(String fk_role_id);
+    /**
+     * 通过roleId删除用户角色
+     */
+    int deleteUserRoleByRoleId(String fk_role_id);
+    /**
+     * 添加用户角色
+     */
+    int addUserRole(String fk_role_id, String userIds);
+    /**
+     * 批量添加用户角色
+     */
+    int addUserRoleByList(String fk_role_id, List<String> idList);
+    /**
+     * 添加用户角色
+     */
+    int addUserRoleByUserRole(ReUserRole userRole);
 }
