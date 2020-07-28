@@ -28,38 +28,14 @@
     <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysUser" parameterType="com.hjy.system.entity.TSysUser">
         select * from "liuchun"."t_sys_user"
         <where>
-            <if test="pkUserId != null">
-                and "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
-            </if>
             <if test="username != null and username != ''">
                 and "username" like '%${username}%'
-            </if>
-            <if test="password != null and password != ''">
-                and "password" = #{password,jdbcType=VARCHAR}
-            </if>
-            <if test="lastLoginDate != null">
-                and "last_login_date" = #{lastLoginDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="fkDeptId != null">
-                and "fk_dept_id" = #{fkDeptId,jdbcType=VARCHAR}
-            </if>
-            <if test="email != null and email != ''">
-                and "email" = #{email,jdbcType=VARCHAR}
-            </if>
-            <if test="tel != null and tel != ''">
-                and "tel" = #{tel,jdbcType=VARCHAR}
             </if>
             <if test="enableStatus != null">
                 and "enable_status" = #{enableStatus,jdbcType=VARCHAR}
             </if>
-            <if test="createTime != null">
-                and "create_time" = #{createTime,jdbcType=TIMESTAMP}
-            </if>
             <if test="IDcard != null and IDcard != ''">
                 and "IDcard" = #{IDcard,jdbcType=VARCHAR}
-            </if>
-            <if test="modifyTime != null">
-                and "modify_time" = #{modifyTime,jdbcType=TIMESTAMP}
             </if>
             <if test="fullName != null and fullName != ''">
                 and "full_name" = #{fullName,jdbcType=VARCHAR}

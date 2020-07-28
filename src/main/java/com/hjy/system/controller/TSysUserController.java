@@ -88,6 +88,7 @@ public class TSysUserController {
      */
     @GetMapping("/system/user/listByEntity")
     public CommonResult tSysUserListByEntity(@RequestBody TSysUser tSysUser) throws FebsException{
+        System.err.println("listByEntity"+tSysUser);
         try {
             //
             List<TSysUser> tSysUserList = tSysUserService.selectAllByEntity(tSysUser);
