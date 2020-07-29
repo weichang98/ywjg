@@ -25,7 +25,13 @@ public class PageResult {
      * 页码总数
      */
     private int pages;
+    /**
+     * 开始行码
+     */
     private int startRow;
+    /**
+     * 结束行码
+     */
     private int endRow;
     /**
      * 数据模型

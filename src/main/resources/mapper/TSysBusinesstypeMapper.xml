@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.system.dao.TSysBusinesstypeMapper">
+
+<sql id="BaseColumnList" >
+        pk_businessType_id,
+        type_name,
+        type_level,
+        whether_null,
+        remarks,
+  </sql>
+    <!--通过主键查询单个-->
+    <select id="selectById" resultType="com.hjy.system.entity.TSysBusinesstype" parameterType="com.hjy.system.entity.TSysBusinesstype">
+        select * from "liuchun"."t_sys_businessType"
+        where "pk_businessType_id" = #{pkBusinesstypeId,jdbcType=VARCHAR}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysBusinesstype" parameterType="com.hjy.system.entity.TSysBusinesstype">
+        select * from "liuchun"."t_sys_businessType"
+        <where>
+            <if test="pkBusinesstypeId != null">
+                and "pk_businessType_id" = #{pkBusinesstypeId,jdbcType=VARCHAR}
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and "type_name" = #{typeName,jdbcType=VARCHAR}
+            </if>
+            <if test="typeLevel != null">
+                and "type_level" = #{typeLevel,jdbcType=INTEGER}
+            </if>
+            <if test="whetherNull != null">
+                and "whether_null" = #{whetherNull,jdbcType=INTEGER}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and "remarks" = #{remarks,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into "liuchun"."t_sys_businessType"(type_name, type_level, whether_null, remarks)
+        values (#{typeName}, #{typeLevel}, #{whetherNull}, #{remarks})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysBusinesstype">
+        insert into "liuchun"."t_sys_businessType"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="pkBusinesstypeId != null and pkBusinesstypeId != ''">
+                "pk_businessType_id",
+        </if>
+        <if test="typeName != null and typeName != ''">
+                "type_name",
+        </if>
+        <if test="typeLevel != null">
+                "type_level",
+        </if>
+        <if test="whetherNull != null">
+                "whether_null",
+        </if>
+        <if test="remarks != null and remarks != ''">
+                "remarks",
+        </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pkBusinesstypeId != null and pkBusinesstypeId != ''">
+                #{pkBusinesstypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="typeName != null and typeName != ''">
+                #{typeName,jdbcType=VARCHAR},
+            </if>
+                    <if test="typeLevel != null">
+                #{typeLevel,jdbcType=INTEGER},
+            </if>
+                    <if test="whetherNull != null">
+                #{whetherNull,jdbcType=INTEGER},
+            </if>
+                    <if test="remarks != null and remarks != ''">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+                </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateById" parameterType="com.hjy.system.entity.TSysBusinesstype">
+        update "liuchun"."t_sys_businessType"
+        <set>
+            <if test="typeName != null and typeName != ''">
+                "type_name" = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeLevel != null">
+                "type_level" = #{typeLevel,jdbcType=INTEGER},
+            </if>
+            <if test="whetherNull != null">
+                "whether_null" = #{whetherNull,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                "remarks" = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where "pk_businessType_id" = #{pkBusinesstypeId,jdbcType=VARCHAR}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="java.lang.String">
+        delete from "liuchun"."t_sys_businessType" where "pk_businessType_id" = #{pkBusinesstypeId,jdbcType=VARCHAR}
+    </delete>
+    <!--查询所有行数据-->
+    <select id="selectAll" resultType="com.hjy.system.entity.TSysBusinesstype">
+        select * from "liuchun"."t_sys_businessType"
+    </select>
+
+</mapper>

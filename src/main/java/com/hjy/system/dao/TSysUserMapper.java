@@ -1,5 +1,7 @@
 package com.hjy.system.dao;
 
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.system.entity.TSysUser;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -67,4 +69,9 @@ public interface TSysUserMapper {
      * @param fk_user_id
      */
     int deleteUserRoleByUserId(@Param("fkUserId")String fk_user_id);
+    /**
+     * 分页查询所有行数据
+     * @return 对象列表
+     */
+    PageResult selectAllPage(PageRequest pageRequest);
 }

@@ -1,9 +1,15 @@
 package com.hjy.system.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.page.PageObjectUtils;
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
+import com.hjy.common.utils.page.PageUtils;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.dao.TSysUserMapper;
 import com.hjy.system.service.TSysUserService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -91,5 +97,12 @@ public class TSysUserServiceImpl implements TSysUserService {
     @Override
     public int deleteUserRoleByUserId(String fk_user_id) {
         return tSysUserMapper.deleteUserRoleByUserId(fk_user_id);
+    }
+
+    @Override
+    public PageResult selectAllPage(PageRequest pageRequest) {
+        PageRequest pageRequest2 = PageObjectUtils.getRequest(pageRequest);
+        System.err.println("pageRequest"+pageRequest2);
+        return tSysUserMapper.selectAllPage(pageRequest2);
     }
 }

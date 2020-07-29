@@ -219,5 +219,12 @@
     <select id="selectUserRoleByUserId" resultType="java.lang.String" parameterType="java.lang.String">
         select "fk_role_id" from "liuchun"."re_user_role" where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
     </select>
+    <select id="selectAllPage" resultType="com.hjy.common.utils.page.PageResult" parameterType="com.hjy.common.utils.page.PageRequest">
+<!--        select t.*-->
+<!--        from (select rownum rn, u.*-->
+<!--        from "liuchun"."t_sys_user" u-->
+<!--        where rownum <=#{pageSize}) t-->
+<!--        where t.rn >= #{startRow}-->
+    </select>
 
 </mapper>

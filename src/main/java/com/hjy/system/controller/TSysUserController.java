@@ -3,6 +3,8 @@ package com.hjy.system.controller;
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.system.entity.ReUserRole;
 import com.hjy.system.entity.TSysRole;
 import com.hjy.system.entity.TSysUser;
@@ -69,13 +71,18 @@ public class TSysUserController {
      * 2 查询所有数据
      * @return 所有数据
      */
-    @GetMapping("/system/user/list")
-    public CommonResult tSysUserList() throws FebsException{
+    @PostMapping("/system/user/list")
+    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest) throws FebsException{
+        System.err.println("pageRequest"+pageRequest);
         try {
             //
-            List<TSysUser> tSysUserList = tSysUserService.selectAll();
-            System.err.println(tSysUserList);
-            return new CommonResult(200,"success","查询数据成功!",tSysUserList);
+//            List<TSysUser> tSysUserList = tSysUserService.selectAll();
+            PageResult result = tSysUserService.selectAllPage(pageRequest);
+            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("tSysUserList",tSysUserList);
+            jsonObject.put("tSysUserList",result.getContent());
+//            System.err.println(tSysUserList);
+            return new CommonResult(200,"success","查询数据成功!",jsonObject);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);
@@ -86,7 +93,7 @@ public class TSysUserController {
      * 2 通过实体查询所有数据
      * @return 所有数据
      */
-    @GetMapping("/system/user/listByEntity")
+    @PostMapping("/system/user/listByEntity")
     public CommonResult tSysUserListByEntity(@RequestBody TSysUser tSysUser) throws FebsException{
         System.err.println("listByEntity"+tSysUser);
         try {
@@ -124,7 +131,7 @@ public class TSysUserController {
      * 4 通过主键查询单条数据
      * @return 单条数据
      */
-    @GetMapping("/system/user/getOne")
+    @PostMapping("/system/user/getOne")
     public CommonResult tSysUsergetOne(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));

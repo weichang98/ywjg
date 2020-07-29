@@ -1,5 +1,7 @@
 package com.hjy.system.service;
 
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.system.entity.TSysUser;
 import java.util.List;
 
@@ -59,4 +61,9 @@ public interface TSysUserService {
      * 通过userId删除已分配角色数据
      */
     int deleteUserRoleByUserId(String fk_user_id);
+    /**
+     * 分页查询所有数据
+     * @return list
+     */
+    PageResult selectAllPage(PageRequest pageRequest);
 }

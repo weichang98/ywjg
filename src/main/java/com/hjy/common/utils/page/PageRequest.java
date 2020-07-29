@@ -15,5 +15,12 @@ public class PageRequest {
      * 每页数量
      */
     private int pageSize;
-
+    /**
+     * 起始行页码
+     */
+    private int startRow;
+    /**
+     * 结束行页码
+     */
+    private int endtRow;
 }
