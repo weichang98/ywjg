@@ -2,36 +2,40 @@ package com.hjy.hall.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
-import com.hjy.hall.entity.THallJiashizheng;
-import com.hjy.hall.service.THallJiashizhengService;
+import com.hjy.common.utils.IDUtils;
+import com.hjy.hall.entity.THallQueue;
+import com.hjy.hall.entity.THallTakenumber;
+import com.hjy.hall.service.THallTakenumberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.hjy.common.domin.CommonResult;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * (THallJiashizheng)表控制层
+ * (THallTakenumber)表控制层
  *
  * @author makejava
- * @since 2020-07-27 14:17:45
+ * @since 2020-07-29 10:28:25
  */
 @Slf4j
 @RestController
-public class THallJiashizhengController {
+public class THallTakenumberController {
     /**
      * 服务对象
      */
     @Autowired
-    private THallJiashizhengService tHallJiashizhengService;
+    private THallTakenumberService tHallTakenumberService;
 
     /**
      * 1 跳转到新增页面
      */
-    @GetMapping(value = "/hall/jiashizheng/addPage")
-    public CommonResult tHallJiashizhengAddPage() throws FebsException {
+    @GetMapping(value = "/hall/takenumber/addPage")
+    public CommonResult tHallTakenumberAddPage() throws FebsException {
         try {
             //
             return new CommonResult(200, "success", "成功!", null);
@@ -45,15 +49,15 @@ public class THallJiashizhengController {
     /**
      * 1 新增数据
      *
-     * @param tHallJiashizheng 实体对象
+     * @param tHallTakenumber 实体对象
      * @return 新增结果
      */
-    @PostMapping("/hall/jiashizheng/add")
-    public CommonResult tHallJiashizhengAdd(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
-        System.err.println(tHallJiashizheng);
+    @PostMapping("/hall/takenumber/add")
+    public CommonResult tHallTakenumberAdd(@RequestBody THallTakenumber tHallTakenumber) throws FebsException {
+        System.err.println(tHallTakenumber);
         try {
             //
-            tHallJiashizhengService.insert(tHallJiashizheng);
+            tHallTakenumberService.insert(tHallTakenumber);
             return new CommonResult(200, "success", "数据添加成功!", null);
         } catch (Exception e) {
             String message = "数据添加失败";
@@ -67,13 +71,13 @@ public class THallJiashizhengController {
      *
      * @return 所有数据
      */
-    @GetMapping("/hall/jiashizheng/list")
-    public CommonResult tHallJiashizhengList() throws FebsException {
+    @GetMapping("/hall/takenumber/list")
+    public CommonResult tHallTakenumberList() throws FebsException {
         try {
             //
-            List<THallJiashizheng> tHallJiashizhengList = tHallJiashizhengService.selectAll();
-            System.err.println(tHallJiashizhengList);
-            return new CommonResult(200, "success", "查询数据成功!", tHallJiashizhengList);
+            List<THallTakenumber> tHallTakenumberList = tHallTakenumberService.selectAll();
+            System.err.println(tHallTakenumberList);
+            return new CommonResult(200, "success", "查询数据成功!", tHallTakenumberList);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);
@@ -86,13 +90,13 @@ public class THallJiashizhengController {
      *
      * @return 所有数据
      */
-    @GetMapping("/hall/jiashizheng/listByEntity")
-    public CommonResult tHallJiashizhengListByEntity(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
+    @GetMapping("/hall/takenumber/listByEntity")
+    public CommonResult tHallTakenumberListByEntity(@RequestBody THallTakenumber tHallTakenumber) throws FebsException {
         try {
             //
-            List<THallJiashizheng> tHallJiashizhengList = tHallJiashizhengService.selectAllByEntity(tHallJiashizheng);
-            System.err.println(tHallJiashizhengList);
-            return new CommonResult(200, "success", "查询数据成功!", tHallJiashizhengList);
+            List<THallTakenumber> tHallTakenumberList = tHallTakenumberService.selectAllByEntity(tHallTakenumber);
+            System.err.println(tHallTakenumberList);
+            return new CommonResult(200, "success", "查询数据成功!", tHallTakenumberList);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);
@@ -105,13 +109,13 @@ public class THallJiashizhengController {
      *
      * @return 删除结果
      */
-    @DeleteMapping("/hall/jiashizheng/del")
-    public CommonResult tHallJiashizhengDel(@RequestBody String parm) throws FebsException {
+    @DeleteMapping("/hall/takenumber/del")
+    public CommonResult tHallTakenumberDel(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
-        String idStr = String.valueOf(jsonObject.get("pkJiashiId"));
+        String idStr = String.valueOf(jsonObject.get("pkTakenumId"));
         try {
             //
-            tHallJiashizhengService.deleteById(idStr);
+            tHallTakenumberService.deleteById(idStr);
             return new CommonResult(200, "success", "数据删除成功!", null);
         } catch (Exception e) {
             String message = "数据删除失败";
@@ -125,15 +129,15 @@ public class THallJiashizhengController {
      *
      * @return 单条数据
      */
-    @GetMapping("/hall/jiashizheng/getOne")
-    public CommonResult tHallJiashizhenggetOne(@RequestBody String parm) throws FebsException {
+    @GetMapping("/hall/takenumber/getOne")
+    public CommonResult tHallTakenumbergetOne(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
-        String idStr = String.valueOf(jsonObject.get("pkJiashiId"));
+        String idStr = String.valueOf(jsonObject.get("pkTakenumId"));
         try {
             //
-            THallJiashizheng tHallJiashizheng = tHallJiashizhengService.selectById(idStr);
-            System.err.println(tHallJiashizheng);
-            return new CommonResult(200, "success", "数据获取成功!", tHallJiashizheng);
+            THallTakenumber tHallTakenumber = tHallTakenumberService.selectById(idStr);
+            System.err.println(tHallTakenumber);
+            return new CommonResult(200, "success", "数据获取成功!", tHallTakenumber);
         } catch (Exception e) {
             String message = "数据获取失败";
             log.error(message, e);
@@ -144,15 +148,15 @@ public class THallJiashizhengController {
     /**
      * 4 修改数据
      *
-     * @param tHallJiashizheng 实体对象
+     * @param tHallTakenumber 实体对象
      * @return 修改结果
      */
-    @PutMapping("/hall/jiashizheng/update")
-    public CommonResult tHallJiashizhengUpdate(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
-        System.err.println(tHallJiashizheng);
+    @PutMapping("/hall/takenumber/update")
+    public CommonResult tHallTakenumberUpdate(@RequestBody THallTakenumber tHallTakenumber) throws FebsException {
+        System.err.println(tHallTakenumber);
         try {
             //
-            tHallJiashizhengService.updateById(tHallJiashizheng);
+            tHallTakenumberService.updateById(tHallTakenumber);
             return new CommonResult(200, "success", "修改成功!", null);
         } catch (Exception e) {
             String message = "修改失败";
@@ -160,5 +164,7 @@ public class THallJiashizhengController {
             throw new FebsException(message);
         }
     }
+
+
 
 }
