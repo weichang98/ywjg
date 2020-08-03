@@ -59,4 +59,6 @@ public interface THallQueueService {
      */
     List<THallQueue> selectAllByEntity(THallQueue tHallQueue);
 
+    THallQueue getByOrdinalAndDatestr(String Ordinal,String DateStr);
+
 }

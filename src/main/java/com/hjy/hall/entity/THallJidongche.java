@@ -1,8 +1,11 @@
 package com.hjy.hall.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * (THallJidongche)实体类
@@ -49,5 +52,15 @@ public class THallJidongche implements Serializable {
     /**
      * 退办时间
      */
-    private Object withdrawTime;
+    private Date withdrawTime;
+    /**
+     * 查询开始时间
+     */
+    private Date startTime;
+    /**
+     * 查询结束时间
+     */
+    private Date endTime;
+
+
 }

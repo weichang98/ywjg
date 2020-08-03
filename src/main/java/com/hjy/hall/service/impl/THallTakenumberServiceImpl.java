@@ -92,4 +92,26 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
     public int count(){
         return tHallTakenumberMapper.count();
     };
+
+    /**
+     * 查询窗口需要办理业务列表
+     *
+     * @return 对象列表
+     */
+    @Override
+    public String queryNumList(String type) {
+        return this.tHallTakenumberMapper.queryNumList(type);
+    }
+
+
+    /**
+     * 查询窗口需要办理业务列表
+     *
+     * @return 对象列表
+     */
+    @Override
+    public THallTakenumber getByOrdinal(String Ordinal) {
+        return this.tHallTakenumberMapper.getByOrdinal(Ordinal);
+    }
+
 }

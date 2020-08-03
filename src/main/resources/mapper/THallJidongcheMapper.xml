@@ -34,7 +34,7 @@
                 and "withdraw_type" = #{withdrawType,jdbcType=VARCHAR}
             </if>
             <if test="applicant != null and applicant != ''">
-                and "applicant" = #{applicant,jdbcType=VARCHAR}
+                and "applicant" like '%${applicant}%'
             </if>
             <if test="businessType != null and businessType != ''">
                 and "business_type" = #{businessType,jdbcType=VARCHAR}
@@ -43,16 +43,19 @@
                 and "number_type" = #{numberType,jdbcType=VARCHAR}
             </if>
             <if test="number != null and number != ''">
-                and "number" = #{number,jdbcType=VARCHAR}
+                and "number" like '%${number}%'
             </if>
             <if test="lack != null and lack != ''">
                 and "lack" = #{lack,jdbcType=VARCHAR}
             </if>
             <if test="handlePeople != null and handlePeople != ''">
-                and "handle_people" = #{handlePeople,jdbcType=VARCHAR}
+                and "handle_people" like '%${handlePeople}%'
             </if>
-            <if test="withdrawTime != null">
-                and "withdraw_time" = #{withdrawTime,jdbcType=DATE}
+            <if test="starTime != null">
+                and  to_char("withdraw_time",'yyyy-mm-dd') >= '${starTime}'
+            </if>
+            <if test="endTime != null">
+                and  to_char("withdraw_time",'yyyy-mm-dd') &lt;= '${endTime}'
             </if>
         </where>
     </select>

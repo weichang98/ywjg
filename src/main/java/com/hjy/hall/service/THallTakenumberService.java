@@ -1,6 +1,7 @@
 package com.hjy.hall.service;
 
 import com.hjy.hall.entity.THallTakenumber;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,4 +62,13 @@ public interface THallTakenumberService {
 
 
     int count();
+
+    /**
+     * 查询窗口需要办理业务列表
+     *
+     * @return list
+     */
+    String queryNumList(String type);
+
+    THallTakenumber getByOrdinal(String Ordinal);
 }

@@ -1,6 +1,7 @@
 package com.hjy.hall.dao;
 
 import com.hjy.hall.entity.THallQueue;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -60,4 +61,6 @@ public interface THallQueueMapper {
      * @return 对象列表
      */
     List<THallQueue> selectAllByEntity(THallQueue tHallQueue);
+
+    THallQueue getByOrdinalAndDatestr(@Param("Ordinal") String Ordinal,@Param("DateStr") String DateStr);
 }

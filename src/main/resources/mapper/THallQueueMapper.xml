@@ -226,4 +226,10 @@
         select * from "c##root"."t_hall_queue"
     </select>
 
+    <select id="getByOrdinalAndDatestr" resultType="com.hjy.hall.entity.THallQueue">
+        SELECT * FROM "c##root"."t_hall_queue"
+    WHERE "ordinal"= #{Ordinal}
+    and to_char("get_time",'yyyy-mm-dd')='${DateStr}'
+    </select>
+
 </mapper>

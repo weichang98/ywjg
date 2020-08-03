@@ -82,4 +82,9 @@ public class THallQueueServiceImpl implements THallQueueService {
     public List<THallQueue> selectAllByEntity(THallQueue tHallQueue) {
         return this.tHallQueueMapper.selectAllByEntity(tHallQueue);
     }
+
+    @Override
+    public THallQueue getByOrdinalAndDatestr(String Ordinal, String DateStr) {
+        return this.tHallQueueMapper.getByOrdinalAndDatestr(Ordinal,DateStr);
+    }
 }

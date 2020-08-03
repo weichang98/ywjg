@@ -1,6 +1,7 @@
 package com.hjy.hall.dao;
 
 import com.hjy.hall.entity.THallTakenumber;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -68,4 +69,13 @@ public interface THallTakenumberMapper {
      * @return 号码
      */
     int count( );
+
+    /**
+     * 查询所有行数据
+     *
+     * @return 对象列表
+     */
+    String queryNumList(@Param("ordinal") String type);
+
+    THallTakenumber getByOrdinal(@Param("Ordinal") String Ordinal);
 }

@@ -112,4 +112,22 @@
       select count(*) from "c##root"."t_hall_takeNumber"
     </select>
 
+    <select id="queryNumList" resultType="java.lang.String" parameterType="java.lang.String">
+  select * from
+        (select "ordinal" from "c##root"."t_hall_takeNumber"
+        <where>
+            <if test="ordinal != null and ordinal != ''">
+                and "ordinal" like  '${ordinal}%'
+            </if>
+        </where>
+        and "flag" = 0
+        ORDER BY "ordinal")
+        where rownum=1
+    </select>
+
+    <select id="getByOrdinal" resultType="com.hjy.hall.entity.THallTakenumber">
+      select * from "c##root"."t_hall_takeNumber"
+      where "ordinal" = #{Ordinal,jdbcType=VARCHAR}
+    </select>
+
 </mapper>
