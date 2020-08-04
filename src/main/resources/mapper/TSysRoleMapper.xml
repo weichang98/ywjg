@@ -189,9 +189,20 @@
 		"re_user_role"."fk_role_id" = "t_sys_role"."pk_role_id"
     where "t_sys_user"."pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
     </select>
-    <select id="selectPermsByRole" resultType="string" parameterType="java.lang.String">
+    <select id="selectPermsCodeByRole" resultType="string" parameterType="java.lang.String">
 SELECT
 	"liuchun"."t_sys_perms"."perms_code"
+FROM
+	"liuchun"."re_role_perms"
+	INNER JOIN
+	"liuchun"."t_sys_perms"
+	ON
+		"re_role_perms"."fk_perms_id" = "t_sys_perms"."pk_perms_id"
+		where "re_role_perms"."fk_role_id" =#{fkRoleId}
+    </select>
+    <select id="selectPermsByRole" resultType="com.hjy.system.entity.TSysPerms">
+SELECT
+	"liuchun"."t_sys_perms".*
 FROM
 	"liuchun"."re_role_perms"
 	INNER JOIN

@@ -8,8 +8,10 @@ import java.util.List;
 public class ActiveUser {
     /**  */
     private static final long serialVersionUID = -4500748422849176791L;
-    /** 用户id（主键） */
-    private int userId;
+    /** 用户id*/
+    private String userId;
+    /** tokenId*/
+    private String tokenId;
     /** 用户姓名 */
     private String username;
     /** 用户密码 */
@@ -33,5 +35,5 @@ public class ActiveUser {
     //权限类型
     private String permsType;
     private List<TSysPerms> menu;
-    private List<TSysPerms> permission;
+    private List<String> permsCode;
 }

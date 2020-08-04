@@ -97,10 +97,15 @@ public interface TSysRoleMapper {
      */
     TSysRole selectRoleByUserId(@Param("pkUserId")String pkUserId);
     /**
+     * 通过roleid获取权限码信息
+     * @param fkRoleId
+     */
+    List<String> selectPermsCodeByRole(@Param("fkRoleId")String fkRoleId);
+    /**
      * 通过roleid获取权限信息
      * @param fkRoleId
      */
-    List<String> selectPermsByRole(@Param("fkRoleId")String fkRoleId);
+    List<TSysPerms> selectPermsByRole(@Param("fkRoleId")String fkRoleId);
 
     List<String> selectUserRole_userIded();
 

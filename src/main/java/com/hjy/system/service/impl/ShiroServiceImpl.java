@@ -7,6 +7,7 @@ import com.hjy.system.dao.TSysRoleMapper;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.dao.TSysUserMapper;
 import com.hjy.system.entity.SysToken;
+import com.hjy.system.entity.TSysPerms;
 import com.hjy.system.entity.TSysRole;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.service.ShiroService;
@@ -53,7 +54,11 @@ public class ShiroServiceImpl implements ShiroService {
 
 
     @Override
-    public List<String> selectPermsByRole(String fkRoleId) {
+    public List<String> selectPermsCodeByRole(String fkRoleId){
+        return tSysRoleMapper.selectPermsCodeByRole(fkRoleId);
+    }
+    @Override
+    public List<TSysPerms> selectPermsByRole(String fkRoleId) {
         return tSysRoleMapper.selectPermsByRole(fkRoleId);
     }
     /**

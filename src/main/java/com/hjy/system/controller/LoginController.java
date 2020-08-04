@@ -3,7 +3,9 @@ package com.hjy.system.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
+import com.hjy.common.utils.IPUtil;
 import com.hjy.common.utils.PasswordEncryptUtils;
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.service.ShiroService;
 import com.hjy.system.service.TSysUserService;
@@ -45,7 +47,7 @@ public class LoginController {
      */
     @ApiOperation(value = "登陆", notes = "参数:用户名 密码")
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody TSysUser tSysUser) {
+    public Map<String, Object> login(@RequestBody TSysUser tSysUser,HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
         boolean rememberMe =true;
         String username = tSysUser.getUsername();
@@ -54,6 +56,7 @@ public class LoginController {
 //        System.err.println("加密密码：--------"+password);
         //用户信息
         TSysUser user = shiroService.selectUserByUsername(username);
+        user.setIp(IPUtil.getIpAddr(request));
         //账号不存在、密码错误
         if (user == null) {
             result.put("code", 444);
@@ -78,9 +81,10 @@ public class LoginController {
      */
     @RequiresPermissions({"index"})
     @PostMapping("/index")
-    public CommonResult tSysUserAdd() throws FebsException {
-
-        return new CommonResult(200,"success","获取数据成功!",null);
+    public CommonResult tSysUserAdd(HttpSession session) throws FebsException {
+        //获取当前登录用户
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        return new CommonResult(200,"success","获取数据成功!",activeUser);
     }
     /**
      *处理登录请求
