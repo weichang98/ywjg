@@ -2,7 +2,11 @@ package com.hjy.system.controller;
 
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
+import com.hjy.system.entity.TSysBusinesstype;
+import com.hjy.system.entity.TSysDept;
 import com.hjy.system.entity.TSysWindow;
+import com.hjy.system.service.TSysBusinesstypeService;
+import com.hjy.system.service.TSysDeptService;
 import com.hjy.system.service.TSysWindowService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,15 +31,27 @@ public class TSysWindowController {
      */
     @Autowired
     private TSysWindowService tSysWindowService;
-
+    @Autowired
+    private TSysBusinesstypeService tSysBusinesstypeService;
+    @Autowired
+    private TSysDeptService tSysDeptService;
     /**
      * 1 跳转到新增页面
      */
      @GetMapping(value = "/system/window/addPage")
      public CommonResult tSysWindowAddPage() throws FebsException {
         try {
-            //
-            return new CommonResult(200,"success","成功!",null);
+            //查询所有业务类型
+            List<TSysBusinesstype> businesstypeList = tSysBusinesstypeService.selectAll();
+            JSONObject json = new JSONObject();
+            List<String> businesstypes = new ArrayList<>();
+            for(TSysBusinesstype obj:businesstypeList){
+                businesstypes.add(obj.getTypeName());
+            }
+            json.put("businesstypeList",businesstypes);
+            List<TSysDept> deptList = tSysDeptService.selectAll();
+            json.put("deptList",deptList);
+            return new CommonResult(200,"success","成功!",json);
         } catch (Exception e) {
             String message = "失败";
             log.error(message, e);
@@ -44,15 +60,14 @@ public class TSysWindowController {
      }
     /**
      * 1 新增数据
-     * @param tSysWindow 实体对象
+     * @param parm
      * @return 新增结果
      */
     @PostMapping("/system/window/add")
-    public CommonResult tSysWindowAdd(@RequestBody TSysWindow tSysWindow) throws FebsException{
-        System.err.println(tSysWindow);
+    public CommonResult tSysWindowAdd(@RequestBody String parm ) throws FebsException{
         try {
-            //
-            tSysWindowService.insert(tSysWindow);
+            //添加窗口数据
+            tSysWindowService.insert(parm);
             return new CommonResult(200,"success","数据添加成功!",null);
         } catch (Exception e) {
             String message = "数据添加失败";

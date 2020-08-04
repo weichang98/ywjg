@@ -182,4 +182,14 @@ public class TSysRoleServiceImpl implements TSysRoleService {
     public int addUserRoleByUserRole(ReUserRole userRole) {
         return tSysRoleMapper.addUserRoleByUserRole(userRole);
     }
+
+    @Override
+    public List<String> selectUserRole_userIded() {
+        return tSysRoleMapper.selectUserRole_userIded();
+    }
+
+    @Override
+    public TSysRole selectRoleByUserId(String pkUserId) {
+        return tSysRoleMapper.selectRoleByUserId(pkUserId);
+    }
 }

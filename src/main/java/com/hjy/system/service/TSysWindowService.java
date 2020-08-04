@@ -1,5 +1,6 @@
 package com.hjy.system.service;
 
+import com.hjy.system.entity.TSysBusinesstype;
 import com.hjy.system.entity.TSysWindow;
 import java.util.List;
 
@@ -22,10 +23,10 @@ public interface TSysWindowService {
 
     /**
      * 新增数据
-     * @param tSysWindow 实例对象
+     * @param parm
      * @return 实例对象
      */
-    int insert(TSysWindow tSysWindow) throws Exception;
+    int insert(String parm) throws Exception;
 
     /**
      * 修改数据

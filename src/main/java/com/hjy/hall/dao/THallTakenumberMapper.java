@@ -78,4 +78,6 @@ public interface THallTakenumberMapper {
     String queryNumList(@Param("ordinal") String type);
 
     THallTakenumber getByOrdinal(@Param("Ordinal") String Ordinal);
+
+    void deleteAll();
 }

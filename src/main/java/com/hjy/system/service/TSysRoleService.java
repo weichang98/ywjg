@@ -84,4 +84,8 @@ public interface TSysRoleService {
      * 添加用户角色
      */
     int addUserRoleByUserRole(ReUserRole userRole);
+
+    List<String> selectUserRole_userIded();
+
+    TSysRole selectRoleByUserId(String pkUserId);
 }

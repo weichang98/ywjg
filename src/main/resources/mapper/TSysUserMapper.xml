@@ -18,6 +18,8 @@
         police_num,
         unit,
         on_line,
+        ip,
+        address,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.system.entity.TSysUser" parameterType="java.lang.String">
@@ -49,13 +51,18 @@
             <if test="onLine != null">
                 and "on_line" = #{onLine,jdbcType=VARCHAR}
             </if>
+            <if test="ip != null">
+                and "ip" = #{ip,jdbcType=VARCHAR}
+            </if><if test="address != null">
+                and "address" = #{address,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert">
-        insert into "liuchun"."t_sys_user"("pk_user_id","username", "password", "last_login_date", "fk_dept_id", "email", "tel", "enable_status", "create_time", "IDcard", "modify_time", "full_name", "police_num", "unit", "on_line")
-        values (#{pkUserId}, #{username}, #{password}, #{lastLoginDate}, #{fkDeptId}, #{email}, #{tel}, #{enableStatus}, #{createTime}, #{IDcard}, #{modifyTime}, #{fullName}, #{policeNum}, #{unit}, #{onLine})
+        insert into "liuchun"."t_sys_user"("pk_user_id","username", "password", "last_login_date", "fk_dept_id", "email", "tel", "enable_status", "create_time", "IDcard", "modify_time", "full_name", "police_num", "unit", "on_line","ip","address")
+        values (#{pkUserId}, #{username}, #{password}, #{lastLoginDate}, #{fkDeptId}, #{email}, #{tel}, #{enableStatus}, #{createTime}, #{IDcard}, #{modifyTime}, #{fullName}, #{policeNum}, #{unit}, #{onLine},#{ip},#{address})
     </insert>
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysUser">
         insert into "liuchun"."t_sys_user"
@@ -104,6 +111,10 @@
         </if>
         <if test="onLine != null">
                 "on_line",
+        </if><if test="ip != null">
+                "ip",
+        </if><if test="address != null">
+                "address",
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -151,6 +162,10 @@
             </if>
                     <if test="onLine != null">
                 #{onLine,jdbcType=VARCHAR},
+            </if><if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if><if test="address != null">
+                #{address,jdbcType=VARCHAR},
             </if>
                 </trim>
     </insert>
@@ -200,6 +215,10 @@
             </if>
             <if test="onLine != null">
                 "on_line" = #{onLine,jdbcType=VARCHAR},
+            </if><if test="ip != null">
+                "ip" = #{ip,jdbcType=VARCHAR},
+            </if><if test="address != null">
+                "address" = #{address,jdbcType=VARCHAR},
             </if>
         </set>
         where "pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
@@ -220,11 +239,18 @@
         select "fk_role_id" from "liuchun"."re_user_role" where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
     </select>
     <select id="selectAllPage" resultType="com.hjy.common.utils.page.PageResult" parameterType="com.hjy.common.utils.page.PageRequest">
-<!--        select t.*-->
-<!--        from (select rownum rn, u.*-->
-<!--        from "liuchun"."t_sys_user" u-->
-<!--        where rownum <=#{pageSize}) t-->
-<!--        where t.rn >= #{startRow}-->
+        select t.*
+        from (select rownum rn, u.*
+        from "liuchun"."t_sys_user" u
+        where rownum &lt;= #{pageSize,jdbcType=INTEGER}) t
+        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
+    </select>
+    <select id="selectByUsername" resultType="com.hjy.system.entity.TSysUser">
+
+    </select>
+    <select id="selectUserByUsername" resultType="com.hjy.system.entity.TSysUser"
+            parameterType="java.lang.String">
+        select * from "liuchun"."t_sys_user" where "username" = #{username,jdbcType=VARCHAR}
     </select>
 
 </mapper>

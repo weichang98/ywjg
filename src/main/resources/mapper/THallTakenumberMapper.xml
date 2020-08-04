@@ -104,6 +104,9 @@
     <delete id="deleteById" parameterType="com.hjy.hall.entity.THallTakenumber">
         delete from "c##root"."t_hall_takeNumber" where "pk_takeNum_id" = #{pkTakenumId,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteAll">
+        delete from "c##root"."t_hall_takeNumber"
+    </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.hall.entity.THallTakenumber">
         select * from "c##root"."t_hall_takeNumber"

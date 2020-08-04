@@ -164,5 +164,44 @@
     <select id="selectUserRoleByrole_id" resultType="java.lang.String" parameterType="java.lang.String">
         select "fk_user_id" from "liuchun"."re_user_role" where "fk_role_id" = #{fkRoleId,jdbcType=VARCHAR}
     </select>
+    <select id="selectRoleIdByUserId" resultType="string">
+        select "liuchun"."re_user_role"."fk_role_id"
+        from "liuchun"."re_user_role"
+        where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectRoleByUserId" resultType="com.hjy.system.entity.TSysRole">
+        SELECT
+	"t_sys_role"."pk_role_id" as "pkRoleId",
+	"t_sys_role"."role_name" as "roleName",
+	"t_sys_role"."role_desc" as "roleDesc",
+	"t_sys_role"."create_date" as "createDate",
+	"t_sys_role"."enable_status" as "enableStatus",
+	"t_sys_role"."modify_time" as "modifyTime"
+    FROM
+	"liuchun"."re_user_role"
+	INNER JOIN
+	"liuchun"."t_sys_user"
+	ON
+		"re_user_role"."fk_user_id" = "t_sys_user"."pk_user_id"
+	INNER JOIN
+	"t_sys_role"
+	ON
+		"re_user_role"."fk_role_id" = "t_sys_role"."pk_role_id"
+    where "t_sys_user"."pk_user_id" = #{pkUserId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectPermsByRole" resultType="string" parameterType="java.lang.String">
+SELECT
+	"liuchun"."t_sys_perms"."perms_code"
+FROM
+	"liuchun"."re_role_perms"
+	INNER JOIN
+	"liuchun"."t_sys_perms"
+	ON
+		"re_role_perms"."fk_perms_id" = "t_sys_perms"."pk_perms_id"
+		where "re_role_perms"."fk_role_id" =#{fkRoleId}
+    </select>
+    <select id="selectUserRole_userIded" resultType="java.lang.String">
+        select "fk_user_id" from "liuchun"."re_user_role" where "fk_role_id" in (select distinct "fk_role_id" from  "liuchun"."re_user_role")
+    </select>
 
 </mapper>

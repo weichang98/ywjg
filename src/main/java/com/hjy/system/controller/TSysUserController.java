@@ -3,17 +3,21 @@ package com.hjy.system.controller;
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.PasswordEncryptUtils;
 import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
-import com.hjy.system.entity.ReUserRole;
-import com.hjy.system.entity.TSysRole;
-import com.hjy.system.entity.TSysUser;
+import com.hjy.system.entity.*;
+import com.hjy.system.service.TSysDeptService;
+import com.hjy.system.service.TSysPermsService;
 import com.hjy.system.service.TSysRoleService;
 import com.hjy.system.service.TSysUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
@@ -35,14 +39,28 @@ public class TSysUserController {
     private TSysUserService tSysUserService;
     @Autowired
     private TSysRoleService tSysRoleService;
+    @Autowired
+    private TSysDeptService tSysDeptService;
+    @Autowired
+    private TSysPermsService tSysPermsService;
+
     /**
      * 1 跳转到新增页面
      */
      @GetMapping(value = "/system/user/addPage")
      public CommonResult tSysUserAddPage() throws FebsException {
         try {
-            //
-            return new CommonResult(200,"success","成功!",null);
+            //查询所有单位列表
+            List<TSysDept> depts = tSysDeptService.selectAll();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("deptList",depts);
+            //所有角色信息
+            List<TSysRole> roleList = tSysRoleService.selectAll();
+            jsonObject.put("roleList",roleList);
+            //所有权限信息
+            List<TSysPerms> perms = tSysPermsService.selectAll();
+            jsonObject.put("permsList",perms);
+            return new CommonResult(200,"success","成功!",jsonObject);
         } catch (Exception e) {
             String message = "失败";
             log.error(message, e);
@@ -54,6 +72,7 @@ public class TSysUserController {
      * @param tSysUser 实体对象
      * @return 新增结果
      */
+    @RequiresPermissions({"user:add"})
     @PostMapping("/system/user/add")
     public CommonResult tSysUserAdd(@RequestBody TSysUser tSysUser) throws FebsException{
         System.err.println(tSysUser);
@@ -71,17 +90,26 @@ public class TSysUserController {
      * 2 查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"user:view"})
     @PostMapping("/system/user/list")
-    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest) throws FebsException{
-        System.err.println("pageRequest"+pageRequest);
+    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest ) throws FebsException{
         try {
             //
-//            List<TSysUser> tSysUserList = tSysUserService.selectAll();
-            PageResult result = tSysUserService.selectAllPage(pageRequest);
+            List<TSysUser> tSysUserList = tSysUserService.selectAll();
+            int total= tSysUserList.size();
+            int pageSize = pageRequest.getPageSize();
+            PageResult result = new PageResult();
+            result.setContent(tSysUserList);
+            result.setTotal(total);
+            result.setPages((int) Math.ceil(total/pageSize));
+            result.setPageSize(pageSize);
+            result.setPageNum(pageRequest.getPageNum());
+//            PageResult result = tSysUserService.selectAllPage(pageRequest);
             JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("tSysUserList",tSysUserList);
-            jsonObject.put("tSysUserList",result.getContent());
-//            System.err.println(tSysUserList);
+            jsonObject.put("PageResult",result);
+            //部门
+            List<TSysDept> depts = tSysDeptService.selectAll();
+            jsonObject.put("depts",depts);
             return new CommonResult(200,"success","查询数据成功!",jsonObject);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -93,6 +121,7 @@ public class TSysUserController {
      * 2 通过实体查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"user:view"})
     @PostMapping("/system/user/listByEntity")
     public CommonResult tSysUserListByEntity(@RequestBody TSysUser tSysUser) throws FebsException{
         System.err.println("listByEntity"+tSysUser);
@@ -112,13 +141,16 @@ public class TSysUserController {
      * 3 删除数据
      * @return 删除结果
      */
+    @RequiresPermissions({"user:del"})
     @DeleteMapping("/system/user/del")
     public CommonResult tSysUserDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
         try {
-            //
+            //删除用户表里的用户
             tSysUserService.deleteById(idStr);
+            //删除用户角色表里的用户
+            tSysUserService.deleteUserRoleByUserId(idStr);
             return new CommonResult(200,"success","数据删除成功!",null);
         } catch (Exception e) {
             String message = "数据删除失败";
@@ -139,7 +171,13 @@ public class TSysUserController {
             //
             TSysUser tSysUser = tSysUserService.selectById(idStr);
             System.err.println(tSysUser);
-            return new CommonResult(200,"success","数据获取成功!",tSysUser);
+            JSONObject jsonObject2 = new JSONObject();
+            jsonObject2.put("tSysUser",tSysUser);
+            List<TSysPerms> perms = tSysPermsService.selectAll();
+            jsonObject2.put("perms",perms);
+            //如果permsType=1为角色权限，permsType=2为自由权限
+            jsonObject2.put("permsType","1");
+            return new CommonResult(200,"success","数据获取成功!",jsonObject2);
         } catch (Exception e) {
             String message = "数据获取失败";
             log.error(message, e);
@@ -152,9 +190,10 @@ public class TSysUserController {
      * @param tSysUser 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"user:update"})
     @PutMapping("/system/user/update")
     public CommonResult tSysUserUpdate(@RequestBody TSysUser tSysUser) throws FebsException{
-        System.err.println(tSysUser);
+        System.err.println("system/user/update:--"+tSysUser);
         try {
             //
             tSysUserService.updateById(tSysUser);
@@ -193,6 +232,7 @@ public class TSysUserController {
     /**
      * 5 分配角色
      */
+    @RequiresPermissions({"user:distributeRole"})
     @PostMapping(value = "/system/user/distributeRole")
     public CommonResult roleDistribute(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
@@ -210,6 +250,30 @@ public class TSysUserController {
             return new CommonResult(200,"success","角色分配成功!",null);
         } catch (Exception e) {
             String message = "角色分配失败！";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+    /**
+     * 6 重置密码
+     * @param parm 参数
+     * @return 修改结果
+     */
+    @PutMapping("/system/user/resetPassword")
+    public CommonResult resetPassword(@RequestBody String parm) throws FebsException{
+        JSONObject json = JSON.parseObject(parm);
+        String pkUserId=String.valueOf(json.get("pk_id"));
+        String username=String.valueOf(json.get("username"));
+        try {
+            //
+            TSysUser tSysUser = new TSysUser();
+            tSysUser.setPkUserId(pkUserId);
+            tSysUser.setUsername(username);
+            tSysUser.setPassword(PasswordEncryptUtils.MyPasswordEncryptUtil(username,"123456"));
+            tSysUserService.updateById(tSysUser);
+            return new CommonResult(200,"success","修改成功!",null);
+        } catch (Exception e) {
+            String message = "修改失败";
             log.error(message, e);
             throw new FebsException(message);
         }

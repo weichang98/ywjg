@@ -2,8 +2,10 @@ package com.hjy.system.service;
 
 
 import com.hjy.system.entity.SysToken;
+import com.hjy.system.entity.TSysRole;
 import com.hjy.system.entity.TSysUser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,25 +14,25 @@ import java.util.Map;
  * @Version 1.0
  */
 public interface ShiroService {
-     /**
-      * Find user by username
-      * @param username
-      * @return
-      */
-     TSysUser findByUsername(String username);
-
-     /**
-      * create token by userId
-      * @param userId
-      * @return
-      */
-     Map<String,Object> createToken(Integer userId);
-
-     /**
-      * logout
-      * @param token
-      */
-     void logout(String token);
+//     /**
+//      * Find user by username
+//      * @param username
+//      * @return
+//      */
+//     TSysUser findByUsername(String username);
+//
+//     /**
+//      * create token by userId
+//      * @param userId
+//      * @return
+//      */
+//     Map<String,Object> createToken(Integer userId);
+//
+//     /**
+//      * logout
+//      * @param token
+//      */
+//     void logout(String token);
 
      /**
       * find token by token
@@ -39,10 +41,18 @@ public interface ShiroService {
       */
      SysToken findByToken(String accessToken);
 
+     //通过角色id从数据库获取权限信息,只含权限码
+     List<String> selectPermsByRole(String fkRoleId);
      /**
-      * find user by userId
-      * @param userId
+      * find user by username
+      * @param username
       * @return
       */
-     TSysUser findByUserId(Integer userId);
+     TSysUser selectUserByUsername(String username);
+
+     Map<String ,Object> createToken(TSysUser user);
+     //从数据库获取角色信息
+     TSysRole selectRoleByUserId(String pkUserId);
+
+     String selectRoleIdByUserId(String pkUserId);
 }

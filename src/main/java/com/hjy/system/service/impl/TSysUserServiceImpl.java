@@ -1,11 +1,10 @@
 package com.hjy.system.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.PasswordEncryptUtils;
 import com.hjy.common.utils.page.PageObjectUtils;
 import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
-import com.hjy.common.utils.page.PageUtils;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.dao.TSysUserMapper;
 import com.hjy.system.service.TSysUserService;
@@ -45,6 +44,11 @@ public class TSysUserServiceImpl implements TSysUserService {
     @Override
     public int insert(TSysUser tSysUser) throws Exception{
         tSysUser.setPkUserId(IDUtils.currentTimeMillis());
+        //加密
+        //默认密码
+        String password = "123456";
+        String passwordMd5 = PasswordEncryptUtils.MyPasswordEncryptUtil(tSysUser.getUsername(),password);
+        tSysUser.setPassword(passwordMd5);
         tSysUser.setCreateTime(new Date());
         tSysUser.setModifyTime(new Date());
         return tSysUserMapper.insertSelective(tSysUser);
@@ -102,7 +106,7 @@ public class TSysUserServiceImpl implements TSysUserService {
     @Override
     public PageResult selectAllPage(PageRequest pageRequest) {
         PageRequest pageRequest2 = PageObjectUtils.getRequest(pageRequest);
-        System.err.println("pageRequest"+pageRequest2);
+        System.err.println("pageRequest------"+pageRequest2);
         return tSysUserMapper.selectAllPage(pageRequest2);
     }
 }

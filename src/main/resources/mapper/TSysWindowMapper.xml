@@ -12,6 +12,9 @@
         operator_time,
         control_card,
         remarks,
+        branch_number,
+        registration_window,
+        com,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.system.entity.TSysWindow" parameterType="com.hjy.system.entity.TSysWindow">
@@ -49,13 +52,21 @@
             <if test="remarks != null and remarks != ''">
                 and "remarks" = #{remarks,jdbcType=VARCHAR}
             </if>
+             <if test="branchNumber != null and branchNumber != ''">
+                and "branch_number" = #{branchNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="registrationWindow != null and registrationWindow != ''">
+            and "registration_window" = #{registrationWindow,jdbcType=VARCHAR}
+        </if><if test="com != null and com != ''">
+            and "com" = #{com,jdbcType=VARCHAR}
+        </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert">
-        insert into "liuchun"."t_sys_window"(dept_name, window_name, ip, business_type, operator_people, operator_time, control_card, remarks)
-        values (#{deptName}, #{windowName}, #{ip}, #{businessType}, #{operatorPeople}, #{operatorTime}, #{controlCard}, #{remarks})
+        insert into "liuchun"."t_sys_window"(dept_name, window_name, ip, business_type, operator_people, operator_time, control_card, remarks,branch_number,registrationWindow,com)
+        values (#{deptName}, #{windowName}, #{ip}, #{businessType}, #{operatorPeople}, #{operatorTime}, #{controlCard}, #{remarks}, #{branchNumber}, #{registrationWindow}, #{com})
     </insert>
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysWindow">
         insert into "liuchun"."t_sys_window"
@@ -87,6 +98,15 @@
         <if test="remarks != null and remarks != ''">
                 "remarks",
         </if>
+        <if test="branchNumber != null and branchNumber != ''">
+                "branch_number",
+        </if>
+        <if test="registrationWindow != null and registrationWindow != ''">
+                 "registration_window",
+        </if>
+        <if test="com != null and com != ''">
+                "com",
+        </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkWindowId != null and pkWindowId != ''">
@@ -95,19 +115,19 @@
             <if test="deptName != null and deptName != ''">
                 #{deptName,jdbcType=VARCHAR},
             </if>
-                    <if test="windowName != null and windowName != ''">
+            <if test="windowName != null and windowName != ''">
                 #{windowName,jdbcType=VARCHAR},
             </if>
-                    <if test="ip != null and ip != ''">
+            <if test="ip != null and ip != ''">
                 #{ip,jdbcType=VARCHAR},
             </if>
-                    <if test="businessType != null and businessType != ''">
+            <if test="businessType != null and businessType != ''">
                 #{businessType,jdbcType=VARCHAR},
             </if>
-                    <if test="operatorPeople != null and operatorPeople != ''">
+            <if test="operatorPeople != null and operatorPeople != ''">
                 #{operatorPeople,jdbcType=VARCHAR},
             </if>
-                    <if test="operatorTime != null">
+            <if test="operatorTime != null">
                 #{operatorTime,jdbcType=TIMESTAMP},
             </if>
                     <if test="controlCard != null and controlCard != ''">
@@ -116,7 +136,16 @@
                     <if test="remarks != null and remarks != ''">
                 #{remarks,jdbcType=VARCHAR},
             </if>
-                </trim>
+            <if test="branchNumber != null and branchNumber != ''">
+                #{branchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="registrationWindow != null and registrationWindow != ''">
+                #{registrationWindow,jdbcType=VARCHAR},
+            </if>
+            <if test="com != null and com != ''">
+                #{com,jdbcType=VARCHAR}
+            </if>
+        </trim>
     </insert>
 
     <!--通过主键修改数据-->
@@ -147,6 +176,14 @@
             <if test="remarks != null and remarks != ''">
                 "remarks" = #{remarks,jdbcType=VARCHAR},
             </if>
+            <if test="branchNumber != null and branchNumber != ''">
+                 "branch_number" = #{branchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="registrationWindow != null and registrationWindow != ''">
+                 "registration_window" = #{registrationWindow,jdbcType=VARCHAR},
+            </if><if test="com != null and com != ''">
+             "com" = #{com,jdbcType=VARCHAR}
+        </if>
         </set>
         where "pk_window_id" = #{pkWindowId,jdbcType=VARCHAR}
     </update>

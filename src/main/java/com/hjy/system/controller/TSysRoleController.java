@@ -76,9 +76,11 @@ public class TSysRoleController {
     public CommonResult tSysRoleList() throws FebsException {
         try {
             //
+            JSONObject jsonObject = new JSONObject();
+            //查询所有角色
             List<TSysRole> tSysRoleList = tSysRoleService.selectAll();
-            System.err.println(tSysRoleList);
-            return new CommonResult(200,"success","查询数据成功!",tSysRoleList);
+            jsonObject.put("roleList",tSysRoleList);
+            return new CommonResult(200,"success","查询数据成功!",jsonObject);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);
@@ -112,9 +114,16 @@ public class TSysRoleController {
     public CommonResult tSysRoleDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
+        if(idStr.equals("1595564064909")){
+            return new CommonResult(444,"error","超级管理员不可删除!",null);
+        }
         try {
-            //
+            //删除角色表里的数据
             tSysRoleService.deleteById(idStr);
+            //删除用户角色表里的数据
+            tSysRoleService.deleteUserRoleByRoleId(idStr);
+            //删除角色权限表里的数据
+            tSysRoleService.deleteRolePermsByRoleId(idStr);
             return new CommonResult(200,"success","数据删除成功!",null);
         } catch (Exception e) {
             String message = "数据删除失败";
@@ -127,7 +136,7 @@ public class TSysRoleController {
      * 4 通过主键查询单条数据
      * @return 单条数据
      */
-    @GetMapping("/system/role/getOne")
+    @PostMapping("/system/role/getOne")
     public CommonResult tSysRolegetOne(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
@@ -167,7 +176,7 @@ public class TSysRoleController {
     @PostMapping("/system/role/distributeUI")
     public CommonResult FPRoleMenuUI(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
-        String roleIdStr=String.valueOf(json.get("fk_role_id"));
+        String roleIdStr=String.valueOf(json.get("pk_id"));
         JSONObject jsonObject = new JSONObject();
         try {
             //通过角色id查找角色
@@ -224,8 +233,10 @@ public class TSysRoleController {
             List<TSysUser> tSysUserList = tSysUserService.selectAll();
             jsonObject.put("userList",tSysUserList);
             //查询已分配的用户角色并进行回显
-            List<String> userRoleList = tSysRoleService.selectUserRoleByrole_id(roleIdStr);
+            List<String> userRoleList = tSysRoleService.selectUserRole_userIded();
+            List<String> userRoleList2 = tSysRoleService.selectUserRoleByrole_id(roleIdStr);
             jsonObject.put("ids",userRoleList);
+            jsonObject.put("idsFP",userRoleList2);
             return new CommonResult(200,"success","获取角色已分配用户成功!",jsonObject);
         } catch (Exception e) {
             String message = "获取角色已分配用户失败";

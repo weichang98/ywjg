@@ -74,4 +74,9 @@ public interface TSysUserMapper {
      * @return 对象列表
      */
     PageResult selectAllPage(PageRequest pageRequest);
+    /**
+     * 通过用户名查询用户信息
+     * @return TSysUser
+     */
+    TSysUser selectUserByUsername(@Param("username")String username);
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * token实体类
@@ -14,32 +15,41 @@ import java.time.LocalDateTime;
 @Data
 public class SysToken implements Serializable {
 
-//    /**
-//     * tokenID
-//     */
-//    @Id
-//    private Integer pkTokenId;
-//    /**
-//     * 用户ID
-//     */
-//    private Integer fkUserId;
     /**
      * tokenID
      */
-//    @Id
-    private Integer UserId;
+    private String pkTokenId;
     /**
-     * token
+     * 用户ID
      */
-    private String token;
-
+    private String fkUserId;
+    /**
+     * tokenID
+     */
+    private String username;
+    /**
+     * password
+     */
+    private String password;
+    /**
+     * ip
+     */
+    private String ip;
+    /**
+     * fullName
+     */
+    private String fullName;
+    /**
+     * policeNum
+     */
+    private String policeNum;
     /**
      * 过期时间
      */
-    private LocalDateTime expireTime;
+    private Date expireTime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 }

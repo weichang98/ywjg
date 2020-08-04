@@ -2,6 +2,7 @@ package com.hjy.system.dao;
 
 import com.hjy.system.entity.ReRolePerms;
 import com.hjy.system.entity.ReUserRole;
+import com.hjy.system.entity.TSysPerms;
 import com.hjy.system.entity.TSysRole;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -90,4 +91,18 @@ public interface TSysRoleMapper {
      * @param userRole 实体对象
      */
     int addUserRoleByUserRole(ReUserRole userRole);
+    /**
+     * 通过userid获取角色信息
+     * @param pkUserId
+     */
+    TSysRole selectRoleByUserId(@Param("pkUserId")String pkUserId);
+    /**
+     * 通过roleid获取权限信息
+     * @param fkRoleId
+     */
+    List<String> selectPermsByRole(@Param("fkRoleId")String fkRoleId);
+
+    List<String> selectUserRole_userIded();
+
+    String selectRoleIdByUserId(@Param("fkUserId")String fkUserId);
 }

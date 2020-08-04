@@ -115,11 +115,12 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(value = AuthorizationException.class)
     public Map<String, String> handleException(AuthorizationException e) {
-        //e.printStackTrace();
+        e.printStackTrace();
         Map<String, String> result = new HashMap<String, String>();
-        result.put("status", "400");
+        result.put("code", "400");
         //获取错误中中括号的内容
         String message = e.getMessage();
+//        System.err.println("message:"+message);
         String msg=message.substring(message.indexOf("[")+1,message.indexOf("]"));
         //判断是角色错误还是权限错误
         if (message.contains("role")) {

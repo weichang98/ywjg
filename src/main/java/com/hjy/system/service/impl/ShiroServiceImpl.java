@@ -1,91 +1,120 @@
-//package com.hjy.system.service.impl;
-//
-//
-//import com.hjy.common.auth.TokenGenerator;
-//import com.hjy.system.dao.SysTokenMapper;
-//import com.hjy.system.dao.UserMapper;
-//import com.hjy.system.entity.SysToken;
-//import com.hjy.system.entity.User;
-//import com.hjy.system.service.ShiroService;
-//import org.springframework.stereotype.Service;
-//
-//import java.time.LocalDateTime;
-//import java.util.HashMap;
-//import java.util.Map;
-//
-///**
-// * @Author 大誌
-// * @Date 2019/3/30 22:18
-// * @Version 1.0
-// */
-//@Service
-//public class ShiroServiceImpl implements ShiroService {
-//    //12小时后失效
-//    private final static int EXPIRE = 12;
-//
-//
-//    private final UserMapper userRepository;
-//    private final SysTokenMapper sysTokenRepository;
-//
-//    public ShiroServiceImpl(UserMapper userRepository, SysTokenMapper sysTokenRepository) {
-//        this.userRepository = userRepository;
-//        this.sysTokenRepository = sysTokenRepository;
-//    }
-//
-//    /**
-//     * 根据username查找用户
-//     *
-//     * @param username
-//     * @return User
-//     */
-//    @Override
-//    public User findByUsername(String username) {
-//        User user = userRepository.findByUsername(username);
-//        return user;
-//    }
-//
-//
-//    @Override
-//    /**
-//     * 生成一个token
-//     *@param  [userId]
-//     *@return Result
-//     */
-//    public Map<String, Object> createToken(Integer userId) {
-//        Map<String, Object> result = new HashMap<>();
-//        //生成一个token
-//        String token = TokenGenerator.generateValue();
-//        //当前时间
-//        LocalDateTime now = LocalDateTime.now();
-//        //过期时间
-//        LocalDateTime expireTime = now.plusHours(EXPIRE);
-//        //判断是否生成过token
-//        SysToken tokenEntity = sysTokenRepository.findByUserId(userId);
-//        if (tokenEntity == null) {
-//            tokenEntity = new SysToken();
-//            tokenEntity.setUserId(userId);
-//            //保存token
-//            tokenEntity.setToken(token);
-//            tokenEntity.setUpdateTime(now);
-//            tokenEntity.setExpireTime(expireTime);
-//        } else {
-//            //更新token
-//            tokenEntity.setToken(token);
-//            tokenEntity.setUpdateTime(now);
-//            tokenEntity.setExpireTime(expireTime);
-//        }
-//        sysTokenRepository.save(tokenEntity);
-//        result.put("token", token);
-//        result.put("expire", expireTime);
-//        return result;
-//    }
-//
-//    /**
-//     * 更新数据库的token，使前端拥有的token失效
-//     * 防止黑客利用token搞事情
-//     *
-//     * @param token
-//     */
+package com.hjy.system.service.impl;
+
+
+import com.hjy.common.auth.TokenGenerator;
+import com.hjy.common.utils.DateUtil;
+import com.hjy.system.dao.TSysRoleMapper;
+import com.hjy.system.dao.TSysTokenMapper;
+import com.hjy.system.dao.TSysUserMapper;
+import com.hjy.system.entity.SysToken;
+import com.hjy.system.entity.TSysRole;
+import com.hjy.system.entity.TSysUser;
+import com.hjy.system.service.ShiroService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Author 大誌
+ * @Date 2019/3/30 22:18
+ * @Version 1.0
+ */
+@Service
+public class ShiroServiceImpl implements ShiroService {
+    //12小时后失效
+    private final static int EXPIRE = 12;
+
+    @Autowired
+    private TSysUserMapper tSysUserMapper;
+    @Autowired
+    private TSysRoleMapper tSysRoleMapper;
+    @Autowired
+    private TSysTokenMapper tSysTokenMapper;
+
+    /**
+     * 根据userid查找角色
+     *
+     * @return User
+     */
+    @Override
+    public TSysRole selectRoleByUserId(String pkUserId) {
+        return tSysRoleMapper.selectRoleByUserId(pkUserId);
+    }
+
+    @Override
+    public String selectRoleIdByUserId(String fkUserId) {
+        return tSysRoleMapper.selectRoleIdByUserId(fkUserId);
+    }
+
+
+    @Override
+    public List<String> selectPermsByRole(String fkRoleId) {
+        return tSysRoleMapper.selectPermsByRole(fkRoleId);
+    }
+    /**
+     * 根据username查找用户
+     * @return User
+     */
+    @Override
+    public TSysUser selectUserByUsername(String username) {
+        return tSysUserMapper.selectUserByUsername(username);
+    }
+
+    /**
+     * 生成一个token
+     *@return Result
+     */
+    @Override
+    public Map<String, Object> createToken(TSysUser tSysUser) {
+        Map<String, Object> result = new HashMap<>();
+        //生成一个token（session）
+        String token = TokenGenerator.generateValue();
+        //当前时间
+        Date now = new Date();
+        //过期时间
+        Date expireTime = null;
+        try {
+            expireTime = DateUtil.addTime(now);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //判断是否生成过token
+        SysToken tokenEntity = tSysTokenMapper.selectByUserId(tSysUser.getPkUserId());
+        if (tokenEntity == null) {
+            tokenEntity = new SysToken();
+            tokenEntity.setFkUserId(tSysUser.getPkUserId());
+            //保存token
+            tokenEntity.setPkTokenId(token);
+            tokenEntity.setUpdateTime(now);
+            tokenEntity.setExpireTime(expireTime);
+            tokenEntity.setUsername(tSysUser.getUsername());
+            tokenEntity.setPassword(tSysUser.getPassword());
+            tokenEntity.setIp(tSysUser.getIp());
+            tokenEntity.setFullName(tSysUser.getFullName());
+            tokenEntity.setPoliceNum(tSysUser.getPoliceNum());
+            tSysTokenMapper.insertToken(tokenEntity);
+        } else {
+            //更新token
+            tokenEntity.setPkTokenId(token);
+            tokenEntity.setUpdateTime(now);
+            tokenEntity.setExpireTime(expireTime);
+            tokenEntity.setIp(tSysUser.getIp());
+            tSysTokenMapper.updateToken(tokenEntity);
+        }
+        result.put("token", token);
+        result.put("expire", expireTime);
+        return result;
+    }
+
+    /**
+     * 更新数据库的token，使前端拥有的token失效
+     * 防止黑客利用token搞事情
+     */
 //    @Override
 //    public void logout(String token) {
 //        SysToken byToken = findByToken(token);
@@ -96,15 +125,11 @@
 //        //使前端获取到的token失效
 //        sysTokenRepository.save(byToken);
 //    }
-//
-//    @Override
-//    public SysToken findByToken(String accessToken) {
-//        return sysTokenRepository.findByToken(accessToken);
-//
-//    }
-//
-//    @Override
-//    public User findByUserId(Integer userId) {
-//        return userRepository.findByUserId(userId);
-//    }
-//}
+
+    @Override
+    public SysToken findByToken(String accessToken) {
+        return tSysTokenMapper.findByToken(accessToken);
+
+    }
+
+}

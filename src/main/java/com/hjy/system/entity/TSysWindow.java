@@ -39,4 +39,15 @@ public class TSysWindow implements Serializable {
         /**
     * 备注
     */    private String remarks;
+    /**
+     * 网点编号
+     */    private String branchNumber;
+     /**
+     * 注册窗口号
+     */
+     private String registrationWindow;
+     /**
+     * 评价器com号
+     */
+     private String com;
 }
