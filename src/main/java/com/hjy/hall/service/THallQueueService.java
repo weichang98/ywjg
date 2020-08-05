@@ -79,7 +79,7 @@ public interface THallQueueService {
     //token
     SysToken findByToken(String accessToken);
     //叫号
-    String call(TSysWindow window );
+    String call(TSysWindow window )  throws Exception;
     //业务查询与时间统计
     THallQueueCount StatisticsTime(THallQueue tHallQueue);
     //设置空号

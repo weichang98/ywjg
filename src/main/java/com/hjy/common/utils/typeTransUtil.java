@@ -1,43 +1,45 @@
 package com.hjy.common.utils;
 
+import com.hjy.system.entity.TSysBusinesstype;
+import com.hjy.system.entity.TSysWindow;
+import com.hjy.system.service.TSysBusinesstypeService;
+import com.hjy.system.service.TSysWindowService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class  typeTransUtil {
 
-   public static List<String> typeTrans(String business_type){
+    @Autowired
+    private TSysBusinesstypeService tSysBusinesstypeService;
 
-       String types[]=business_type.split("/");
-       List<String> typeList=new ArrayList<>();
+    private static typeTransUtil typeTransUtil;
+
+    @PostConstruct
+    public void init() {
+        typeTransUtil= this;
+        typeTransUtil.tSysBusinesstypeService= this.tSysBusinesstypeService;
+    }
+
+   public static List<String> typeTrans(String business_type) throws  Exception{
+       List<TSysBusinesstype> typeList=typeTransUtil.tSysBusinesstypeService.selectAll();//查询数据库所有数据类型
+       String types[]=business_type.split("/");//拿到当前窗口可办理的业务类型，用/分割
+       List<String> typeDealList=new ArrayList<>();
        for(String type : types){
-           String typeTrans="";
-           if("普通车驾管理业务".equals(type)){
-               typeTrans="A";
-               typeList.add(typeTrans);
-           }else if("军转、外籍换证".equals(type)){
-               typeTrans="B";
-               typeList.add(typeTrans);
-           }else if("满分、恢复驾驶证资格考试预约".equals(type)){
-               typeTrans="C";
-               typeList.add(typeTrans);
-           }else if("三平台专用".equals(type)){
-               typeTrans="D";
-               typeList.add(typeTrans);
-           }else if("绿色窗口".equals(type)){
-               typeTrans="E";
-               typeList.add(typeTrans);
-           }else if("业务咨询查询".equals(type)){
-               typeTrans="F";
-               typeList.add(typeTrans);
-           }
+          for(TSysBusinesstype businesstype: typeList){
+              if( businesstype.getTypeName().equals(type)){
+                  typeDealList.add(businesstype.getTypeLevel());
+              }
+          }
        }
-
-       Collections.sort (typeList);
-
-       System.out.print("工具类：该窗口可办理的号码类型有:"+typeList+",应优先办理:"+typeList.get(0)+"\n");
-
-        return  typeList;
+       Collections.sort (typeDealList);
+       System.out.print("工具类：该窗口可办理的号码类型有:"+typeDealList+",应优先办理:"+typeDealList.get(0)+"\n");
+        return  typeDealList;
     }
 }
