@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,7 +92,21 @@ public class THallJidongcheController {
     @GetMapping("/hall/jidongche/listByEntity")
     public CommonResult tHallJidongcheListByEntity(@RequestBody THallJidongche tHallJidongche) throws FebsException {
         try {
-            //
+            //时间域处理
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date startTime=tHallJidongche.getStartTime();
+            Date endTime=tHallJidongche.getEndTime();
+            String endTimeStr = sdf.format(endTime);//date-->String
+            System.out.println(endTimeStr);
+            //将endTime日期加1便于数据库统计
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(endTime);
+            calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
+            endTime = calendar.getTime();//这个时间就是日期向后推一天的结果
+            String startTimeStr=sdf.format(startTime);
+            endTimeStr = sdf.format(endTime);//date-->String
+            System.out.println("时间要大于"+startTimeStr+"小于"+endTimeStr);
+
             List<THallJidongche> tHallJidongcheList = tHallJidongcheService.selectAllByEntity(tHallJidongche);
             System.err.println(tHallJidongcheList);
             return new CommonResult(200, "success", "查询数据成功!", tHallJidongcheList);

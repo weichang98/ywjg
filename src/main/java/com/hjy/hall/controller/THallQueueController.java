@@ -5,16 +5,28 @@ import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.IPUtil;
+import com.hjy.common.utils.TokenUtil;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.entity.THallQueue;
+import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.hall.entity.THallTakenumber;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
+import com.hjy.system.entity.SysToken;
+import com.hjy.system.entity.TSysWindow;
+import com.hjy.system.service.ShiroService;
+import com.hjy.system.service.TSysWindowService;
 import lombok.extern.slf4j.Slf4j;
+import oracle.sql.DATE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.schema.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +46,8 @@ public class THallQueueController {
     private THallQueueService tHallQueueService;
     @Autowired
     private THallTakenumberService tHallTakenumberService;
+    @Autowired
+    private TSysWindowService tSysWindowService;
 
     /**
      * 1 跳转到新增页面
@@ -58,9 +72,7 @@ public class THallQueueController {
      */
     @PostMapping("/hall/queue/add")
     public CommonResult tHallQueueAdd(@RequestBody THallQueue tHallQueue) throws FebsException {
-        System.err.println(tHallQueue);
         try {
-            //
             tHallQueueService.insert(tHallQueue);
             return new CommonResult(200, "success", "数据添加成功!", null);
         } catch (Exception e) {
@@ -78,7 +90,6 @@ public class THallQueueController {
     @GetMapping("/hall/queue/list")
     public CommonResult tHallQueueList() throws FebsException {
         try {
-            //
             List<THallQueue> tHallQueueList = tHallQueueService.selectAll();
             System.err.println(tHallQueueList);
             return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
@@ -97,7 +108,6 @@ public class THallQueueController {
     @GetMapping("/hall/queue/listByEntity")
     public CommonResult tHallQueueListByEntity(@RequestBody THallQueue tHallQueue) throws FebsException {
         try {
-            //
             List<THallQueue> tHallQueueList = tHallQueueService.selectAllByEntity(tHallQueue);
             System.err.println(tHallQueueList);
             return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
@@ -118,7 +128,6 @@ public class THallQueueController {
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr = String.valueOf(jsonObject.get("pkQueueId"));
         try {
-            //
             tHallQueueService.deleteById(idStr);
             return new CommonResult(200, "success", "数据删除成功!", null);
         } catch (Exception e) {
@@ -157,9 +166,7 @@ public class THallQueueController {
      */
     @PutMapping("/hall/queue/update")
     public CommonResult tHallQueueUpdate(@RequestBody THallQueue tHallQueue) throws FebsException {
-        System.err.println(tHallQueue);
         try {
-            //
             tHallQueueService.updateById(tHallQueue);
             return new CommonResult(200, "success", "修改成功!", null);
         } catch (Exception e) {
@@ -171,37 +178,16 @@ public class THallQueueController {
 
 
     /**
-     *  取号
-     *
+     * 取号
      *
      * @return 取号结果
      */
     @PostMapping("/hall/queue/getOrdinal")
     public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
-
         try {
-            //*****取号**************************************
-            int ordinal_num=tHallTakenumberService.count()+1;
-            List<String> type=typeTransUtil.typeTrans(tHallQueue.getBusinessType());
-            String ordinal=type.get(0)+ordinal_num;
-            THallTakenumber takenumber=new THallTakenumber();
-            takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
-            takenumber.setOrdinal(ordinal);
-            takenumber.setIsVip(0);
-            takenumber.setFlag(0);
-            takenumber.setGetTime(new Date());
-            tHallTakenumberService.insert(takenumber);
-            System.err.println("您的号码是:"+ordinal+"号!");
-            //*****取号**************************************
-
-            //*****存储排队信息*******
-            tHallQueue.setGetTime(new Date());
-            tHallQueue.setOrdinal(ordinal);
-            tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
-            tHallQueueService.insert(tHallQueue);
-            //*****存储排队信息*******
-
-            return new CommonResult(200, "success", "取号成功!", "您的号码是:"+ordinal);
+            //业务方法
+            String ordinal = tHallTakenumberService.getOrdinal(tHallQueue);
+            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinal, ordinal);
         } catch (Exception e) {
             String message = "取号失败";
             log.error(message, e);
@@ -212,58 +198,23 @@ public class THallQueueController {
     /**
      * 顺序叫号
      *
-     *
      * @return 叫号结果
      */
     @PostMapping("/hall/queue/call")
-    public CommonResult call() throws FebsException {
+    public CommonResult call(HttpServletRequest request) throws FebsException {
         try {
-            //*****判断当前窗口业务类型，通过token拿到当前窗口名称、工作人员姓名及可办理的业务类型********
-               String agent="工作人员小刘";
-               String window="2号窗口";
-               String businessType="三平台专用/满分、恢复驾驶证资格考试预约";
-            List<String> typeList=typeTransUtil.typeTrans(businessType);//通过此工具类可以将该窗口可办理的业务类型转化为字母显示且已经排序的List集合
-
-            //*****判断该窗口所办理的业务类型是否有号
-            String type="";//type设为实际应该叫号的字母式业务类型
-            int mark=0;//mark为判断该窗口所办理的业务类型是否有号的标识
-
-            for(String typeSingle : typeList){//通过foreach判断是否有号，如果typeList所包含的所有业务类型都在数据库中查询不到号码,则该窗口已无号可办,即typeList.size()= mark
-                if(tHallTakenumberService.queryNumList(typeSingle)!=null) {
-                    type=tHallTakenumberService.queryNumList(typeSingle);
-                    break;
-                }else{
-                    mark++;
-                }
-            }
-            if(typeList.size()==mark){
-                return new CommonResult(200, "success", "该窗口办理业务类型已无号!", "该窗口办理业务类型已无号!");
-            }
-
-                //*********取得应叫的号码
-                String num = tHallTakenumberService.queryNumList(type);
-                System.err.print("呼叫的号码是:"+num);
-                //*********取得应叫的号码
-
-                //*********处理取号表的flag标识
-                THallTakenumber tHallTakenumber=tHallTakenumberService.getByOrdinal(num);
-               tHallTakenumber.setFlag(1);
-               tHallTakenumberService.updateById(tHallTakenumber);
-
-                //*********处理取号表的flag标识
-
-
-                //******更新排队信息表
-            Date date = new Date();//通过当前日期和序号拿到当前号的排队信息
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = formatter.format(date);//format()方法bai将Date转换成指定格式的String
-            THallQueue queueUpdate=tHallQueueService.getByOrdinalAndDatestr(num,dateStr);
-            queueUpdate.setStartTime(new Date());
-            queueUpdate.setWindowName(window);
-            queueUpdate.setAgent(agent);
-            tHallQueueService.updateById(queueUpdate);
-                //******更新排队信息表
-                return new CommonResult(200, "success", "叫号成功!", "请" + num + "到" + window + "进行业务办理");
+            //从token中拿到当前窗口信息
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow windowQuery = new TSysWindow();
+            windowQuery.setIp(ip);
+            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
+            TSysWindow window = windowList.get(0);
+            String windowName = window.getWindowName();
+            //业务方法
+            String num = tHallQueueService.call(window);
+            return new CommonResult(200, "success", windowName + ":" + num, num);
         } catch (Exception e) {
             String message = "叫号失败";
             log.error(message, e);
@@ -272,6 +223,157 @@ public class THallQueueController {
     }
 
 
+    /**
+     * 4 业务时间统计
+     *
+     * @return 统计结果
+     */
+    @PostMapping("/hall/queue/StatisticsTime")
+    public CommonResult StatisticsTime(@RequestBody THallQueue tHallQueue) throws FebsException {
+        try {
+            //业务方法
+            THallQueueCount tHallQueueCount = tHallQueueService.StatisticsTime(tHallQueue);
+            return new CommonResult(200, "success", "查询成功!", tHallQueueCount);
+        } catch (Exception e) {
+            String message = "查询失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 4 办理人员业务量统计
+     *
+     * @return 统计结果
+     */
+    @PostMapping("/hall/queue/StatisticsNum")
+    public CommonResult StatisticsNum(@RequestBody THallQueue tHallQueue) throws FebsException {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date queryStart = tHallQueue.getQueryStart();
+            Date queryEnd = tHallQueue.getQueryEnd();
+            //将endTime日期加1便于数据库统计
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(queryEnd);
+            calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
+            queryEnd = calendar.getTime();//这个时间就是日期向后推一天的结果
+            tHallQueue.setQueryEnd(queryEnd);
+            String queryStartStr = sdf.format(queryStart);
+            String queryEndStr = sdf.format(queryEnd);
+
+            //实际业务量统计
+            List<THallQueueCount> realList = tHallQueueService.realCount(queryStartStr, queryEndStr);
+            //空号统计
+            List<THallQueueCount> nullList = tHallQueueService.nullCount(queryStartStr, queryEndStr);
+            //退办统计
+            List<THallQueueCount> backLsit = tHallQueueService.backCount(queryStartStr, queryEndStr);
+            return new CommonResult(200, "success", "查询成功!", null);
+        } catch (Exception e) {
+            String message = "查询失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 空号
+     *
+     * @return 空号结果
+     */
+    @PostMapping("/hall/queue/nullNum")
+    public CommonResult nullNum(HttpServletRequest request) throws FebsException {
+        try {
+            //从token中拿到当前窗口号
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow windowQuery = new TSysWindow();
+            windowQuery.setIp(ip);
+            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
+            TSysWindow window = windowList.get(0);
+            String windowName = window.getWindowName();
+            //业务方法
+            String ordinal = tHallQueueService.nullNum(window);
+            return new CommonResult(200, "success", ordinal + "设置空号", ordinal);
+        } catch (Exception e) {
+            String message = "设置空号失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 退号
+     *
+     * @return 退号结果
+     */
+    @PostMapping("/hall/queue/backNum")
+    public CommonResult backNum(HttpServletRequest request) throws FebsException {
+        try {
+            //从token中拿到当前窗口号
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow windowQuery = new TSysWindow();
+            windowQuery.setIp(ip);
+            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
+            TSysWindow window = windowList.get(0);
+            String windowName = window.getWindowName();
+            //业务方法
+            String ordinal = tHallQueueService.backNum(window);
+            return new CommonResult(200, "success", ordinal + "退号", ordinal);
+        } catch (Exception e) {
+            String message = "退办失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 办结
+     *
+     * @return 办结结果
+     */
+    @PostMapping("/hall/queue/downNum")
+    public CommonResult downNum(HttpServletRequest request) throws FebsException {
+        try {
+            //从token中拿到当前窗口号
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow windowQuery = new TSysWindow();
+            windowQuery.setIp(ip);
+            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
+            TSysWindow window = windowList.get(0);
+            String windowName = window.getWindowName();
+            String ordinal = tHallQueueService.downNum(window);
+            return new CommonResult(200, "success", ordinal + "办结!", ordinal);
+        } catch (Exception e) {
+            String message = "办结失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 大厅等待人数
+     *
+     * @return 查询结果
+     */
+    @PostMapping("/hall/queue/nowWaitNum")
+    public CommonResult nowWaitNum() throws FebsException {
+        try {
+            THallTakenumber tHallTakenumber=new THallTakenumber();
+            tHallTakenumber.setFlag(0);
+            List<THallTakenumber> takenumberList=tHallTakenumberService.selectAllByEntity(tHallTakenumber);
+            int num=takenumberList.size();
+            return new CommonResult(200, "success", "查询成功!", num);
+        } catch (Exception e) {
+            String message = "查询失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
 
 
 }

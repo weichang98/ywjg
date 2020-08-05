@@ -1,11 +1,16 @@
 package com.hjy.hall.service.impl;
 
+import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.dao.THallTakenumberMapper;
+import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallTakenumber;
+import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +23,8 @@ import java.util.List;
 public class THallTakenumberServiceImpl implements THallTakenumberService {
     @Autowired
     private THallTakenumberMapper tHallTakenumberMapper;
+    @Autowired
+    private THallQueueService tHallQueueService;
 
     /**
      * 通过ID查询单条数据
@@ -112,6 +119,36 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
     @Override
     public THallTakenumber getByOrdinal(String Ordinal) {
         return this.tHallTakenumberMapper.getByOrdinal(Ordinal);
+    }
+
+    /**
+    * 取号
+     *
+     * @return ordinal
+    */
+    @Override
+    public String getOrdinal(THallQueue tHallQueue){
+        //*****取号**************************************
+        int ordinal_num = this.count() + 1;
+        List<String> type = typeTransUtil.typeTrans(tHallQueue.getBusinessType());
+        String ordinal = type.get(0) + ordinal_num;
+        THallTakenumber takenumber = new THallTakenumber();
+        takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
+        takenumber.setOrdinal(ordinal);
+        takenumber.setIsVip(0);
+        takenumber.setFlag(0);
+        takenumber.setGetTime(new Date());
+        this.insert(takenumber);
+        System.err.println("取号：您的号码是:" + ordinal + "号!");
+        //*****取号**************************************
+
+        //*****存储排队信息*******
+        tHallQueue.setGetTime(new Date());
+        tHallQueue.setOrdinal(ordinal);
+        tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
+        tHallQueueService.insert(tHallQueue);
+        //*****存储排队信息*******
+        return ordinal;
     }
 
 }
