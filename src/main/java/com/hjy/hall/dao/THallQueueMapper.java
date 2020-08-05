@@ -1,8 +1,10 @@
 package com.hjy.hall.dao;
 
 import com.hjy.hall.entity.THallQueue;
+import com.hjy.hall.entity.THallQueueCount;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,4 +65,14 @@ public interface THallQueueMapper {
     List<THallQueue> selectAllByEntity(THallQueue tHallQueue);
 
     THallQueue getByOrdinalAndDatestr(@Param("Ordinal") String Ordinal,@Param("DateStr") String DateStr);
+
+    List<THallQueue> queryByTime(@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    THallQueue getNowNum(@Param("windowName") String windowName,@Param("nowDate") String nowDateStr);
+
+    List<THallQueueCount> realCount(@Param("queryStart") String queryStart, @Param("queryEnd") String queryEnd);
+
+    List<THallQueueCount> nullCount(@Param("queryStart")String queryStart, @Param("queryEnd")String queryEnd);
+
+    List<THallQueueCount> backCount(@Param("queryStart")String queryStart, @Param("queryEnd")String queryEnd);
 }

@@ -52,7 +52,7 @@
                 and "handle_people" like '%${handlePeople}%'
             </if>
             <if test="starTime != null">
-                and  to_char("withdraw_time",'yyyy-mm-dd') >= '${starTime}'
+                and  to_char("withdraw_time",'yyyy-mm-dd') >= '${startTime}'
             </if>
             <if test="endTime != null">
                 and  to_char("withdraw_time",'yyyy-mm-dd') &lt;= '${endTime}'

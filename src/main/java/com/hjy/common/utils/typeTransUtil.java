@@ -36,7 +36,7 @@ public class  typeTransUtil {
 
        Collections.sort (typeList);
 
-       System.out.print("该窗口可办理的号码类型有:"+typeList+",应优先办理:"+typeList.get(0)+"\n");
+       System.out.print("工具类：该窗口可办理的号码类型有:"+typeList+",应优先办理:"+typeList.get(0)+"\n");
 
         return  typeList;
     }

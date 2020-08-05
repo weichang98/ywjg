@@ -1,5 +1,6 @@
 package com.hjy.hall.service;
 
+import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallTakenumber;
 import org.apache.ibatis.annotations.Param;
 
@@ -71,4 +72,6 @@ public interface THallTakenumberService {
     String queryNumList(String type);
 
     THallTakenumber getByOrdinal(String Ordinal);
+
+    String getOrdinal(THallQueue tHallQueue);
 }

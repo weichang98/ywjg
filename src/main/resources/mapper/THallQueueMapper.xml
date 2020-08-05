@@ -17,11 +17,12 @@
         get_time,
         start_time,
         end_time,
+        remarks,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
         select
-          pk_queue_id, ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time        from "c##root"."t_hall_queue"
+          pk_queue_id, ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time,remarks        from "c##root"."t_hall_queue"
         where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
@@ -61,14 +62,21 @@
             <if test="bIdcard != null and bIdcard != ''">
                 and "b_Idcard" = #{bIdcard,jdbcType=VARCHAR}
             </if>
-            <if test="getTime != null">
-                and "get_time" = #{getTime,jdbcType=DATE}
-            </if>
+
             <if test="startTime != null">
                 and "start_time" = #{startTime,jdbcType=DATE}
             </if>
             <if test="endTime != null">
                 and "end_time" = #{endTime,jdbcType=DATE}
+            </if>
+            <if test="queryStart != null">
+                and "get_time" >= #{queryStart,jdbcType=DATE}
+            </if>
+            <if test="queryEnd != null">
+                and "get_time"  &lt;= #{queryEnd,jdbcType=DATE}
+            </if>
+            <if test="remarks != null">
+                and  "remarks" = #{remarks,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -123,6 +131,9 @@
         <if test="endTime != null">
                 "end_time",
         </if>
+            <if test="remarks != null">
+                "remarks",
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkQueueId != null and pkQueueId != ''">
@@ -166,6 +177,9 @@
             </if>
                     <if test="endTime != null">
                 #{endTime,jdbcType=DATE},
+            </if>
+            <if test="remarks != null">
+                "remarks" = #{remarks,jdbcType=VARCHAR},
             </if>
                 </trim>
     </insert>
@@ -213,6 +227,9 @@
             <if test="endTime != null">
                 "end_time" = #{endTime,jdbcType=DATE},
             </if>
+            <if test="remarks != null">
+                "remarks" = #{remarks,jdbcType=VARCHAR},
+            </if>
         </set>
         where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
     </update>
@@ -225,11 +242,49 @@
     <select id="selectAll" resultType="com.hjy.hall.entity.THallQueue">
         select * from "c##root"."t_hall_queue"
     </select>
-
+    <!--通过号码和日期查询-->
     <select id="getByOrdinalAndDatestr" resultType="com.hjy.hall.entity.THallQueue">
         SELECT * FROM "c##root"."t_hall_queue"
     WHERE "ordinal"= #{Ordinal}
-    and to_char("get_time",'yyyy-mm-dd')='${DateStr}'
+    AND to_char("get_time",'yyyy-mm-dd')='${DateStr}'
+    </select>
+
+    <select id="queryByTime" resultType="com.hjy.hall.entity.THallQueue">
+        SELECT * FROM "c##root"."t_hall_queue"
+    WHERE "get_time" >= '${startTime}'
+    AND "get_time" &lt;='${endTime}'
+    </select>
+
+    <select id="getNowNum" resultType="com.hjy.hall.entity.THallQueue">
+        SELECT * FROM "c##root"."t_hall_queue"
+        WHERE "window_name" =#{windowName}
+        AND to_char("get_time",'yyyy-mm-dd') = '${nowDate}'
+        AND "end_time" is null
+		AND "remarks" is null
+    </select>
+
+    <select id="realCount" resultType="com.hjy.hall.entity.THallQueueCount">
+        SELECT "agent","window_name","business_type",COUNT("business_type")as "realCount" FROM "c##root"."t_hall_queue"
+        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND "remarks"='办结'
+        GROUP BY "agent","window_name","business_type"
+    </select>
+
+    <select id="nullCount" resultType="com.hjy.hall.entity.THallQueueCount">
+        SELECT "agent","window_name",COUNT("business_type")as "nullCount" FROM "c##root"."t_hall_queue"
+        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND "remarks"='空号'
+        GROUP BY "agent","window_name"
+    </select>
+
+    <select id="backCount" resultType="com.hjy.hall.entity.THallQueueCount">
+        SELECT "agent","window_name",COUNT("business_type")as "backCount" FROM "c##root"."t_hall_queue"
+        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND "remarks"='退办'
+        GROUP BY "agent","window_name"
     </select>
 
 </mapper>

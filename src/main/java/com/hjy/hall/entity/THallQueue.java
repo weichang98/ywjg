@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * (THallQueue)实体类
@@ -39,7 +41,7 @@ public class THallQueue implements Serializable {
     @JsonProperty
     private String aCertificatesType;
     /**
-     * 代理人姓名
+            * 代理人姓名
      */
     @JsonProperty
     private String aName;
@@ -75,4 +77,19 @@ public class THallQueue implements Serializable {
      * 结束时间
      */
     private Date endTime;
+
+    /**
+     * 查询开始时间
+     */
+    private Date queryStart;
+    /**
+     * 查询结束时间
+     */
+    private Date queryEnd;
+    /**
+     * 备注是否为空号或者退办
+     */
+    private String remarks;
+
+
 }
