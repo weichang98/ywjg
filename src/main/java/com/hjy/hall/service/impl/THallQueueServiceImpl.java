@@ -260,7 +260,7 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public String call(TSysWindow window) {
+    public String call(TSysWindow window) throws Exception {
         String agent = window.getOperatorPeople();
         String windowName = window.getWindowName();
         String businessType = window.getBusinessType();
