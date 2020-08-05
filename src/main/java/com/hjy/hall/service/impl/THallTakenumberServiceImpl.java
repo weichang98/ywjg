@@ -129,9 +129,18 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
     @Override
     public String getOrdinal(THallQueue tHallQueue) throws Exception{
         //*****取号**************************************
-        int ordinal_num = this.count() + 1;
+
         List<String> type = typeTransUtil.typeTrans(tHallQueue.getBusinessType());
-        String ordinal = type.get(0) + ordinal_num;
+        int ordinal_num = this.count() + 1;
+        String ordinal="";
+        if(ordinal_num<10){
+             ordinal = type.get(0) +"00"+ ordinal_num;
+        }else if(ordinal_num<=99){
+             ordinal=type.get(0) +"0"+ ordinal_num;
+        }else{
+             ordinal=type.get(0) + ordinal_num;
+        }
+
         THallTakenumber takenumber = new THallTakenumber();
         takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
         takenumber.setOrdinal(ordinal);
