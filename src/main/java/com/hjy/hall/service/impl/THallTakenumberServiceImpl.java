@@ -144,7 +144,6 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
         THallTakenumber takenumber = new THallTakenumber();
         takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
         takenumber.setOrdinal(ordinal);
-        takenumber.setIsVip(0);
         takenumber.setFlag(0);
         takenumber.setGetTime(new Date());
         this.insert(takenumber);
@@ -154,6 +153,7 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
         //*****存储排队信息*******
         tHallQueue.setGetTime(new Date());
         tHallQueue.setOrdinal(ordinal);
+        tHallQueue.setIsVip(0);
         tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
         tHallQueueService.insert(tHallQueue);
         //*****存储排队信息*******

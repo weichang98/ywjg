@@ -24,10 +24,7 @@ public class THallTakenumber implements Serializable {
      * 序号
      */
     private String ordinal;
-    /**
-     * 是否为特呼，0是普通，1是特呼
-     */
-    private Integer isVip;
+
     /**
      * 处理标识，0是未处理，1是已处理
      */

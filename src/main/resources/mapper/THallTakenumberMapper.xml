@@ -5,7 +5,6 @@
 <sql id="BaseColumnList" >
         pk_takeNum_id,
         ordinal,
-        is_vip,
         flag,
         get_time,
   </sql>
@@ -24,9 +23,6 @@
             </if>
             <if test="ordinal != null and ordinal != ''">
                 and "ordinal" = #{ordinal,jdbcType=VARCHAR}
-            </if>
-            <if test="isVip != null">
-                and "is_vip" = #{isVip,jdbcType=INTEGER}
             </if>
             <if test="flag != null">
                 and "flag" = #{flag,jdbcType=INTEGER}
@@ -51,9 +47,6 @@
         <if test="ordinal != null and ordinal != ''">
                 "ordinal",
         </if>
-        <if test="isVip != null">
-                "is_vip",
-        </if>
         <if test="flag != null">
                 "flag",
         </if>
@@ -67,9 +60,6 @@
             </if>
                     <if test="ordinal != null and ordinal != ''">
                 #{ordinal,jdbcType=VARCHAR},
-            </if>
-                    <if test="isVip != null">
-                #{isVip,jdbcType=INTEGER},
             </if>
                     <if test="flag != null">
                 #{flag,jdbcType=INTEGER},
@@ -86,9 +76,6 @@
         <set>
             <if test="ordinal != null and ordinal != ''">
                 "ordinal" = #{ordinal,jdbcType=VARCHAR},
-            </if>
-            <if test="isVip != null">
-                "is_vip" = #{isVip,jdbcType=INTEGER},
             </if>
             <if test="flag != null">
                 "flag" = #{flag,jdbcType=INTEGER},

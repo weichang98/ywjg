@@ -248,6 +248,41 @@ public class THallQueueController {
         }
     }
 
+    /**
+     * 特呼
+     *
+     * @return 叫号结果
+     */
+    @PostMapping("/hall/queue/vipCall")
+    public CommonResult vipCall(HttpServletRequest request,@RequestBody THallQueue tHallQueue) throws FebsException {
+        try {
+            //从token中拿到当前窗口信息
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow windowQuery = new TSysWindow();
+            windowQuery.setIp(ip);
+            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
+            TSysWindow window = windowList.get(0);
+            String windowName = window.getWindowName();
+            //判断是否存在输入的号码
+            String vip_ordinal=tHallQueue.getOrdinal();
+            if(tHallTakenumberService.getByOrdinal(vip_ordinal)==null){
+                return new CommonResult(201, "failed", "特呼的号码不存在！", null);
+            }
+//            if(tHallTakenumberService.getByOrdinal(vip_ordinal).getFlag()==1 ||tHallTakenumberService.getByOrdinal(vip_ordinal).getFlag()==2){
+//                return new CommonResult(201, "failed", "特呼的号码正在处理或已办理", null);
+//            }
+            //业务方法
+            tHallQueueService.vipCall(window,vip_ordinal);
+            return new CommonResult(200, "success", windowName + "特呼:" + vip_ordinal, vip_ordinal);
+        } catch (Exception e) {
+            String message = "叫号失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
 
     /**
      * 4 业务时间统计

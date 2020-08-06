@@ -98,6 +98,9 @@ public class THallQueue implements Serializable {
      * 代办次数
      */
     private Integer agentNum;
-
+    /**
+     * 是否为特呼，0是普通，1是特呼
+     */
+    private Integer isVip;
 
 }

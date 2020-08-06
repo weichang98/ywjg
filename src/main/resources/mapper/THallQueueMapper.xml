@@ -18,6 +18,7 @@
         start_time,
         end_time,
         remarks,
+        is_vip,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
@@ -78,6 +79,9 @@
             <if test="remarks != null">
                 and  "remarks" = #{remarks,jdbcType=VARCHAR}
             </if>
+            <if test="isVip != null">
+                and  "is_vip" = #{isVip,jdbcType=INTEGER}
+            </if>
         </where>
     </select>
 
@@ -134,6 +138,9 @@
             <if test="remarks != null">
                 "remarks",
             </if>
+            <if test="isVip != null">
+                "is_vip",
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkQueueId != null and pkQueueId != ''">
@@ -179,7 +186,10 @@
                 #{endTime,jdbcType=DATE},
             </if>
             <if test="remarks != null">
-                "remarks" = #{remarks,jdbcType=VARCHAR},
+               #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="isVip != null">
+                #{isVip,jdbcType=INTEGER},
             </if>
                 </trim>
     </insert>
@@ -259,8 +269,8 @@
         SELECT * FROM "c##root"."t_hall_queue"
         WHERE "window_name" =#{windowName}
         AND to_char("get_time",'yyyy-mm-dd') = '${nowDate}'
-        AND "end_time" is null
 		AND "remarks" is null
+		or  "remarks" ='特呼'
     </select>
 
     <select id="realCount" resultType="com.hjy.hall.entity.THallQueueCount">
@@ -291,13 +301,13 @@
         select count(*) from "c##root"."t_hall_queue"
         where "b_Idcard"=#{bIdcard,jdbcType=VARCHAR}
         and "a_Idcard" is null
-        and "end_time" is not  null
+        and "remarks" ='办结'
     </select>
 
     <select id="agentNum" resultType="Integer">
         select count(*) from "c##root"."t_hall_queue"
         where "a_Idcard"=#{aIdcard,jdbcType=VARCHAR}
-        and "end_time" is not  null
+        and "remarks" ='办结'
     </select>
 
 

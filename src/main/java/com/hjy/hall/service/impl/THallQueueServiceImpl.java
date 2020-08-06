@@ -2,6 +2,7 @@ package com.hjy.hall.service.impl;
 
 import com.alibaba.druid.sql.visitor.functions.If;
 import com.hjy.common.domin.CommonResult;
+import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.dao.THallQueueMapper;
 import com.hjy.hall.entity.THallQueue;
@@ -14,6 +15,7 @@ import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -208,7 +210,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum = new THallTakenumber();
+        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
@@ -230,7 +232,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum = new THallTakenumber();
+        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
@@ -252,7 +254,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum = new THallTakenumber();
+        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
@@ -267,6 +269,46 @@ public class THallQueueServiceImpl implements THallQueueService {
     @Override
     public int agentNum(THallQueue tHallQueue) {
         return this.tHallQueueMapper.agentNum(tHallQueue);
+    }
+
+    @Override
+    public String vipCall(TSysWindow window, String vip_ordinal) throws  Exception{
+        String agent = window.getOperatorPeople();
+        String windowName = window.getWindowName();
+        String businessType = window.getBusinessType();
+        List<String> typeList = typeTransUtil.typeTrans(businessType);//通过此工具类可以将该窗口可办理的业务类型转化为字母显示且已经排序的List集合
+
+        //*********处理取号表的flag标识
+        THallTakenumber tHallTakenumber = tHallTakenumberService.getByOrdinal(vip_ordinal);
+        tHallTakenumber.setFlag(1);
+        tHallTakenumberService.updateById(tHallTakenumber);
+        //******更新排队信息表
+        Date date = new Date();//通过当前日期和序号拿到当前号的排队信息
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = formatter.format(date);//format()方法bai将Date转换成指定格式的String
+        THallQueue queueVip = this.getByOrdinalAndDatestr(vip_ordinal, dateStr);
+        //需要将endtime置空，queueVIP.setEndTime(null)无用，故新建个对象
+        THallQueue queueinsert=new THallQueue();
+        queueinsert.setPkQueueId(IDUtils.currentTimeMillis());
+        queueinsert.setOrdinal(queueVip.getOrdinal());
+        queueinsert.setWindowName(queueVip.getWindowName());
+        queueinsert.setAgent(queueVip.getAgent());
+        queueinsert.setBusinessType(queueVip.getBusinessType());
+        if(queueVip.getAIdcard()!=null){
+            queueinsert.setAIdcard(queueVip.getAIdcard());
+            queueinsert.setAName(queueVip.getAName());
+            queueinsert.setACertificatesType(queueVip.getACertificatesType());
+        }
+        queueinsert.setBIdcard(queueVip.getBIdcard());
+        queueinsert.setBName(queueVip.getBName());
+        queueinsert.setBCertificatesType(queueVip.getBCertificatesType());
+        queueinsert.setGetTime(queueVip.getGetTime());
+        queueinsert.setStartTime(new Date());
+        queueinsert.setRemarks("特呼");
+        queueinsert.setIsVip(1);
+        this.insert(queueinsert);
+        String message=windowName+"特呼："+vip_ordinal+"号！";
+        return message;
     }
 
     @Override

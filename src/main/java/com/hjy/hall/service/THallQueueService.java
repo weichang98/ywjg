@@ -92,4 +92,6 @@ public interface THallQueueService {
    int handleNum(THallQueue tHallQueue);
     //代办次数
     int agentNum(THallQueue tHallQueue);
+    //特呼
+     String vipCall(TSysWindow window,String vip_ordinal) throws Exception;
 }
