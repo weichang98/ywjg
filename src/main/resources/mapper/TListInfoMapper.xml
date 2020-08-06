@@ -13,11 +13,15 @@
         reason,
         whether_pass,
         approval_people,
+        unit,
+        organization_code,
+        apply_book,
+        code_certificates,
+        operator,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.list.entity.TListInfo" parameterType="com.hjy.list.entity.TListInfo">
-        select
-          pk_list_id, list_type, full_name, Idcard, tel, explain, other, reason, whether_pass, approval_people        from "liuchun"."t_list_info"
+        select * from "liuchun"."t_list_info"
         where "pk_list_id" = #{pkListId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
@@ -33,8 +37,8 @@
             <if test="fullName != null and fullName != ''">
                 and "full_name" = #{fullName,jdbcType=VARCHAR}
             </if>
-            <if test="idcard != null and idcard != ''">
-                and "Idcard" = #{idcard,jdbcType=VARCHAR}
+            <if test="IdCard != null and IdCard != ''">
+                and "Idcard" = #{IdCard,jdbcType=VARCHAR}
             </if>
             <if test="tel != null and tel != ''">
                 and "tel" = #{tel,jdbcType=VARCHAR}
@@ -54,24 +58,34 @@
             <if test="approvalPeople != null and approvalPeople != ''">
                 and "approval_people" = #{approvalPeople,jdbcType=VARCHAR}
             </if>
+            <if test="unit != null and unit != ''">
+                and "unit" = #{unit,jdbcType=VARCHAR}
+            </if><if test="organizationCode != null and organizationCode != ''">
+                and "organization_code" = #{organizationCode,jdbcType=VARCHAR}
+            </if><if test="applyBook != null and applyBook != ''">
+                and "apply_book" = #{applyBook,jdbcType=VARCHAR}
+            </if><if test="codeCertificates != null and codeCertificates != ''">
+                and "code_certificates" = #{codeCertificates,jdbcType=VARCHAR}
+            </if><if test="operator != null and operator != ''">
+                and "operator" = #{operator,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
-    <insert id="insert">
-        insert into "liuchun"."t_list_info"(list_type, full_name, Idcard, tel, explain, other, reason, whether_pass, approval_people)
-        values (#{listType}, #{fullName}, #{idcard}, #{tel}, #{explain}, #{other}, #{reason}, #{whetherPass}, #{approvalPeople})
-    </insert>
     <insert id="insertSelective" parameterType="com.hjy.list.entity.TListInfo">
         insert into "liuchun"."t_list_info"
         <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="pkListId != null and pkListId != ''">
+                "pk_list_id",
+        </if>
         <if test="listType != null and listType != ''">
                 "list_type",
         </if>
         <if test="fullName != null and fullName != ''">
                 "full_name",
         </if>
-        <if test="idcard != null and idcard != ''">
+        <if test="IdCard != null and IdCard != ''">
                 "Idcard",
         </if>
         <if test="tel != null and tel != ''">
@@ -91,17 +105,30 @@
         </if>
         <if test="approvalPeople != null and approvalPeople != ''">
                 "approval_people",
+        </if><if test="unit != null and unit != ''">
+                "unit",
+        </if><if test="organizationCode != null and organizationCode != ''">
+                "organization_code",
+        </if><if test="applyBook != null and applyBook != ''">
+                "apply_book",
+        </if><if test="codeCertificates != null and codeCertificates != ''">
+                "code_certificates",
+        </if><if test="operator != null and operator != ''">
+                "operator",
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-                    <if test="listType != null and listType != ''">
+            <if test="pkListId != null and pkListId != ''">
+                #{pkListId,jdbcType=VARCHAR},
+            </if>
+            <if test="listType != null and listType != ''">
                 #{listType,jdbcType=VARCHAR},
             </if>
                     <if test="fullName != null and fullName != ''">
                 #{fullName,jdbcType=VARCHAR},
             </if>
-                    <if test="idcard != null and idcard != ''">
-                #{idcard,jdbcType=VARCHAR},
+                    <if test="IdCard != null and IdCard != ''">
+                #{IdCard,jdbcType=VARCHAR},
             </if>
                     <if test="tel != null and tel != ''">
                 #{tel,jdbcType=VARCHAR},
@@ -120,6 +147,16 @@
             </if>
                     <if test="approvalPeople != null and approvalPeople != ''">
                 #{approvalPeople,jdbcType=VARCHAR},
+            </if><if test="unit != null and unit != ''">
+                #{unit,jdbcType=VARCHAR},
+            </if><if test="organizationCode != null and organizationCode != ''">
+                #{organizationCode,jdbcType=VARCHAR},
+            </if><if test="applyBook != null and applyBook != ''">
+                #{applyBook,jdbcType=VARCHAR},
+            </if><if test="codeCertificates != null and codeCertificates != ''">
+                #{codeCertificates,jdbcType=VARCHAR},
+            </if><if test="operator != null and operator != ''">
+                #{operator,jdbcType=VARCHAR},
             </if>
                 </trim>
     </insert>
@@ -134,8 +171,8 @@
             <if test="fullName != null and fullName != ''">
                 "full_name" = #{fullName,jdbcType=VARCHAR},
             </if>
-            <if test="idcard != null and idcard != ''">
-                "Idcard" = #{idcard,jdbcType=VARCHAR},
+            <if test="IdCard != null and IdCard != ''">
+                "Idcard" = #{IdCard,jdbcType=VARCHAR},
             </if>
             <if test="tel != null and tel != ''">
                 "tel" = #{tel,jdbcType=VARCHAR},
@@ -155,6 +192,18 @@
             <if test="approvalPeople != null and approvalPeople != ''">
                 "approval_people" = #{approvalPeople,jdbcType=VARCHAR},
             </if>
+            <if test="unit != null and unit != ''">
+                "unit" = #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="organizationCode != null and organizationCode != ''">
+                "organization_code" = #{organizationCode,jdbcType=VARCHAR},
+            </if><if test="applyBook != null and applyBook != ''">
+                "apply_book" = #{applyBook,jdbcType=VARCHAR},
+            </if><if test="codeCertificates != null and codeCertificates != ''">
+                "code_certificates" = #{codeCertificates,jdbcType=VARCHAR},
+            </if><if test="operator != null and operator != ''">
+                "operator" = #{operator,jdbcType=VARCHAR},
+            </if>
         </set>
         where "pk_list_id" = #{pkListId,jdbcType=VARCHAR}
     </update>
@@ -166,6 +215,10 @@
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.list.entity.TListInfo">
         select * from "liuchun"."t_list_info"
+    </select>
+    <select id="selectWaitApproval" resultType="com.hjy.list.entity.TListInfo">
+        select * from "liuchun"."t_list_info"
+        where "t_list_info"."approval_people" is null;
     </select>
 
 </mapper>

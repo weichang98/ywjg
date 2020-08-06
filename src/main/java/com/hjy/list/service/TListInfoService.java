@@ -1,6 +1,8 @@
 package com.hjy.list.service;
 
 import com.hjy.list.entity.TListInfo;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 /**
@@ -53,5 +55,8 @@ public interface TListInfoService {
      * @return list
      */
      List<TListInfo> selectAllByEntity(TListInfo tListInfo)throws Exception;
-     
+
+    List<TListInfo> selectWaitApproval()throws Exception;
+
+    int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception;
 }

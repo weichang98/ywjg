@@ -28,7 +28,7 @@ public class TListInfo implements Serializable {
     /**
      * 身份证
      */
-    private String idcard;
+    private String IdCard;
     /**
      * 联系电话
      */
@@ -53,4 +53,24 @@ public class TListInfo implements Serializable {
      * 审批人
      */
     private String approvalPeople;
+    /**
+     * 单位名称
+     */
+    private String unit;
+    /**
+     * 组织机构代码
+     */
+    private String organizationCode;
+    /**
+     * 申请书
+     */
+    private String applyBook;
+    /**
+     * 组织机构代码证
+     */
+    private String codeCertificates;
+    /**
+     * 操作人
+     */
+    private String operator;
 }

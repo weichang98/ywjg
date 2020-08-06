@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,17 +49,27 @@ public class LoginController {
      */
     @ApiOperation(value = "登陆", notes = "参数:用户名 密码")
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody TSysUser tSysUser,HttpServletRequest request) {
+    public Map<String, Object> login(@RequestBody TSysUser tSysUser,HttpServletRequest request) throws UnknownHostException, SocketException {
         Map<String, Object> result = new HashMap<>();
         boolean rememberMe =true;
         String username = tSysUser.getUsername();
         String passwordN0 = tSysUser.getPassword();
         String password = PasswordEncryptUtils.MyPasswordEncryptUtil(username,passwordN0);
-//        System.err.println("加密密码：--------"+password);
         //用户信息
         TSysUser user = shiroService.selectUserByUsername(username);
-        String ip= IPUtil.getIp();
-        user.setIp(ip);
+        String ip1= IPUtil.getIpAddress1(request);
+        String ip2= IPUtil.getIpAddress2(request);
+        String ip3= IPUtil.getIpAddress3(request);
+        String ip4= IPUtil.getIpAddress4(request);
+        String ip5= IPUtil.getIpAddress5();
+        String ip6= IPUtil.getIpAddress6();
+        System.err.println("ip1：--------"+ip1);
+        System.err.println("ip2：--------"+ip2);
+        System.err.println("ip3：--------"+ip3);
+        System.err.println("ip4：--------"+ip4);
+        System.err.println("ip5：--------"+ip5);
+        System.err.println("ip6：--------"+ip6);
+        user.setIp(ip3);
         //账号不存在、密码错误
         if (user == null) {
             result.put("code", 444);
@@ -79,6 +91,7 @@ public class LoginController {
     /**
      *登录成功
      * @return
+     * throws FebsException
      */
     @RequiresPermissions({"index"})
     @PostMapping("/index")

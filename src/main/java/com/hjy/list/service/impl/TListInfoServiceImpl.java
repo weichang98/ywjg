@@ -1,10 +1,15 @@
 package com.hjy.list.service.impl;
 
+import com.hjy.common.utils.IDUtils;
+import com.hjy.common.utils.file.MyFileUtil;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.list.dao.TListInfoMapper;
 import com.hjy.list.service.TListInfoService;
+import com.hjy.system.entity.ActiveUser;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 /**
@@ -37,6 +42,7 @@ public class TListInfoServiceImpl implements TListInfoService {
      */
     @Override
     public int insert(TListInfo tListInfo) throws Exception{
+        tListInfo.setPkListId(IDUtils.currentTimeMillis());
         return tListInfoMapper.insertSelective(tListInfo);
     }
 
@@ -78,4 +84,25 @@ public class TListInfoServiceImpl implements TListInfoService {
     public List<TListInfo> selectAllByEntity(TListInfo tListInfo) throws Exception{
         return this.tListInfoMapper.selectAllByEntity(tListInfo);
     }
+
+    @Override
+    public List<TListInfo> selectWaitApproval() throws Exception{
+        return tListInfoMapper.selectWaitApproval();
+    }
+
+    @Override
+    public int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception {
+        tListInfo.setPkListId(IDUtils.currentTimeMillis());
+        if(files!=null){
+            String []strings = MyFileUtil.FileUtil(tListInfo.getListType(),files,tListInfo.getIdCard());
+            tListInfo.setApplyBook(strings[0]);
+            tListInfo.setCodeCertificates(strings[1]);
+        }else{
+            tListInfo.setApplyBook(null);
+            tListInfo.setCodeCertificates(null);
+        }
+        System.err.println(tListInfo);
+        return tListInfoMapper.insertSelective(tListInfo);
+    }
+
 }

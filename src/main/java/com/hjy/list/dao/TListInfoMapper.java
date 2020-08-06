@@ -26,7 +26,6 @@ public interface TListInfoMapper {
      * @param tListInfo 实例对象
      * @return 影响行数
      */
-    int insert(TListInfo tListInfo);
     int insertSelective(TListInfo tListInfo);
 
     /**
@@ -57,4 +56,9 @@ public interface TListInfoMapper {
      * @return 对象列表
      */
     List<TListInfo> selectAllByEntity(TListInfo tListInfo);
+    /**
+     * 查询所有待审批数据
+     * @return TListInfo 对象列表
+     */
+    List<TListInfo> selectWaitApproval();
 }

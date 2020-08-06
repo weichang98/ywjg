@@ -7,9 +7,13 @@ import com.hjy.list.service.TListAgentService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hjy.system.entity.ActiveUser;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +35,7 @@ public class TListAgentController {
     /**
      * 1 跳转到新增页面
      */
-     @GetMapping(value = "/tListAgent/addPage")
+     @GetMapping(value = "/agentInfo/addPage")
      public CommonResult tListAgentAddPage() throws FebsException {
         try {
             //
@@ -47,9 +51,12 @@ public class TListAgentController {
      * @param tListAgent 实体对象
      * @return 新增结果
      */
-    @PostMapping("/tListAgent/add")
-    public CommonResult tListAgentAdd(@RequestBody TListAgent tListAgent) throws FebsException{
+    @RequiresPermissions({"agentInfo:add"})
+    @PostMapping("/agentInfo/add")
+    public CommonResult tListAgentAdd(@RequestBody TListAgent tListAgent, HttpSession session) throws FebsException{
         System.err.println(tListAgent);
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        tListAgent.setAgent(activeUser.getFullName());
         try {
             //
             tListAgentService.insert(tListAgent);
@@ -64,7 +71,8 @@ public class TListAgentController {
      * 2 查询所有数据
      * @return 所有数据
      */
-    @GetMapping("/tListAgent/list")
+    @RequiresPermissions({"agentInfo:view"})
+    @GetMapping("/agentInfo/list")
     public CommonResult tListAgentList() throws FebsException{
         try {
             //
@@ -81,7 +89,7 @@ public class TListAgentController {
      * 2 通过实体查询所有数据
      * @return 所有数据
      */
-    @PostMapping("/tListAgent/listByEntity")
+    @PostMapping("/agentInfo/listByEntity")
     public CommonResult tListAgentListByEntity(@RequestBody TListAgent tListAgent) throws FebsException{
         try {
             //
@@ -99,7 +107,8 @@ public class TListAgentController {
      * 3 删除数据
      * @return 删除结果
      */
-    @DeleteMapping("/tListAgent/del")
+    @RequiresPermissions({"agentInfo:del"})
+    @DeleteMapping("/agentInfo/del")
     public CommonResult tListAgentDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
@@ -118,7 +127,7 @@ public class TListAgentController {
      * 4 通过主键查询单条数据
      * @return 单条数据
      */
-    @PostMapping("/tListAgent/getOne")
+    @PostMapping("/agentInfo/getOne")
     public CommonResult tListAgentgetOne(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
@@ -139,7 +148,8 @@ public class TListAgentController {
      * @param tListAgent 实体对象
      * @return 修改结果
      */
-    @PutMapping("/tListAgent/update")
+    @RequiresPermissions({"agentInfo:update"})
+    @PutMapping("/agentInfo/update")
     public CommonResult tListAgentUpdate(@RequestBody TListAgent tListAgent) throws FebsException{
         System.err.println(tListAgent);
         try {

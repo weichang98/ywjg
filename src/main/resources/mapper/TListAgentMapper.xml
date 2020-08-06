@@ -69,6 +69,9 @@
     <insert id="insertSelective" parameterType="com.hjy.list.entity.TListAgent">
         insert into "liuchun"."t_list_agent"
         <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="pkAgentId != null and pkAgentId != ''">
+                "pk_agent_id",
+        </if>
         <if test="businessType != null and businessType != ''">
                 "business_type",
         </if>
@@ -101,7 +104,10 @@
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-                    <if test="businessType != null and businessType != ''">
+            <if test="pkAgentId != null and pkAgentId != ''">
+                #{pk_agent_id,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null and businessType != ''">
                 #{businessType,jdbcType=VARCHAR},
             </if>
                     <if test="aCertificatesType != null and aCertificatesType != ''">

@@ -1,10 +1,13 @@
 package com.hjy.list.service.impl;
 
+import com.hjy.common.utils.IDUtils;
 import com.hjy.list.entity.TListAgent;
 import com.hjy.list.dao.TListAgentMapper;
 import com.hjy.list.service.TListAgentService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +40,8 @@ public class TListAgentServiceImpl implements TListAgentService {
      */
     @Override
     public int insert(TListAgent tListAgent) throws Exception{
+        tListAgent.setPkAgentId(IDUtils.currentTimeMillis());
+        tListAgent.setAddTime(new Date());
         return tListAgentMapper.insertSelective(tListAgent);
     }
 
