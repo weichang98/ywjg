@@ -183,7 +183,7 @@ public class THallQueueController {
     /**
      * 取号页面
      *
-     * @return 取号结果
+     * @return 跳转结果
      */
     @GetMapping("/hall/queue/getOrdinal/page")
     public CommonResult getOrdinalpage () throws FebsException {
@@ -211,11 +211,9 @@ public class THallQueueController {
         System.err.println("11111111111111111111");
         try {
             //业务方法
-            String ordinal = tHallTakenumberService.getOrdinal(tHallQueue);
-            //获取其他数据
-            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("IDCard",);
-            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinal, ordinal);
+
+            THallQueue ordinalQueue = tHallTakenumberService.getOrdinal(tHallQueue);
+            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinalQueue.getOrdinal(), ordinalQueue);
         } catch (Exception e) {
             String message = "取号失败";
             log.error(message, e);

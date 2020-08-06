@@ -90,6 +90,14 @@ public class THallQueue implements Serializable {
      * 备注是否为空号或者退办
      */
     private String remarks;
+    /**
+     * 办理次数
+     */
+    private Integer handleNum;
+    /**
+     * 代办次数
+     */
+    private Integer agentNum;
 
 
 }

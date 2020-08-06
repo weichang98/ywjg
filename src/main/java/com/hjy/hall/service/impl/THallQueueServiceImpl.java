@@ -158,7 +158,7 @@ public class THallQueueServiceImpl implements THallQueueService {
                 //结束时间与备注均为空，则该号正在办理
                 continue;
             }
-            if (queueSingle.getEndTime() == null && "退办".equals(queueSingle.getRemarks())) {
+            if (queueSingle.getEndTime() == null && "退号".equals(queueSingle.getRemarks())) {
                 backMark++;
                 continue;
             }
@@ -226,7 +226,7 @@ public class THallQueueServiceImpl implements THallQueueService {
             String message="已无号";
             return message;
         }
-        nowQueue.setRemarks("退办");
+        nowQueue.setRemarks("退号");
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
@@ -257,6 +257,16 @@ public class THallQueueServiceImpl implements THallQueueService {
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
         return ordinal;
+    }
+
+    @Override
+    public int handleNum(THallQueue tHallQueue) {
+        return this.tHallQueueMapper.handleNum(tHallQueue);
+    }
+
+    @Override
+    public int agentNum(THallQueue tHallQueue) {
+        return this.tHallQueueMapper.agentNum(tHallQueue);
     }
 
     @Override

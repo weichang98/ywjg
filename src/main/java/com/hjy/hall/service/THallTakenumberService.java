@@ -73,5 +73,5 @@ public interface THallTakenumberService {
 
     THallTakenumber getByOrdinal(String Ordinal);
 
-    String getOrdinal(THallQueue tHallQueue) throws Exception;
+    THallQueue getOrdinal(THallQueue tHallQueue) throws Exception;
 }

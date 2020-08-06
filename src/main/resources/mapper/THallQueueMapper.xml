@@ -283,8 +283,22 @@
         SELECT "agent","window_name",COUNT("business_type")as "backCount" FROM "c##root"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        AND "remarks"='退办'
+        AND "remarks"='退号'
         GROUP BY "agent","window_name"
     </select>
+
+    <select id="handleNum" resultType="Integer">
+        select count(*) from "c##root"."t_hall_queue"
+        where "b_Idcard"=#{bIdcard,jdbcType=VARCHAR}
+        and "a_Idcard" is null
+        and "end_time" is not  null
+    </select>
+
+    <select id="agentNum" resultType="Integer">
+        select count(*) from "c##root"."t_hall_queue"
+        where "a_Idcard"=#{aIdcard,jdbcType=VARCHAR}
+        and "end_time" is not  null
+    </select>
+
 
 </mapper>

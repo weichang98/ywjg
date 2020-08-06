@@ -88,4 +88,8 @@ public interface THallQueueService {
     String backNum(TSysWindow window);
     //办结
     String downNum(TSysWindow window);
+    //办理次数
+   int handleNum(THallQueue tHallQueue);
+    //代办次数
+    int agentNum(THallQueue tHallQueue);
 }

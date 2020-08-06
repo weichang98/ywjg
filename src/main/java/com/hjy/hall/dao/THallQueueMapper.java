@@ -75,4 +75,8 @@ public interface THallQueueMapper {
     List<THallQueueCount> nullCount(@Param("queryStart")String queryStart, @Param("queryEnd")String queryEnd);
 
     List<THallQueueCount> backCount(@Param("queryStart")String queryStart, @Param("queryEnd")String queryEnd);
+
+    int handleNum(THallQueue tHallQueue);
+
+    int agentNum(THallQueue tHallQueue);
 }
