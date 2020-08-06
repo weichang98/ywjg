@@ -2,6 +2,7 @@ package com.hjy.system.service;
 
 import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
 import java.util.List;
 
@@ -66,4 +67,8 @@ public interface TSysUserService {
      * @return list
      */
     PageResult selectAllPage(PageRequest pageRequest);
+    /**
+     * 修改密码
+     */
+    int updatePassword(String parm, ActiveUser activeUser) throws Exception;
 }

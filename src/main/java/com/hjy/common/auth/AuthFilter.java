@@ -94,7 +94,6 @@ public class AuthFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 暂时不用
      * token失效时候调用
      */
     @Override

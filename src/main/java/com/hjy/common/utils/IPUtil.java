@@ -1,6 +1,9 @@
 package com.hjy.common.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class IPUtil {
 
@@ -28,6 +31,16 @@ public class IPUtil {
 			ip = request.getRemoteAddr();
 		}
 		return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+	}
+	public static String getIp() {
+		String ip = "";
+		try {
+			InetAddress ip4 = Inet4Address.getLocalHost();
+			ip = ip4.getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return ip;
 	}
 
 }

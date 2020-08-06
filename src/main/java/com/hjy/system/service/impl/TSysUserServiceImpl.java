@@ -1,10 +1,13 @@
 package com.hjy.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.PasswordEncryptUtils;
 import com.hjy.common.utils.page.PageObjectUtils;
 import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.dao.TSysUserMapper;
 import com.hjy.system.service.TSysUserService;
@@ -108,5 +111,30 @@ public class TSysUserServiceImpl implements TSysUserService {
         PageRequest pageRequest2 = PageObjectUtils.getRequest(pageRequest);
         System.err.println("pageRequest------"+pageRequest2);
         return tSysUserMapper.selectAllPage(pageRequest2);
+    }
+
+    @Override
+    public int updatePassword(String parm, ActiveUser activeUser) throws Exception{
+        //用户名
+        String username = activeUser.getUsername();
+        //数据库旧密码
+        String oldPasswordMd5 = activeUser.getPassword();
+        JSONObject json = JSON.parseObject(parm);
+        //输入的旧密码
+        String inputOldPassword = String.valueOf(json.get("oldPassword"));
+        //输入的旧密码加密
+        String inputOldPasswordMd5 = PasswordEncryptUtils.MyPasswordEncryptUtil(username,inputOldPassword);
+
+        if(!inputOldPasswordMd5.equals(oldPasswordMd5)){
+            return 2;
+        }
+        //输入的新密码
+        String inputNewPassword = String.valueOf(json.get("newPassword"));
+        //输入的新密码加密
+        String inputNewPasswordMd5 = PasswordEncryptUtils.MyPasswordEncryptUtil(username,inputNewPassword);
+        TSysUser user = new TSysUser();
+        user.setPkUserId(activeUser.getUserId());
+        user.setPassword(inputNewPasswordMd5);
+        return tSysUserMapper.updateById(user);
     }
 }

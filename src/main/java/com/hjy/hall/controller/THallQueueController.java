@@ -14,8 +14,10 @@ import com.hjy.hall.entity.THallTakenumber;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
 import com.hjy.system.entity.SysToken;
+import com.hjy.system.entity.TSysBusinesstype;
 import com.hjy.system.entity.TSysWindow;
 import com.hjy.system.service.ShiroService;
+import com.hjy.system.service.TSysBusinesstypeService;
 import com.hjy.system.service.TSysWindowService;
 import lombok.extern.slf4j.Slf4j;
 import oracle.sql.DATE;
@@ -48,7 +50,8 @@ public class THallQueueController {
     private THallTakenumberService tHallTakenumberService;
     @Autowired
     private TSysWindowService tSysWindowService;
-
+    @Autowired
+    private TSysBusinesstypeService tSysBusinesstypeService;
     /**
      * 1 跳转到新增页面
      */
@@ -178,15 +181,40 @@ public class THallQueueController {
 
 
     /**
+     * 取号页面
+     *
+     * @return 取号结果
+     */
+    @GetMapping("/hall/queue/getOrdinal/page")
+    public CommonResult getOrdinalpage () throws FebsException {
+        try {
+            //获取业务类型
+            List<TSysBusinesstype> businesstypes = tSysBusinesstypeService.selectAll();
+            List<String> businesstypeList = new ArrayList<>();
+            for(TSysBusinesstype obj :businesstypes){
+                businesstypeList.add(obj.getTypeName());
+            }
+            return new CommonResult(200, "success", "获取业务类型数据成功",businesstypeList);
+        } catch (Exception e) {
+            String message = "获取业务类型数据失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+    /**
      * 取号
      *
      * @return 取号结果
      */
     @PostMapping("/hall/queue/getOrdinal")
     public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
+        System.err.println("11111111111111111111");
         try {
             //业务方法
             String ordinal = tHallTakenumberService.getOrdinal(tHallQueue);
+            //获取其他数据
+            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("IDCard",);
             return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinal, ordinal);
         } catch (Exception e) {
             String message = "取号失败";

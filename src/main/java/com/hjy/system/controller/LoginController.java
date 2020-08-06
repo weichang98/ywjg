@@ -56,7 +56,8 @@ public class LoginController {
 //        System.err.println("加密密码：--------"+password);
         //用户信息
         TSysUser user = shiroService.selectUserByUsername(username);
-        user.setIp(IPUtil.getIpAddr(request));
+        String ip= IPUtil.getIp();
+        user.setIp(ip);
         //账号不存在、密码错误
         if (user == null) {
             result.put("code", 444);
@@ -81,10 +82,25 @@ public class LoginController {
      */
     @RequiresPermissions({"index"})
     @PostMapping("/index")
-    public CommonResult tSysUserAdd(HttpSession session) throws FebsException {
+    public CommonResult index(HttpSession session) throws FebsException {
         //获取当前登录用户
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         return new CommonResult(200,"success","获取数据成功!",activeUser);
+    }
+    /**
+     *退出系统
+     * @return
+     */
+    @PostMapping("/logout")
+    public CommonResult logout() throws FebsException {
+        //清空缓存
+        //取出当前验证主体
+        Subject subject = SecurityUtils.getSubject();
+        //不为空，执行一次logout的操作，将session全部清空
+        if (subject != null) {
+            subject.logout();
+        }
+        return new CommonResult(200,"success","成功退出系统!",null);
     }
     /**
      *处理登录请求

@@ -48,6 +48,7 @@ public class TSysWindowServiceImpl implements TSysWindowService {
     public int insert(String parm) throws Exception{
         TSysWindow tSysWindow = new TSysWindow();
         JSONObject jsonObject = JSON.parseObject(parm);
+        System.err.println(parm);
         String deptName=String.valueOf(jsonObject.get("deptName"));
         String windowName=String.valueOf(jsonObject.get("windowName"));
         String ip=String.valueOf(jsonObject.get("ip"));
@@ -75,8 +76,9 @@ public class TSysWindowServiceImpl implements TSysWindowService {
         if(com != null || com != ""){
             tSysWindow.setCom(com);
         }
+        System.err.println("implement：---"+tSysWindow);
         //业务类型
-        JSONArray jsonArray = jsonObject.getJSONArray("businesstypes");
+        JSONArray jsonArray = jsonObject.getJSONArray("businessTypes");
         String businesstypes = jsonArray.toString();
         List<TSysBusinesstype> businesstypeList = JSONArray.parseArray(businesstypes, TSysBusinesstype.class);
         if(businesstypeList != null){

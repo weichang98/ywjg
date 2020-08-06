@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -262,7 +264,7 @@ public class TSysUserController {
     @PutMapping("/system/user/resetPassword")
     public CommonResult resetPassword(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
-        String pkUserId=String.valueOf(json.get("pk_id"));
+        String pkUserId=String.valueOf(json.get("pkUserId"));
         String username=String.valueOf(json.get("username"));
         try {
             //
@@ -274,6 +276,27 @@ public class TSysUserController {
             return new CommonResult(200,"success","修改成功!",null);
         } catch (Exception e) {
             String message = "修改失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+    /**
+     * 7 修改密码
+     * @return 修改结果
+     */
+    @PutMapping("/system/user/updatePassword")
+    public CommonResult updatePassword(HttpSession session,@RequestBody String parm) throws FebsException{
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        try {
+            //
+            int i = tSysUserService.updatePassword(parm,activeUser);
+            if (i==2) {
+                return new CommonResult(444,"error","旧密码错误!",null);
+            }else {
+                return new CommonResult(200,"success","修改密码成功!",null);
+            }
+        } catch (Exception e) {
+            String message = "修改密码失败";
             log.error(message, e);
             throw new FebsException(message);
         }
