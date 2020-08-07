@@ -8,11 +8,16 @@ import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.IPUtil;
 import com.hjy.common.utils.TokenUtil;
 import com.hjy.common.utils.typeTransUtil;
+import com.hjy.hall.entity.Statistics;
 import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.hall.entity.THallTakenumber;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
+import com.hjy.list.entity.TListAgent;
+import com.hjy.list.entity.TListInfo;
+import com.hjy.list.service.TListAgentService;
+import com.hjy.list.service.TListInfoService;
 import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysBusinesstype;
 import com.hjy.system.entity.TSysWindow;
@@ -52,6 +57,10 @@ public class THallQueueController {
     private TSysWindowService tSysWindowService;
     @Autowired
     private TSysBusinesstypeService tSysBusinesstypeService;
+    @Autowired
+    private TListAgentService tListAgentService;
+    @Autowired
+    private TListInfoService tListInfoService;
     /**
      * 1 跳转到新增页面
      */
@@ -208,11 +217,42 @@ public class THallQueueController {
      */
     @PostMapping("/hall/queue/getOrdinal")
     public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
-        System.err.println("11111111111111111111");
         try {
-            //业务方法
+            //********查询代理次数
+            int handleNum=tHallQueueService.handleNum(tHallQueue);
+            int agentNum = tHallQueueService.agentNum(tHallQueue);
 
+            //查询办理本人是否在黑名单中
+            TListInfo tListInfoB=new TListInfo();
+            tListInfoB.setIdCard(tHallQueue.getBIdcard());
+            List<TListInfo> infoListB=tListInfoService.selectAllByEntity(tListInfoB);
+            if(infoListB.size()!=0){
+                return new CommonResult(201, "failed", "办理本人在黑名单中！不予取号", null);
+            }
+
+            if(tHallQueue.getAIdcard()!=null){
+                TListInfo tListInfoA=new TListInfo();
+                tListInfoA.setIdCard(tHallQueue.getAIdcard());
+                //查询代办人是否在黑名单中
+                List<TListInfo> infoList=tListInfoService.selectAllByEntity(tListInfoA);
+                if(infoList.size()!=0){
+                    return new CommonResult(201, "failed", "该代办人在黑名单中！不予取号", null);
+                }
+                //查询代办人是否代理次数超过5次，是则加入黑名单
+                if(agentNum>=4){
+                    tListInfoA.setPkListId(IDUtils.currentTimeMillis());
+                    tListInfoA.setListType("黑名单");
+                    tListInfoA.setFullName(tHallQueue.getAName());
+                    tListInfoA.setExplain("代理次数过多");
+                    //待补全
+                    tListInfoService.insert(tListInfoA);
+                    return new CommonResult(201, "failed", "该代办人代次数超过5次！不予取号", null);
+                }
+            }
+            //业务方法
             THallQueue ordinalQueue = tHallTakenumberService.getOrdinal(tHallQueue);
+            ordinalQueue.setHandleNum(handleNum);
+            ordinalQueue.setAgentNum(agentNum);
             return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinalQueue.getOrdinal(), ordinalQueue);
         } catch (Exception e) {
             String message = "取号失败";
@@ -239,8 +279,15 @@ public class THallQueueController {
             TSysWindow window = windowList.get(0);
             String windowName = window.getWindowName();
             //业务方法
-            String num = tHallQueueService.call(window);
-            return new CommonResult(200, "success", windowName + ":" + num, num);
+            THallQueue queue = tHallQueueService.call(window);
+            if(queue==null){
+                return new CommonResult(201, "failed", "该窗口已无号", null);
+            }
+            int handleNum=tHallQueueService.handleNum(queue);
+            int agentNum = tHallQueueService.agentNum(queue);
+            queue.setAgentNum(agentNum);
+            queue.setHandleNum(handleNum);
+            return new CommonResult(200, "success", windowName + ":" + queue.getOrdinal(), queue);
         } catch (Exception e) {
             String message = "叫号失败";
             log.error(message, e);
@@ -274,8 +321,12 @@ public class THallQueueController {
 //                return new CommonResult(201, "failed", "特呼的号码正在处理或已办理", null);
 //            }
             //业务方法
-            tHallQueueService.vipCall(window,vip_ordinal);
-            return new CommonResult(200, "success", windowName + "特呼:" + vip_ordinal, vip_ordinal);
+            THallQueue queue=tHallQueueService.vipCall(window,vip_ordinal);
+            int handleNum=tHallQueueService.handleNum(queue);
+            int agentNum = tHallQueueService.agentNum(queue);
+            queue.setAgentNum(agentNum);
+            queue.setHandleNum(handleNum);
+            return new CommonResult(200, "success", windowName + "特呼:" + vip_ordinal, queue);
         } catch (Exception e) {
             String message = "叫号失败";
             log.error(message, e);
@@ -322,12 +373,19 @@ public class THallQueueController {
             String queryStartStr = sdf.format(queryStart);
             String queryEndStr = sdf.format(queryEnd);
 
+            //总业务量
+            List<THallQueueCount> totalList = tHallQueueService.totalCount(queryStartStr, queryEndStr);
             //实际业务量统计
             List<THallQueueCount> realList = tHallQueueService.realCount(queryStartStr, queryEndStr);
             //空号统计
             List<THallQueueCount> nullList = tHallQueueService.nullCount(queryStartStr, queryEndStr);
             //退办统计
             List<THallQueueCount> backLsit = tHallQueueService.backCount(queryStartStr, queryEndStr);
+            List<Statistics> statisticsList=new ArrayList<>();
+
+            for(THallQueueCount realSingle:realList){
+                String agent=realSingle.getAgent();
+            }
             return new CommonResult(200, "success", "查询成功!", null);
         } catch (Exception e) {
             String message = "查询失败";
@@ -396,8 +454,10 @@ public class THallQueueController {
      * @return 办结结果
      */
     @PostMapping("/hall/queue/downNum")
-    public CommonResult downNum(HttpServletRequest request) throws FebsException {
+    public CommonResult downNum(HttpServletRequest request,@RequestBody THallQueue tHallQueue) throws FebsException {
         try {
+            String ordinal=tHallQueue.getOrdinal();
+
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
@@ -407,8 +467,8 @@ public class THallQueueController {
             List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
             TSysWindow window = windowList.get(0);
             String windowName = window.getWindowName();
-            String ordinal = tHallQueueService.downNum(window);
-            return new CommonResult(200, "success", ordinal + "办结!", ordinal);
+            String ordinalDown = tHallQueueService.downNum(window);
+            return new CommonResult(200, "success", ordinalDown + "办结!", ordinalDown);
         } catch (Exception e) {
             String message = "办结失败";
             log.error(message, e);

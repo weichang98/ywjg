@@ -119,6 +119,11 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
+    public List<THallQueueCount> totalCount(String queryStart, String queryEnd) {
+        return this.tHallQueueMapper.totalCount(queryStart, queryEnd);
+    }
+
+    @Override
     public List<THallQueueCount> backCount(String queryStart, String queryEnd) {
         return this.tHallQueueMapper.backCount(queryStart, queryEnd);
     }
@@ -192,6 +197,7 @@ public class THallQueueServiceImpl implements THallQueueService {
 
         return tHallQueueCount;
     }
+
 
     @Override
     public String downNum(TSysWindow window) {
@@ -271,7 +277,7 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public String vipCall(TSysWindow window, String vip_ordinal) throws  Exception{
+    public THallQueue vipCall(TSysWindow window, String vip_ordinal) throws  Exception{
         String agent = window.getOperatorPeople();
         String windowName = window.getWindowName();
         String businessType = window.getBusinessType();
@@ -306,12 +312,11 @@ public class THallQueueServiceImpl implements THallQueueService {
         queueinsert.setRemarks("特呼");
         queueinsert.setIsVip(1);
         this.insert(queueinsert);
-        String message=windowName+"特呼："+vip_ordinal+"号！";
-        return message;
+        return queueinsert;
     }
 
     @Override
-    public String call(TSysWindow window) throws Exception {
+    public THallQueue call(TSysWindow window) throws Exception {
         String agent = window.getOperatorPeople();
         String windowName = window.getWindowName();
         String businessType = window.getBusinessType();
@@ -328,7 +333,7 @@ public class THallQueueServiceImpl implements THallQueueService {
             }
         }
         if (typeList.size() == mark) {
-            return "该窗口可办理的业务类型已无号";
+            return null;
         }
         //*********取得应叫的号码
         String num = tHallTakenumberService.queryNumList(type);
@@ -346,6 +351,6 @@ public class THallQueueServiceImpl implements THallQueueService {
         queueUpdate.setWindowName(windowName);
         queueUpdate.setAgent(agent);
         this.updateById(queueUpdate);
-        return num;
+        return queueUpdate;
     }
 }

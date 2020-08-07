@@ -257,6 +257,7 @@
         SELECT * FROM "c##root"."t_hall_queue"
     WHERE "ordinal"= #{Ordinal}
     AND to_char("get_time",'yyyy-mm-dd')='${DateStr}'
+    AND "is_vip" !=1
     </select>
 
     <select id="queryByTime" resultType="com.hjy.hall.entity.THallQueue">
@@ -273,6 +274,13 @@
 		or  "remarks" ='特呼'
     </select>
 
+    <select id="totalCount" resultType="com.hjy.hall.entity.THallQueueCount">
+        SELECT "agent","window_name",COUNT(*)as "totalCount" FROM "c##root"."t_hall_queue"
+        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
+        GROUP BY "agent","window_name"
+    </select>
+
     <select id="realCount" resultType="com.hjy.hall.entity.THallQueueCount">
         SELECT "agent","window_name","business_type",COUNT("business_type")as "realCount" FROM "c##root"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
@@ -282,7 +290,7 @@
     </select>
 
     <select id="nullCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT("business_type")as "nullCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name",COUNT(*)as "nullCount" FROM "c##root"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         AND "remarks"='空号'
@@ -290,7 +298,7 @@
     </select>
 
     <select id="backCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT("business_type")as "backCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name",COUNT(*)as "backCount" FROM "c##root"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         AND "remarks"='退号'

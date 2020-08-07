@@ -158,11 +158,7 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
         tHallQueueService.insert(tHallQueue);
         //*****存储排队信息*******
 
-        //********查询代理次数
-        int handleNum=tHallQueueService.handleNum(tHallQueue);
-        int agentNum = tHallQueueService.agentNum(tHallQueue);
-        tHallQueue.setHandleNum(handleNum);
-        tHallQueue.setAgentNum(agentNum);
+
         return tHallQueue;
     }
 }

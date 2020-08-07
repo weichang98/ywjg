@@ -70,6 +70,8 @@ public interface THallQueueService {
     List<THallQueue> queryByTime(String startTime,String endTime);
     //查询现在正在办理的号码
     THallQueue getNowNum(String windowName,String nowDateStr);
+    //根据日期字符串查询总业务量
+    List<THallQueueCount> totalCount(String queryStart, String queryEnd);
     //根据日期字符串查询实际业务量
     List<THallQueueCount> realCount(String queryStart, String queryEnd);
     //根据日期字符串查询空号业务量
@@ -79,7 +81,7 @@ public interface THallQueueService {
     //token
     SysToken findByToken(String accessToken);
     //叫号
-    String call(TSysWindow window )  throws Exception;
+    THallQueue call(TSysWindow window )  throws Exception;
     //业务查询与时间统计
     THallQueueCount StatisticsTime(THallQueue tHallQueue);
     //设置空号
@@ -93,5 +95,5 @@ public interface THallQueueService {
     //代办次数
     int agentNum(THallQueue tHallQueue);
     //特呼
-     String vipCall(TSysWindow window,String vip_ordinal) throws Exception;
+    THallQueue vipCall(TSysWindow window,String vip_ordinal) throws Exception;
 }
