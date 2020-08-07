@@ -52,6 +52,11 @@ public class ShiroServiceImpl implements ShiroService {
         return tSysRoleMapper.selectRoleIdByUserId(fkUserId);
     }
 
+    @Override
+    public void deleteToken(String tokenId) {
+        tSysTokenMapper.deleteToken(tokenId);
+    }
+
 
     @Override
     public List<String> selectPermsCodeByRole(String fkRoleId){
@@ -116,20 +121,6 @@ public class ShiroServiceImpl implements ShiroService {
         return result;
     }
 
-    /**
-     * 更新数据库的token，使前端拥有的token失效
-     * 防止黑客利用token搞事情
-     */
-//    @Override
-//    public void logout(String token) {
-//        SysToken byToken = findByToken(token);
-//        //生成一个token
-//        token = TokenGenerator.generateValue();
-//        //修改token
-//        byToken.setToken(token);
-//        //使前端获取到的token失效
-//        sysTokenRepository.save(byToken);
-//    }
 
     @Override
     public SysToken findByToken(String accessToken) {

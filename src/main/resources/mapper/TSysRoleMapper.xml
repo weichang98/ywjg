@@ -122,6 +122,10 @@
        insert into "liuchun"."re_user_role"("pk_userRole_id","fk_user_id","fk_role_id")
         values (#{pk_userRole_id},#{fk_user_id},#{fk_role_id})
     </insert>
+    <insert id="insertRolePerms" parameterType="com.hjy.system.entity.ReRolePerms">
+        insert into "liuchun"."re_role_perms"("pk_rolePerms_id","fk_role_id","fk_perms_id")
+        values (#{pk_rolePerms_id},#{fk_role_id},#{fk_perms_id})
+    </insert>
     <!--通过主键修改数据-->
     <update id="updateById">
         update "liuchun"."t_sys_role"

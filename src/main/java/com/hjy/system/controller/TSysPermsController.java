@@ -2,6 +2,7 @@ package com.hjy.system.controller;
 
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysPerms;
 import com.hjy.system.service.TSysPermsService;
 import com.alibaba.fastjson.JSON;
@@ -10,6 +11,9 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +52,10 @@ public class TSysPermsController {
      * @return 新增结果
      */
     @PostMapping("/system/perms/add")
-    public CommonResult tSysPermsAdd(@RequestBody TSysPerms tSysPerms) throws FebsException{
+    public CommonResult tSysPermsAdd(@RequestBody TSysPerms tSysPerms, HttpSession session) throws FebsException{
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        tSysPerms.setModifyUsername(activeUser.getFullName());
+        tSysPerms.setFkUserId(activeUser.getUserId());
         System.err.println(tSysPerms);
         try {
             //

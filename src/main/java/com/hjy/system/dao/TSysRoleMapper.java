@@ -110,4 +110,9 @@ public interface TSysRoleMapper {
     List<String> selectUserRole_userIded();
 
     String selectRoleIdByUserId(@Param("fkUserId")String fkUserId);
+    /**
+     * 默认为角色添加主页权限
+     * @param rolePerms
+     */
+    void insertRolePerms(ReRolePerms rolePerms);
 }

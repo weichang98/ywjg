@@ -14,4 +14,6 @@ public interface TSysTokenMapper {
     int updateToken(SysToken tokenEntity);
 
     void deleteAll();
+
+    void deleteToken(@Param("tokenId")String tokenId);
 }

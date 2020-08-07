@@ -5,6 +5,7 @@ import com.hjy.common.utils.page.PageResult;
 import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (TSysUser)表服务接口
@@ -71,4 +72,8 @@ public interface TSysUserService {
      * 修改密码
      */
     int updatePassword(String parm, ActiveUser activeUser) throws Exception;
+    /**
+     * 添加用户且添加角色
+     */
+    Map<String,Object> insertUserAndRole(String param);
 }

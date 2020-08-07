@@ -109,6 +109,9 @@
     <delete id="deleteAll">
         delete from "liuchun"."t_sys_token"
     </delete>
+    <delete id="deleteToken" parameterType="java.lang.String">
+        delete from "liuchun"."t_sys_token" where "pk_token_id" = #{tokenId,jdbcType=VARCHAR}
+    </delete>
     <select id="findByToken" resultType="com.hjy.system.entity.SysToken" parameterType="java.lang.String">
     select * from "liuchun"."t_sys_token" where "pk_token_id" = #{accessToken,jdbcType=VARCHAR}
     </select>

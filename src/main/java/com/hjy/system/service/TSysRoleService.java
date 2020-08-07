@@ -26,7 +26,7 @@ public interface TSysRoleService {
      * @param tSysRole 实例对象
      * @return 实例对象
      */
-    int insert(TSysRole tSysRole);
+    void insert(TSysRole tSysRole);
 
     /**
      * 修改数据

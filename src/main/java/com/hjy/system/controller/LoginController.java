@@ -11,6 +11,7 @@ import com.hjy.system.service.ShiroService;
 import com.hjy.system.service.TSysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Api(tags = "Shiro权限管理")
+@Slf4j
 @RestController
 public class LoginController {
     @Autowired
@@ -49,8 +51,7 @@ public class LoginController {
      */
     @ApiOperation(value = "登陆", notes = "参数:用户名 密码")
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody TSysUser tSysUser,HttpServletRequest request) throws UnknownHostException, SocketException {
-        Map<String, Object> result = new HashMap<>();
+    public CommonResult login(@RequestBody TSysUser tSysUser,HttpServletRequest request) throws UnknownHostException, SocketException {
         boolean rememberMe =true;
         String username = tSysUser.getUsername();
         String passwordN0 = tSysUser.getPassword();
@@ -72,21 +73,16 @@ public class LoginController {
         user.setIp(ip3);
         //账号不存在、密码错误
         if (user == null) {
-            result.put("code", 444);
-            result.put("status", "error");
-            result.put("msg", "账号不存在");
+            return new CommonResult(444,"error","账号不存在");
         } else if(!user.getPassword().equals(password)) {
-            result.put("code", 445);
-            result.put("status", "error");
-            result.put("msg", "密码错误");
+            return new CommonResult(445,"error","密码错误");
+        }else if(user.getEnableStatus().equals("0")){
+            return new CommonResult(446,"error","该账户已被管理员禁用，请联系管理员");
         }else {
             //生成token，并保存到数据库
-            result = shiroService.createToken(user);
-            result.put("code", 200);
-            result.put("status", "success");
-            result.put("msg", "登陆成功");
+            Map<String, Object> result = shiroService.createToken(user);
+            return new CommonResult(200,"success","登陆成功",result);
         }
-        return result;
     }
     /**
      *登录成功
@@ -105,7 +101,8 @@ public class LoginController {
      * @return
      */
     @PostMapping("/logout")
-    public CommonResult logout() throws FebsException {
+    public CommonResult logout(HttpSession session) throws FebsException {
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         //清空缓存
         //取出当前验证主体
         Subject subject = SecurityUtils.getSubject();
@@ -113,51 +110,14 @@ public class LoginController {
         if (subject != null) {
             subject.logout();
         }
-        return new CommonResult(200,"success","成功退出系统!",null);
+        //删除token
+        try{
+            shiroService.deleteToken(activeUser.getTokenId());
+            return new CommonResult(200,"success","成功退出系统!",null);
+        }catch (Exception e) {
+            String message = "系统内部异常";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
     }
-    /**
-     *处理登录请求
-     * @return
-     */
-//    @PostMapping(value = "/login")
-//    public CommonResult login(HttpServletRequest request, HttpServletResponse resp, RedirectAttributes attr, HttpSession session,
-//                              @RequestBody TSysUser user
-//    ) throws IOException {
-//        boolean rememberMe =true;
-//        String username = user.getUsername();
-//        String passwordN0 = user.getPassword();
-//        String password = PasswordEncryptUtils.MyPasswordEncryptUtil(username,passwordN0);
-//        //1、获取subject
-//        Subject subject = SecurityUtils.getSubject();
-//        //2、封装用户数据
-//        UsernamePasswordToken token = new UsernamePasswordToken(username,password,rememberMe);
-//        //3、执行登录方法
-//        try {
-//            //交给Realm处理--->执行它的认证方法
-//            subject.login(token);
-//            //登录成功
-//            TSysUser dbuser = shiroService.selectUserByUsername(username);
-////            shiroService.createToken(dbuser.getPkUserId());
-////            session.setAttribute("currentUser",dbuser);
-////            session.setMaxInactiveInterval(60*60*24);
-////            Cookie cookie = new Cookie("username", dbuser.getUsername());
-////            // 设置一个月有效
-////            cookie.setMaxAge(60*60*24*30);
-////            cookie.setPath("/");
-////            // 服务器返回给浏览器cookie以便下次判断
-////            resp.addCookie(cookie);
-////            String sessionId = (String) subject.getSession().getId();
-//            JSONObject jsonObject = new JSONObject();
-////            jsonObject.put("token",sessionId);
-////            jsonObject.put("username",dbuser.getUsername());
-//            jsonObject.put("user",dbuser);
-//            return new CommonResult(200,"success！","登录成功",jsonObject);
-//        }catch (UnknownAccountException e){
-//            //登录失败:用户名不存在
-//            return new CommonResult(444,"error","用户名不存在！",null);
-//        }catch (IncorrectCredentialsException e){
-//            //登录失败：密码错误
-//            return new CommonResult(445,"error","密码错误！",null);
-//        }
-//    }
 }

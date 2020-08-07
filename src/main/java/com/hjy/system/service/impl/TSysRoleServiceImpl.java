@@ -42,15 +42,23 @@ public class TSysRoleServiceImpl implements TSysRoleService {
      * @return 实例对象
      */
     @Override
-    public int insert(TSysRole tSysRole) {
+    public void insert(TSysRole tSysRole) {
         //通过工具类IDUtils获取主键
         String uuid= IDUtils.currentTimeMillis();
-        System.err.println("主键"+uuid);
+        //首页菜单id
+        String indexId = "1596706636946";
         tSysRole.setPkRoleId(uuid);
         //设置创建时间和更改时间
         tSysRole.setCreateDate(new Date());
         tSysRole.setModifyTime(new Date());
-        return tSysRoleMapper.insertSelective(tSysRole);
+        tSysRoleMapper.insertSelective(tSysRole);
+        //为新角色默认添加主页权限
+        ReRolePerms rolePerms = new ReRolePerms();
+        rolePerms.setPk_rolePerms_id(IDUtils.currentTimeMillis());
+        rolePerms.setFk_role_id(uuid);
+        rolePerms.setFk_perms_id(indexId);
+        tSysRoleMapper.insertRolePerms(rolePerms);
+
     }
 
     /**

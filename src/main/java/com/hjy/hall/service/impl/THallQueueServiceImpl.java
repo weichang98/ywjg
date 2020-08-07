@@ -15,7 +15,6 @@ import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;

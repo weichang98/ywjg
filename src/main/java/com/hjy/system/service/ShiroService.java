@@ -57,4 +57,6 @@ public interface ShiroService {
      TSysRole selectRoleByUserId(String pkUserId);
 
      String selectRoleIdByUserId(String pkUserId);
+
+    void deleteToken(String tokenId);
 }

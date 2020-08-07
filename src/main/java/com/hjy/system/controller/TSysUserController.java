@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (TSysUser)表控制层
@@ -59,9 +60,9 @@ public class TSysUserController {
             //所有角色信息
             List<TSysRole> roleList = tSysRoleService.selectAll();
             jsonObject.put("roleList",roleList);
-            //所有权限信息
-            List<TSysPerms> perms = tSysPermsService.selectAll();
-            jsonObject.put("permsList",perms);
+//            //所有权限信息
+//            List<TSysPerms> perms = tSysPermsService.selectAll();
+//            jsonObject.put("permsList",perms);
             return new CommonResult(200,"success","成功!",jsonObject);
         } catch (Exception e) {
             String message = "失败";
@@ -69,19 +70,37 @@ public class TSysUserController {
             throw new FebsException(message);
         }
      }
+//    /**
+//     * 1 新增数据
+//     * @param tSysUser 实体对象
+//     * @return 新增结果
+//     */
+//    @RequiresPermissions({"user:add"})
+//    @PostMapping("/system/user/addOnlyUser")
+//    public CommonResult tSysUserAdd(@RequestBody TSysUser tSysUser) throws FebsException{
+//        System.err.println(tSysUser);
+//        try {
+//            //
+//            tSysUserService.insert(tSysUser);
+//            return new CommonResult(200,"success","数据添加成功!",null);
+//        } catch (Exception e) {
+//            String message = "数据添加失败";
+//            log.error(message, e);
+//            throw new FebsException(message);
+//        }
+//    }
     /**
-     * 1 新增数据
-     * @param tSysUser 实体对象
+     * 1 新增数据，连带角色
+     * @param param
      * @return 新增结果
      */
     @RequiresPermissions({"user:add"})
     @PostMapping("/system/user/add")
-    public CommonResult tSysUserAdd(@RequestBody TSysUser tSysUser) throws FebsException{
-        System.err.println(tSysUser);
+    public CommonResult tSysUserAdd(@RequestBody String param) throws FebsException{
         try {
             //
-            tSysUserService.insert(tSysUser);
-            return new CommonResult(200,"success","数据添加成功!",null);
+            Map<String,Object> result = tSysUserService.insertUserAndRole(param);
+            return new CommonResult(200,"success","数据添加成功!",result);
         } catch (Exception e) {
             String message = "数据添加失败";
             log.error(message, e);
@@ -148,6 +167,9 @@ public class TSysUserController {
     public CommonResult tSysUserDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr=String.valueOf(jsonObject.get("pk_id"));
+        if(idStr.equals("1595580422556") || idStr.equals("1596676031119")){
+            return new CommonResult(444,"error","系统维护人员不可删除，建议禁用账号!",null);
+        }
         try {
             //删除用户表里的用户
             tSysUserService.deleteById(idStr);

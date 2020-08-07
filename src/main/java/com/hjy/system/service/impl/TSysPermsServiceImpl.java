@@ -43,9 +43,6 @@ public class TSysPermsServiceImpl implements TSysPermsService {
         tSysPerms.setPkPermsId(IDUtils.currentTimeMillis());
         tSysPerms.setCreateTime(new Date());
         tSysPerms.setModifyTime(new Date());
-        //获取session中的用户信息
-//        tSysPerms.setModifyUsername();
-//        tSysPerms.setFkUserId();
         return tSysPermsMapper.insertSelective(tSysPerms);
     }
 
