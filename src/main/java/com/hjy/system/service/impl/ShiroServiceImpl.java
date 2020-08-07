@@ -56,8 +56,20 @@ public class ShiroServiceImpl implements ShiroService {
     public void deleteToken(String tokenId) {
         tSysTokenMapper.deleteToken(tokenId);
     }
+    /**
+     * 更新最后一次登录时间
+     */
+    @Override
+    public void updateLoginTime(String userId) {
+        TSysUser user = new TSysUser();
+        user.setPkUserId(userId);
+        user.setLastLoginDate(new Date());
+        tSysUserMapper.updateById(user);
+    }
 
-
+    /**
+     * 通过roleid查找权限码
+     */
     @Override
     public List<String> selectPermsCodeByRole(String fkRoleId){
         return tSysRoleMapper.selectPermsCodeByRole(fkRoleId);
@@ -125,7 +137,6 @@ public class ShiroServiceImpl implements ShiroService {
     @Override
     public SysToken findByToken(String accessToken) {
         return tSysTokenMapper.findByToken(accessToken);
-
     }
 
 }

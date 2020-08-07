@@ -129,7 +129,6 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
     @Override
     public THallQueue getOrdinal(THallQueue tHallQueue) throws Exception{
         //*****取号**************************************
-
         List<String> type = typeTransUtil.typeTrans(tHallQueue.getBusinessType());
         int ordinal_num = this.count() + 1;
         String ordinal="";
@@ -157,7 +156,6 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
         tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
         tHallQueueService.insert(tHallQueue);
         //*****存储排队信息*******
-
 
         return tHallQueue;
     }

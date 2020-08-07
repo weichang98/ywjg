@@ -215,9 +215,25 @@ public class TSysUserController {
      * @return 修改结果
      */
     @RequiresPermissions({"user:update"})
+    @PutMapping("/system/user/admin/update")
+    public CommonResult tSysUserAdminUpdate(@RequestBody TSysUser tSysUser) throws FebsException{
+        try {
+            //
+            tSysUserService.updateById(tSysUser);
+            return new CommonResult(200,"success","修改成功!",null);
+        } catch (Exception e) {
+            String message = "修改失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+    /**
+     * 4 完善个人信息
+     * @param tSysUser 实体对象
+     * @return 修改结果
+     */
     @PutMapping("/system/user/update")
     public CommonResult tSysUserUpdate(@RequestBody TSysUser tSysUser) throws FebsException{
-        System.err.println("system/user/update:--"+tSysUser);
         try {
             //
             tSysUserService.updateById(tSysUser);
@@ -283,6 +299,7 @@ public class TSysUserController {
      * @param parm 参数
      * @return 修改结果
      */
+    @RequiresPermissions({"user:resetPassword"})
     @PutMapping("/system/user/resetPassword")
     public CommonResult resetPassword(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);

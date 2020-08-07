@@ -8,6 +8,7 @@ import com.hjy.system.entity.TSysWindow;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (THallQueue)表服务接口
@@ -96,4 +97,6 @@ public interface THallQueueService {
     int agentNum(THallQueue tHallQueue);
     //特呼
     THallQueue vipCall(TSysWindow window,String vip_ordinal) throws Exception;
+
+    Map<String, Object> getOrdinal(String param) throws Exception;
 }

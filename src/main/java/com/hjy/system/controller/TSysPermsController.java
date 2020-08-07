@@ -8,6 +8,7 @@ import com.hjy.system.service.TSysPermsService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ public class TSysPermsController {
      * @param tSysPerms 实体对象
      * @return 新增结果
      */
+    @RequiresPermissions({"perms:add"})
     @PostMapping("/system/perms/add")
     public CommonResult tSysPermsAdd(@RequestBody TSysPerms tSysPerms, HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
@@ -71,6 +73,7 @@ public class TSysPermsController {
      * 2 查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"perms:view"})
     @GetMapping("/system/perms/list")
     public CommonResult tSysPermsList() throws FebsException{
         try {
@@ -106,6 +109,7 @@ public class TSysPermsController {
      * 3 删除数据
      * @return 删除结果
      */
+    @RequiresPermissions({"perms:del"})
     @DeleteMapping("/system/perms/del")
     public CommonResult tSysPermsDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -146,6 +150,7 @@ public class TSysPermsController {
      * @param tSysPerms 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"perms:update"})
     @PutMapping("/system/perms/update")
     public CommonResult tSysPermsUpdate(@RequestBody TSysPerms tSysPerms) throws FebsException{
         System.err.println(tSysPerms);

@@ -11,6 +11,7 @@ import com.hjy.system.service.TSysWindowService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,7 @@ public class TSysWindowController {
      * @param parm
      * @return 新增结果
      */
+    @RequiresPermissions({"window:add"})
     @PostMapping("/system/window/add")
     public CommonResult tSysWindowAdd(@RequestBody String parm ) throws FebsException{
         try {
@@ -79,6 +81,7 @@ public class TSysWindowController {
      * 2 查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"window:view"})
     @GetMapping("/system/window/list")
     public CommonResult tSysWindowList() throws FebsException{
         try {
@@ -114,6 +117,7 @@ public class TSysWindowController {
      * 3 删除数据
      * @return 删除结果
      */
+    @RequiresPermissions({"window:del"})
     @DeleteMapping("/system/window/del")
     public CommonResult tSysWindowDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -154,6 +158,7 @@ public class TSysWindowController {
      * @param tSysWindow 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"window:update"})
     @PutMapping("/system/window/update")
     public CommonResult tSysWindowUpdate(@RequestBody TSysWindow tSysWindow) throws FebsException{
         System.err.println(tSysWindow);

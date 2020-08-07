@@ -5,6 +5,7 @@ import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IPUtil;
 import com.hjy.common.utils.PasswordEncryptUtils;
+import com.hjy.hall.service.THallTakenumberService;
 import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
 import com.hjy.system.service.ShiroService;
@@ -42,10 +43,8 @@ import java.util.Map;
 public class LoginController {
     @Autowired
     private ShiroService shiroService;
-    /**
-     *处理登录请求
-     * @return
-     */
+    @Autowired
+    private THallTakenumberService takeNumberService;
     /**
      * 登录
      */
@@ -91,9 +90,27 @@ public class LoginController {
      */
     @RequiresPermissions({"index"})
     @PostMapping("/index")
-    public CommonResult index(HttpSession session) throws FebsException {
+    public CommonResult index(HttpSession session,HttpServletResponse resp) throws FebsException {
         //获取当前登录用户
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        //获取主页统计数据
+        //顶部各个业务类型统计
+        Map<String,Object> businessMap = new HashMap<>();
+//        try {
+//        businessMap = takeNumberService.selectBusinessNum();
+//        }catch (Exception e) {
+//            String message = "系统内部异常";
+//            log.error(message, e);
+//            throw new FebsException(message);
+//        }
+//        Cookie cookie = new Cookie("businessType", "");
+//        // 设置一天有效
+//        cookie.setMaxAge(60*60*24);
+//        cookie.setPath("/");
+//        // 服务器返回给浏览器cookie
+//        resp.addCookie(cookie);
+//        session.setAttribute("businessType",businessMap);
+//        session.setMaxInactiveInterval(60*60*24);
         return new CommonResult(200,"success","获取数据成功!",activeUser);
     }
     /**
@@ -110,9 +127,11 @@ public class LoginController {
         if (subject != null) {
             subject.logout();
         }
-        //删除token
         try{
+            //删除token
             shiroService.deleteToken(activeUser.getTokenId());
+            //更新最后一次登录时间
+            shiroService.updateLoginTime(activeUser.getUserId());
             return new CommonResult(200,"success","成功退出系统!",null);
         }catch (Exception e) {
             String message = "系统内部异常";

@@ -7,6 +7,7 @@ import com.hjy.system.service.TSysBusinesstypeService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ public class TSysBusinesstypeController {
      * @param tSysBusinesstype 实体对象
      * @return 新增结果
      */
+    @RequiresPermissions({"businessType:add"})
     @PostMapping("/system/businessType/add")
     public CommonResult tSysBusinesstypeAdd(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
         System.err.println(tSysBusinesstype);
@@ -64,6 +66,7 @@ public class TSysBusinesstypeController {
      * 2 查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"businessType:view"})
     @GetMapping("/system/businessType/list")
     public CommonResult tSysBusinesstypeList() throws FebsException{
         try {
@@ -99,6 +102,7 @@ public class TSysBusinesstypeController {
      * 3 删除数据
      * @return 删除结果
      */
+    @RequiresPermissions({"businessType:del"})
     @DeleteMapping("/system/businessType/del")
     public CommonResult tSysBusinesstypeDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -139,6 +143,7 @@ public class TSysBusinesstypeController {
      * @param tSysBusinesstype 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"businessType:update"})
     @PutMapping("/system/businessType/update")
     public CommonResult tSysBusinesstypeUpdate(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
         System.err.println(tSysBusinesstype);

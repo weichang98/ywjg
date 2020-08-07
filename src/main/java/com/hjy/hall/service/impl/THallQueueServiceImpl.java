@@ -1,15 +1,20 @@
 package com.hjy.hall.service.impl;
 
 import com.alibaba.druid.sql.visitor.functions.If;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.dao.THallQueueMapper;
+import com.hjy.hall.dao.THallTakenumberMapper;
 import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.hall.entity.THallTakenumber;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
+import com.hjy.list.dao.TListInfoMapper;
+import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysWindow;
@@ -18,9 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * (THallQueue)表服务实现类
@@ -38,6 +41,10 @@ public class THallQueueServiceImpl implements THallQueueService {
     private TSysTokenMapper tSysTokenMapper;
     @Autowired
     private THallTakenumberService tHallTakenumberService;
+    @Autowired
+    private TListInfoMapper tListInfoMapper;
+    @Autowired
+    private THallTakenumberMapper tHallTakenumberMapper;
 
     /**
      * 通过ID查询单条数据
@@ -313,6 +320,99 @@ public class THallQueueServiceImpl implements THallQueueService {
         queueinsert.setIsVip(1);
         this.insert(queueinsert);
         return queueinsert;
+    }
+
+    @Override
+    public Map<String, Object> getOrdinal(String param) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        THallQueue tHallQueue= new THallQueue();
+        TListInfo tListInfoB=new TListInfo();
+        JSONObject jsonObject = JSON.parseObject(param);
+        String businessType=String.valueOf(jsonObject.get("businessType"));
+        String bCertificatesType=String.valueOf(jsonObject.get("bCertificatesType"));
+        String bName=String.valueOf(jsonObject.get("bName"));
+        String bIdCard=String.valueOf(jsonObject.get("bIdCard"));
+        String isAgent=String.valueOf(jsonObject.get("isAgent"));
+        //查询代理次数
+        int handleNum = tHallQueueMapper.handleNum(tHallQueue);
+        int agentNum = tHallQueueMapper.agentNum(tHallQueue);
+
+        //本人业务
+        if(isAgent.equals("1")){
+            //查询办理本人是否在黑名单中
+            tListInfoB.setIdCard(bIdCard);
+            List<TListInfo> infoListB= tListInfoMapper.selectAllByEntity(tListInfoB);
+            if(infoListB != null){
+                map.put("code",444);
+                map.put("status","error");
+                map.put("msg","办理本人在黑名单中！不予取号");
+            }
+            //本人信息
+            tHallQueue.setBIdcard(bIdCard);
+            tHallQueue.setBusinessType(businessType);
+            tHallQueue.setBCertificatesType(bCertificatesType);
+            tHallQueue.setBCertificatesType(bCertificatesType);
+            tHallQueue.setBName(bName);
+        }else {
+            //代理业务
+            String aIdcard=String.valueOf(jsonObject.get("aIdCard"));
+            String aName=String.valueOf(jsonObject.get("aName"));
+            String aCertificatesType=String.valueOf(jsonObject.get("aCertificatesType"));
+            TListInfo tListInfoA=new TListInfo();
+            tListInfoA.setIdCard(aIdcard);
+            //查询代办人是否在黑名单中
+            List<TListInfo> infoList=tListInfoMapper.selectAllByEntity(tListInfoA);
+            if(infoList!=null){
+                map.put("code",445);
+                map.put("status","error");
+                map.put("msg","该代办人在黑名单中！不予取号");
+                return map;
+            }
+            if(agentNum>=4){
+                tListInfoA.setPkListId(IDUtils.currentTimeMillis());
+                tListInfoA.setListType("黑名单");
+                tListInfoA.setFullName(tHallQueue.getAName());
+                tListInfoA.setExplain("代理次数过多");
+                //待补全
+                tListInfoMapper.insertSelective(tListInfoA);
+                map.put("code",446);
+                map.put("status","error");
+                map.put("msg","该代办人代次数超过5次！不予取号");
+                return map;
+            }
+            //代办人信息
+            tHallQueue.setAName(aName);
+            tHallQueue.setAIdcard(aIdcard);
+            tHallQueue.setACertificatesType(aCertificatesType);
+        }
+        //开始取号
+        //调用取号工具将取号结果放入ordinalQueue
+        //序号
+        int ordinal_num = tHallTakenumberMapper.count()+1;
+        List<String> type = typeTransUtil.typeTrans(tHallQueue.getBusinessType());
+        String ordinal="";
+        if(ordinal_num<10){
+            ordinal = type.get(0) +"00"+ ordinal_num;
+        }else if(ordinal_num<=99){
+            ordinal=type.get(0) +"0"+ ordinal_num;
+        }else{
+            ordinal=type.get(0) + ordinal_num;
+        }
+        THallTakenumber takenumber = new THallTakenumber();
+        takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
+        takenumber.setOrdinal(ordinal);
+        takenumber.setFlag(0);
+        takenumber.setGetTime(new Date());
+        tHallTakenumberMapper.insert(takenumber);
+        //*****取号**************************************
+        //*****存储排队信息*******
+        tHallQueue.setGetTime(new Date());
+        tHallQueue.setOrdinal(ordinal);
+        tHallQueue.setIsVip(0);
+        tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
+        tHallQueueMapper.insert(tHallQueue);
+        map.put("ordinalQueue",tHallQueue);
+        return map;
     }
 
     @Override

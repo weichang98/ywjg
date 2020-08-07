@@ -82,6 +82,7 @@ public class TListInfoServiceImpl implements TListInfoService {
      */
     @Override
     public List<TListInfo> selectAllByEntity(TListInfo tListInfo) throws Exception{
+        System.err.println("-----"+tListInfo);
         return this.tListInfoMapper.selectAllByEntity(tListInfo);
     }
 

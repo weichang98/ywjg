@@ -7,6 +7,7 @@ import com.hjy.system.service.TSysDeptService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ public class TSysDeptController {
      * @param tSysDept 实体对象
      * @return 新增结果
      */
+    @RequiresPermissions({"dept:add"})
     @PostMapping("/system/dept/add")
     public CommonResult tSysDeptAdd(@RequestBody TSysDept tSysDept) throws FebsException{
         System.err.println(tSysDept);
@@ -64,6 +66,7 @@ public class TSysDeptController {
      * 2 查询所有数据
      * @return 所有数据
      */
+    @RequiresPermissions({"dept:view"})
     @GetMapping("/system/dept/list")
     public CommonResult tSysDeptList() throws FebsException{
         try {
@@ -99,6 +102,7 @@ public class TSysDeptController {
      * 3 删除数据
      * @return 删除结果
      */
+    @RequiresPermissions({"dept:del"})
     @DeleteMapping("/system/dept/del")
     public CommonResult tSysDeptDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -139,6 +143,7 @@ public class TSysDeptController {
      * @param tSysDept 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"dept:update"})
     @PutMapping("/system/dept/update")
     public CommonResult tSysDeptUpdate(@RequestBody TSysDept tSysDept) throws FebsException{
         System.err.println(tSysDept);

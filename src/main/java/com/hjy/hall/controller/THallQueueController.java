@@ -32,10 +32,7 @@ import springfox.documentation.schema.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * (THallQueue)表控制层
@@ -216,50 +213,63 @@ public class THallQueueController {
      * @return 取号结果
      */
     @PostMapping("/hall/queue/getOrdinal")
-    public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
-        try {
-            //********查询代理次数
-            int handleNum=tHallQueueService.handleNum(tHallQueue);
-            int agentNum = tHallQueueService.agentNum(tHallQueue);
-
-            //查询办理本人是否在黑名单中
-            TListInfo tListInfoB=new TListInfo();
-            tListInfoB.setIdCard(tHallQueue.getBIdcard());
-            List<TListInfo> infoListB=tListInfoService.selectAllByEntity(tListInfoB);
-            if(infoListB.size()>0){
-                return new CommonResult(201, "failed", "办理本人在黑名单中！不予取号", null);
-            }
-
-            if(tHallQueue.getAIdcard()!=null||tHallQueue.getAIdcard()==""){
-                TListInfo tListInfoA=new TListInfo();
-                tListInfoA.setIdCard(tHallQueue.getAIdcard());
-                //查询代办人是否在黑名单中
-                List<TListInfo> infoList=tListInfoService.selectAllByEntity(tListInfoA);
-                if(infoList.size()>0){
-                    return new CommonResult(201, "failed", "该代办人在黑名单中！不予取号", null);
-                }
-                //查询代办人是否代理次数超过5次，是则加入黑名单
-                if(agentNum>=4){
-                    tListInfoA.setPkListId(IDUtils.currentTimeMillis());
-                    tListInfoA.setListType("黑名单");
-                    tListInfoA.setFullName(tHallQueue.getAName());
-                    tListInfoA.setExplain("代理次数过多");
-                    //待补全
-                    tListInfoService.insert(tListInfoA);
-                    return new CommonResult(201, "failed", "该代办人代次数超过5次！不予取号", null);
-                }
-            }
-            //业务方法
-            THallQueue ordinalQueue = tHallTakenumberService.getOrdinal(tHallQueue);
-            ordinalQueue.setHandleNum(handleNum);
-            ordinalQueue.setAgentNum(agentNum);
-            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinalQueue.getOrdinal(), ordinalQueue);
-        } catch (Exception e) {
-            String message = "取号失败";
+    public Map<String,Object> getOrdinal(@RequestBody String param) throws FebsException {
+        try{
+            Map<String,Object> map = tHallQueueService.getOrdinal(param);
+            return map;
+        }catch (Exception e) {
+            String message = "获取业务类型数据失败";
             log.error(message, e);
             throw new FebsException(message);
         }
     }
+//    @PostMapping("/hall/queue/getOrdinal")
+//    public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
+//        System.err.println(tHallQueue);
+//        System.err.println(tHallQueue.getAIdcard());
+//        try {
+//            //********查询代理次数
+//            int handleNum=tHallQueueService.handleNum(tHallQueue);
+//            int agentNum = tHallQueueService.agentNum(tHallQueue);
+//
+//            //查询办理本人是否在黑名单中
+//            TListInfo tListInfoB=new TListInfo();
+//            tListInfoB.setIdCard(tHallQueue.getBIdcard());
+//            List<TListInfo> infoListB=tListInfoService.selectAllByEntity(tListInfoB);
+//            if(infoListB.size()>0){
+//                return new CommonResult(444, "failed", "办理本人在黑名单中！不予取号", null);
+//            }
+//
+//            if(tHallQueue.getAIdcard()!=null||tHallQueue.getAIdcard()!=""){
+//                TListInfo tListInfoA=new TListInfo();
+//                tListInfoA.setIdCard(tHallQueue.getAIdcard());
+//                //查询代办人是否在黑名单中
+//                List<TListInfo> infoList=tListInfoService.selectAllByEntity(tListInfoA);
+//                if(infoList.size()>0){
+//                    return new CommonResult(445, "failed", "该代办人在黑名单中！不予取号", null);
+//                }
+//                //查询代办人是否代理次数超过5次，是则加入黑名单
+//                if(agentNum>=4){
+//                    tListInfoA.setPkListId(IDUtils.currentTimeMillis());
+//                    tListInfoA.setListType("黑名单");
+//                    tListInfoA.setFullName(tHallQueue.getAName());
+//                    tListInfoA.setExplain("代理次数过多");
+//                    //待补全
+//                    tListInfoService.insert(tListInfoA);
+//                    return new CommonResult(446, "failed", "该代办人代次数超过5次！不予取号", null);
+//                }
+//            }
+//            //业务方法
+//            THallQueue ordinalQueue = tHallTakenumberService.getOrdinal(tHallQueue);
+//            ordinalQueue.setHandleNum(handleNum);
+//            ordinalQueue.setAgentNum(agentNum);
+//            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinalQueue.getOrdinal(), ordinalQueue);
+//        } catch (Exception e) {
+//            String message = "取号失败";
+//            log.error(message, e);
+//            throw new FebsException(message);
+//        }
+//    }
 
     /**
      * 顺序叫号
