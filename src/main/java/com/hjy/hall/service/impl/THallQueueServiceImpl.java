@@ -403,14 +403,14 @@ public class THallQueueServiceImpl implements THallQueueService {
         takenumber.setOrdinal(ordinal);
         takenumber.setFlag(0);
         takenumber.setGetTime(new Date());
-        tHallTakenumberMapper.insert(takenumber);
+        tHallTakenumberMapper.insertSelective(takenumber);
         //*****取号**************************************
         //*****存储排队信息*******
         tHallQueue.setGetTime(new Date());
         tHallQueue.setOrdinal(ordinal);
         tHallQueue.setIsVip(0);
         tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
-        tHallQueueMapper.insert(tHallQueue);
+        tHallQueueMapper.insertSelective(tHallQueue);
         map.put("ordinalQueue",tHallQueue);
         return map;
     }
