@@ -226,16 +226,16 @@ public class THallQueueController {
             TListInfo tListInfoB=new TListInfo();
             tListInfoB.setIdCard(tHallQueue.getBIdcard());
             List<TListInfo> infoListB=tListInfoService.selectAllByEntity(tListInfoB);
-            if(infoListB.size()!=0){
+            if(infoListB.size()>0){
                 return new CommonResult(201, "failed", "办理本人在黑名单中！不予取号", null);
             }
 
-            if(tHallQueue.getAIdcard()!=null){
+            if(tHallQueue.getAIdcard()!=null||tHallQueue.getAIdcard()==""){
                 TListInfo tListInfoA=new TListInfo();
                 tListInfoA.setIdCard(tHallQueue.getAIdcard());
                 //查询代办人是否在黑名单中
                 List<TListInfo> infoList=tListInfoService.selectAllByEntity(tListInfoA);
-                if(infoList.size()!=0){
+                if(infoList.size()>0){
                     return new CommonResult(201, "failed", "该代办人在黑名单中！不予取号", null);
                 }
                 //查询代办人是否代理次数超过5次，是则加入黑名单
