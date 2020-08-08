@@ -96,13 +96,14 @@ public class LoginController {
         //获取主页统计数据
         //顶部各个业务类型统计
         Map<String,Object> businessMap = new HashMap<>();
-//        try {
-//        businessMap = takeNumberService.selectBusinessNum();
-//        }catch (Exception e) {
-//            String message = "系统内部异常";
-//            log.error(message, e);
-//            throw new FebsException(message);
-//        }
+        try {
+        businessMap = shiroService.selectIndexData(resp);
+            return new CommonResult(200,"success","获取数据成功!",activeUser);
+        }catch (Exception e) {
+            String message = "系统内部异常";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
 //        Cookie cookie = new Cookie("businessType", "");
 //        // 设置一天有效
 //        cookie.setMaxAge(60*60*24);
@@ -111,7 +112,6 @@ public class LoginController {
 //        resp.addCookie(cookie);
 //        session.setAttribute("businessType",businessMap);
 //        session.setMaxInactiveInterval(60*60*24);
-        return new CommonResult(200,"success","获取数据成功!",activeUser);
     }
     /**
      *退出系统

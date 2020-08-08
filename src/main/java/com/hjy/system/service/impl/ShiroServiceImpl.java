@@ -14,6 +14,7 @@ import com.hjy.system.service.ShiroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,6 +66,11 @@ public class ShiroServiceImpl implements ShiroService {
         user.setPkUserId(userId);
         user.setLastLoginDate(new Date());
         tSysUserMapper.updateById(user);
+    }
+
+    @Override
+    public Map<String, Object> selectIndexData(HttpServletResponse resp) {
+        return null;
     }
 
     /**

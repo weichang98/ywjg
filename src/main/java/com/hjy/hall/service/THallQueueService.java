@@ -6,6 +6,7 @@ import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysWindow;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -86,11 +87,11 @@ public interface THallQueueService {
     //业务查询与时间统计
     THallQueueCount StatisticsTime(THallQueue tHallQueue);
     //设置空号
-    String nullNum(TSysWindow window);
+    String nullNum(TSysWindow window,HttpSession session);
     //退号
-    String backNum(TSysWindow window);
+    String backNum(TSysWindow window,HttpSession session);
     //办结
-    String downNum(TSysWindow window);
+    String downNum(TSysWindow window, HttpSession session);
     //办理次数
    int handleNum(THallQueue tHallQueue);
     //代办次数

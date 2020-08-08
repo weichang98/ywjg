@@ -6,6 +6,7 @@ import com.hjy.system.entity.TSysPerms;
 import com.hjy.system.entity.TSysRole;
 import com.hjy.system.entity.TSysUser;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -61,4 +62,6 @@ public interface ShiroService {
      void deleteToken(String tokenId);
      //更新最后一次登录时间
      void updateLoginTime(String userId);
+
+    Map<String, Object> selectIndexData(HttpServletResponse resp);
 }

@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.schema.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -231,7 +232,6 @@ public class THallQueueController {
     @GetMapping("/hall/queue/call/page")
     public CommonResult callPage (HttpServletRequest request) throws FebsException {
         try {
-
             JSONObject jsonObject = new JSONObject();
             //从token中拿到当前窗口信息
             String tokenStr = TokenUtil.getRequestToken(request);
@@ -256,26 +256,26 @@ public class THallQueueController {
      * @return 叫号结果
      */
     @PostMapping("/hall/queue/call")
-    public CommonResult call(HttpServletRequest request) throws FebsException {
+    public CommonResult call(HttpServletRequest request, HttpSession session) throws FebsException {
         try {
             //从token中拿到当前窗口信息
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
-            TSysWindow windowQuery = new TSysWindow();
-            windowQuery.setIp(ip);
-            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
-            TSysWindow window = windowList.get(0);
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             String windowName = window.getWindowName();
             //业务方法
             THallQueue queue = tHallQueueService.call(window);
             if(queue==null){
-                return new CommonResult(201, "failed", "该窗口已无号", null);
+                return new CommonResult(444, "error", "该窗口已无号", null);
             }
             int handleNum=tHallQueueService.handleNum(queue);
             int agentNum = tHallQueueService.agentNum(queue);
             queue.setAgentNum(agentNum);
             queue.setHandleNum(handleNum);
+            System.err.println("queue"+queue);
+            //将当前窗口正在办理的号码放入session中
+            session.setAttribute(windowName+"HandingQueue",queue);
             return new CommonResult(200, "success", windowName + ":" + queue.getOrdinal(), queue);
         } catch (Exception e) {
             String message = "叫号失败";
@@ -296,15 +296,12 @@ public class THallQueueController {
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
-            TSysWindow windowQuery = new TSysWindow();
-            windowQuery.setIp(ip);
-            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
-            TSysWindow window = windowList.get(0);
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             String windowName = window.getWindowName();
             //判断是否存在输入的号码
             String vip_ordinal=tHallQueue.getOrdinal();
             if(tHallTakenumberService.getByOrdinal(vip_ordinal)==null){
-                return new CommonResult(201, "failed", "特呼的号码不存在！", null);
+                return new CommonResult(444, "error", "特呼的号码不存在！", null);
             }
 //            if(tHallTakenumberService.getByOrdinal(vip_ordinal).getFlag()==1 ||tHallTakenumberService.getByOrdinal(vip_ordinal).getFlag()==2){
 //                return new CommonResult(201, "failed", "特呼的号码正在处理或已办理", null);
@@ -361,7 +358,6 @@ public class THallQueueController {
             tHallQueue.setQueryEnd(queryEnd);
             String queryStartStr = sdf.format(queryStart);
             String queryEndStr = sdf.format(queryEnd);
-
             //总业务量
             List<THallQueueCount> totalList = tHallQueueService.totalCount(queryStartStr, queryEndStr);
             //实际业务量统计
@@ -389,20 +385,16 @@ public class THallQueueController {
      * @return 空号结果
      */
     @PostMapping("/hall/queue/nullNum")
-    public CommonResult nullNum(HttpServletRequest request) throws FebsException {
+    public CommonResult nullNum(HttpServletRequest request,HttpSession session) throws FebsException {
         try {
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
-            TSysWindow windowQuery = new TSysWindow();
-            windowQuery.setIp(ip);
-            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
-            TSysWindow window = windowList.get(0);
-            String windowName = window.getWindowName();
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             //业务方法
-            String ordinal = tHallQueueService.nullNum(window);
-            return new CommonResult(200, "success", ordinal + "设置空号", ordinal);
+            String ordinal = tHallQueueService.nullNum(window,session);
+            return new CommonResult(200, "success",  "设置空号成功", ordinal);
         } catch (Exception e) {
             String message = "设置空号失败";
             log.error(message, e);
@@ -416,19 +408,15 @@ public class THallQueueController {
      * @return 退号结果
      */
     @PostMapping("/hall/queue/backNum")
-    public CommonResult backNum(HttpServletRequest request) throws FebsException {
+    public CommonResult backNum(HttpServletRequest request,HttpSession session) throws FebsException {
         try {
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
-            TSysWindow windowQuery = new TSysWindow();
-            windowQuery.setIp(ip);
-            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
-            TSysWindow window = windowList.get(0);
-            String windowName = window.getWindowName();
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             //业务方法
-            String ordinal = tHallQueueService.backNum(window);
+            String ordinal = tHallQueueService.backNum(window,session);
             return new CommonResult(200, "success", ordinal + "退号", ordinal);
         } catch (Exception e) {
             String message = "退办失败";
@@ -443,20 +431,17 @@ public class THallQueueController {
      * @return 办结结果
      */
     @PostMapping("/hall/queue/downNum")
-    public CommonResult downNum(HttpServletRequest request,@RequestBody THallQueue tHallQueue) throws FebsException {
+    public CommonResult downNum(HttpServletRequest request,HttpSession session) throws FebsException {
+//        System.err.println("tHallQueue"+tHallQueue);
         try {
-            String ordinal=tHallQueue.getOrdinal();
-
+//            String ordinal=tHallQueue.getOrdinal();
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
-            TSysWindow windowQuery = new TSysWindow();
-            windowQuery.setIp(ip);
-            List<TSysWindow> windowList = tSysWindowService.selectAllByEntity(windowQuery);
-            TSysWindow window = windowList.get(0);
-            String windowName = window.getWindowName();
-            String ordinalDown = tHallQueueService.downNum(window);
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
+            System.err.println("window"+window);
+            String ordinalDown = tHallQueueService.downNum(window,session);
             return new CommonResult(200, "success", ordinalDown + "办结!", ordinalDown);
         } catch (Exception e) {
             String message = "办结失败";
