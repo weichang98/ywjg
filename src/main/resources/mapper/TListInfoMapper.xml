@@ -218,7 +218,10 @@
     </select>
     <select id="selectWaitApproval" resultType="com.hjy.list.entity.TListInfo">
         select * from "liuchun"."t_list_info"
-        where "t_list_info"."approval_people" is null;
+        where "t_list_info"."approval_people" is null
+    </select>
+    <select id="selectByIdCard" resultType="com.hjy.list.entity.TListInfo" parameterType="string">
+        select * from "liuchun"."t_list_info" where "Idcard" = #{IdCard,jdbcType=VARCHAR}
     </select>
 
 </mapper>

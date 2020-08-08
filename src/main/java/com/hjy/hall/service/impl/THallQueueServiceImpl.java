@@ -331,7 +331,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         String businessType=String.valueOf(jsonObject.get("businessType"));
         String bCertificatesType=String.valueOf(jsonObject.get("bCertificatesType"));
         String bName=String.valueOf(jsonObject.get("bName"));
-        String bIdCard=String.valueOf(jsonObject.get("bIdCard"));
+        String bIdCard=String.valueOf(jsonObject.get("bIdcard"));
         String isAgent=String.valueOf(jsonObject.get("isAgent"));
         //查询代理次数
         int handleNum = tHallQueueMapper.handleNum(tHallQueue);
@@ -341,11 +341,12 @@ public class THallQueueServiceImpl implements THallQueueService {
         if(isAgent.equals("1")){
             //查询办理本人是否在黑名单中
             tListInfoB.setIdCard(bIdCard);
-            List<TListInfo> infoListB= tListInfoMapper.selectAllByEntity(tListInfoB);
-            if(infoListB != null){
+            TListInfo infoB= tListInfoMapper.selectByIdCard(bIdCard);
+            if(infoB != null){
                 map.put("code",444);
                 map.put("status","error");
                 map.put("msg","办理本人在黑名单中！不予取号");
+                return map;
             }
             //本人信息
             tHallQueue.setBIdcard(bIdCard);
@@ -361,8 +362,8 @@ public class THallQueueServiceImpl implements THallQueueService {
             TListInfo tListInfoA=new TListInfo();
             tListInfoA.setIdCard(aIdcard);
             //查询代办人是否在黑名单中
-            List<TListInfo> infoList=tListInfoMapper.selectAllByEntity(tListInfoA);
-            if(infoList!=null){
+            TListInfo infoA=tListInfoMapper.selectByIdCard(aIdcard);
+            if(infoA!=null){
                 map.put("code",445);
                 map.put("status","error");
                 map.put("msg","该代办人在黑名单中！不予取号");
@@ -410,7 +411,11 @@ public class THallQueueServiceImpl implements THallQueueService {
         tHallQueue.setOrdinal(ordinal);
         tHallQueue.setIsVip(0);
         tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
+        tHallQueue.setHandleNum(handleNum);
         tHallQueueMapper.insertSelective(tHallQueue);
+        map.put("code",200);
+        map.put("status","error");
+        map.put("msg","获取业务类型数据成功");
         map.put("ordinalQueue",tHallQueue);
         return map;
     }

@@ -61,4 +61,6 @@ public interface TListInfoMapper {
      * @return TListInfo 对象列表
      */
     List<TListInfo> selectWaitApproval();
+
+    TListInfo selectByIdCard(@Param("IdCard") String IdCard);
 }
