@@ -16,6 +16,7 @@ import com.hjy.hall.service.THallTakenumberService;
 import com.hjy.list.dao.TListInfoMapper;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysTokenMapper;
+import com.hjy.system.dao.TSysWindowMapper;
 import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ public class THallQueueServiceImpl implements THallQueueService {
     private TListInfoMapper tListInfoMapper;
     @Autowired
     private THallTakenumberMapper tHallTakenumberMapper;
+    @Autowired
+    private TSysWindowMapper tSysWindowMapper;
 
     /**
      * 通过ID查询单条数据
@@ -418,6 +421,16 @@ public class THallQueueServiceImpl implements THallQueueService {
         map.put("msg","获取业务类型数据成功");
         map.put("ordinalQueue",tHallQueue);
         return map;
+    }
+
+    @Override
+    public String selectWindowNameByIp(String ip) {
+        return tSysWindowMapper.selectWindowNameByIp(ip);
+    }
+
+    @Override
+    public TSysWindow selectWindowByIp(String ip) {
+        return tSysWindowMapper.selectWindowByIp(ip);
     }
 
     @Override

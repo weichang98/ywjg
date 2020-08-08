@@ -196,5 +196,12 @@
     <select id="selectAll" resultType="com.hjy.system.entity.TSysWindow">
         select * from "liuchun"."t_sys_window"
     </select>
+    <select id="selectWindowNameByIp" resultType="java.lang.String" parameterType="string">
+        select "t_sys_window"."window_name" from "liuchun"."t_sys_window" where "ip" = #{Ip,jdbcType=VARCHAR}
+    </select>
+    <select id="selectWindowByIp" resultType="com.hjy.system.entity.TSysWindow"
+            parameterType="string">
+        select "t_sys_window"."window_name","t_sys_window"."business_type" from "liuchun"."t_sys_window" where "ip" = #{Ip,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

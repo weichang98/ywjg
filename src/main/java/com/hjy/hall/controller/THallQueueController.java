@@ -27,6 +27,7 @@ import com.hjy.system.service.TSysWindowService;
 import lombok.extern.slf4j.Slf4j;
 import oracle.sql.DATE;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.schema.Model;
 
@@ -192,7 +193,7 @@ public class THallQueueController {
      * @return 跳转结果
      */
     @GetMapping("/hall/queue/getOrdinal/page")
-    public CommonResult getOrdinalpage () throws FebsException {
+    public CommonResult getOrdinalpage (HttpServletRequest request) throws FebsException {
         try {
             //获取业务类型
             List<TSysBusinesstype> businesstypes = tSysBusinesstypeService.selectAll();
@@ -223,54 +224,32 @@ public class THallQueueController {
             throw new FebsException(message);
         }
     }
-//    @PostMapping("/hall/queue/getOrdinal")
-//    public CommonResult getOrdinal(@RequestBody THallQueue tHallQueue) throws FebsException {
-//        System.err.println(tHallQueue);
-//        System.err.println(tHallQueue.getAIdcard());
-//        try {
-//            //********查询代理次数
-//            int handleNum=tHallQueueService.handleNum(tHallQueue);
-//            int agentNum = tHallQueueService.agentNum(tHallQueue);
-//
-//            //查询办理本人是否在黑名单中
-//            TListInfo tListInfoB=new TListInfo();
-//            tListInfoB.setIdCard(tHallQueue.getBIdcard());
-//            List<TListInfo> infoListB=tListInfoService.selectAllByEntity(tListInfoB);
-//            if(infoListB.size()>0){
-//                return new CommonResult(444, "failed", "办理本人在黑名单中！不予取号", null);
-//            }
-//
-//            if(tHallQueue.getAIdcard()!=null||tHallQueue.getAIdcard()!=""){
-//                TListInfo tListInfoA=new TListInfo();
-//                tListInfoA.setIdCard(tHallQueue.getAIdcard());
-//                //查询代办人是否在黑名单中
-//                List<TListInfo> infoList=tListInfoService.selectAllByEntity(tListInfoA);
-//                if(infoList.size()>0){
-//                    return new CommonResult(445, "failed", "该代办人在黑名单中！不予取号", null);
-//                }
-//                //查询代办人是否代理次数超过5次，是则加入黑名单
-//                if(agentNum>=4){
-//                    tListInfoA.setPkListId(IDUtils.currentTimeMillis());
-//                    tListInfoA.setListType("黑名单");
-//                    tListInfoA.setFullName(tHallQueue.getAName());
-//                    tListInfoA.setExplain("代理次数过多");
-//                    //待补全
-//                    tListInfoService.insert(tListInfoA);
-//                    return new CommonResult(446, "failed", "该代办人代次数超过5次！不予取号", null);
-//                }
-//            }
-//            //业务方法
-//            THallQueue ordinalQueue = tHallTakenumberService.getOrdinal(tHallQueue);
-//            ordinalQueue.setHandleNum(handleNum);
-//            ordinalQueue.setAgentNum(agentNum);
-//            return new CommonResult(200, "success", "取号成功!您的号码是:" + ordinalQueue.getOrdinal(), ordinalQueue);
-//        } catch (Exception e) {
-//            String message = "取号失败";
-//            log.error(message, e);
-//            throw new FebsException(message);
-//        }
-//    }
 
+    /**
+     * 叫号页面
+     */
+    @GetMapping("/hall/queue/call/page")
+    public CommonResult callPage (HttpServletRequest request) throws FebsException {
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+            //从token中拿到当前窗口信息
+            String tokenStr = TokenUtil.getRequestToken(request);
+            SysToken token = tHallQueueService.findByToken(tokenStr);
+            String ip = token.getIp();
+            TSysWindow window = tHallQueueService.selectWindowByIp(ip);
+            jsonObject.put("windowName",window.getWindowName());
+            //获取当前窗口可办理的业务类型
+            String businesstypeList= window.getBusinessType();
+            String [] strings = businesstypeList.split("/");
+            jsonObject.put("businessTypes",strings);
+            return new CommonResult(200, "success", "获取窗口及业务数据成功",jsonObject);
+        } catch (Exception e) {
+            String message = "获取窗口及业务数据失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
     /**
      * 顺序叫号
      *

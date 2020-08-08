@@ -57,4 +57,8 @@ public interface TSysWindowMapper {
      * @return 对象列表
      */
     List<TSysWindow> selectAllByEntity(TSysWindow tSysWindow);
+
+    String selectWindowNameByIp(@Param("Ip") String Ip);
+
+    TSysWindow selectWindowByIp(@Param("Ip")String ip);
 }

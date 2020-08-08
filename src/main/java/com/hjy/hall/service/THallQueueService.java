@@ -99,4 +99,8 @@ public interface THallQueueService {
     THallQueue vipCall(TSysWindow window,String vip_ordinal) throws Exception;
 
     Map<String, Object> getOrdinal(String param) throws Exception;
+
+    String selectWindowNameByIp(String ip);
+
+    TSysWindow selectWindowByIp(String ip);
 }
