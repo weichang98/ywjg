@@ -102,7 +102,6 @@ public class THallQueueController {
     public CommonResult tHallQueueList() throws FebsException {
         try {
             List<THallQueue> tHallQueueList = tHallQueueService.selectAll();
-            System.err.println(tHallQueueList);
             return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -120,7 +119,6 @@ public class THallQueueController {
     public CommonResult tHallQueueListByEntity(@RequestBody THallQueue tHallQueue) throws FebsException {
         try {
             List<THallQueue> tHallQueueList = tHallQueueService.selectAllByEntity(tHallQueue);
-            System.err.println(tHallQueueList);
             return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -160,7 +158,6 @@ public class THallQueueController {
         try {
             //
             THallQueue tHallQueue = tHallQueueService.selectById(idStr);
-            System.err.println(tHallQueue);
             return new CommonResult(200, "success", "数据获取成功!", tHallQueue);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -273,7 +270,7 @@ public class THallQueueController {
             int agentNum = tHallQueueService.agentNum(queue);
             queue.setAgentNum(agentNum);
             queue.setHandleNum(handleNum);
-            System.err.println("queue"+queue);
+            System.err.println("/hall/queue/call-queue"+queue);
             //将当前窗口正在办理的号码放入session中
             session.setAttribute(windowName+"HandingQueue",queue);
             return new CommonResult(200, "success", windowName + ":" + queue.getOrdinal(), queue);

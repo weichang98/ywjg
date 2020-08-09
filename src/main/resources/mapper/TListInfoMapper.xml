@@ -223,5 +223,34 @@
     <select id="selectByIdCard" resultType="com.hjy.list.entity.TListInfo" parameterType="string">
         select * from "liuchun"."t_list_info" where "Idcard" = #{IdCard,jdbcType=VARCHAR}
     </select>
+    <select id="selectSize" resultType="java.lang.Integer">
+        select count(*) from "liuchun"."t_list_info"
+        where 1 = 1
+        <if test="listType != null and listType != '' and listType != 'null'">
+            and "list_type" = #{listType,jdbcType=VARCHAR}
+        </if>
+        <if test="fullName != null and fullName != ''and fullName != 'null'">
+            and  "full_name" = #{fullName,jdbcType=VARCHAR}
+        </if><if test="IdCard != null and IdCard != '' and IdCard != 'null'">
+            and "Idcard" like '%${IdCard}%'
+        </if>
+    </select>
+    <select id="selectAllPage" resultType="com.hjy.list.entity.TListInfo">
+        select t.*
+        from
+        (select rownum rn, u.*
+        from "liuchun"."t_list_info" u
+        where rownum &lt;= #{endRow,jdbcType=INTEGER}) t
+        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
+        <if test="listType != null and listType != '' and listType != 'null'">
+            and "list_type" = #{listType}
+        </if>
+        <if test="fullName != null and fullName != ''and fullName != 'null'">
+            and  "full_name" = #{fullName}
+        </if>
+        <if test="IdCard != null and IdCard != '' and IdCard != 'null'">
+            and "Idcard" like '%${IdCard}%'
+        </if>
+    </select>
 
 </mapper>

@@ -22,5 +22,5 @@ public class PageRequest {
     /**
      * 结束行页码
      */
-    private int endtRow;
+    private int endRow;
 }

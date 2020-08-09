@@ -1,5 +1,7 @@
 package com.hjy.list.service;
 
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.list.entity.TListInfo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,4 +61,6 @@ public interface TListInfoService {
     List<TListInfo> selectWaitApproval()throws Exception;
 
     int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception;
+
+    PageResult selectAllPage(String param);
 }

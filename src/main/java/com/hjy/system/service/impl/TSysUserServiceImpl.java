@@ -7,6 +7,8 @@ import com.hjy.common.utils.PasswordEncryptUtils;
 import com.hjy.common.utils.page.PageObjectUtils;
 import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
+import com.hjy.common.utils.page.PageUtil;
+import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysRoleMapper;
 import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.ReUserRole;
@@ -112,10 +114,24 @@ public class TSysUserServiceImpl implements TSysUserService {
     }
 
     @Override
-    public PageResult selectAllPage(PageRequest pageRequest) {
-        PageRequest pageRequest2 = PageObjectUtils.getRequest(pageRequest);
-        System.err.println("pageRequest------"+pageRequest2);
-        return tSysUserMapper.selectAllPage(pageRequest2);
+    public PageResult selectAllPage(String param) {
+        JSONObject json = JSON.parseObject(param);
+        //实体数据
+        String unit = String.valueOf(json.get("unit"));
+        String fullName = String.valueOf(json.get("fullName"));
+        String IDcard = String.valueOf(json.get("IDcard"));
+        String policeNum = String.valueOf(json.get("policeNum"));
+        TSysUser user = new TSysUser();
+        user.setUnit(unit);
+        user.setFullName(fullName);
+        user.setIDcard(IDcard);
+        user.setPoliceNum(policeNum);
+        //分页记录条数
+        int total = tSysUserMapper.selectSize(user);
+        PageResult result = PageUtil.getPageResult(param,total);
+        List<TSysUser> users = tSysUserMapper.selectAllPage(result.getStartRow(),result.getEndRow(),unit,fullName,IDcard,policeNum);
+        result.setContent(users);
+        return result;
     }
 
     @Override
@@ -129,7 +145,6 @@ public class TSysUserServiceImpl implements TSysUserService {
         String inputOldPassword = String.valueOf(json.get("oldPassword"));
         //输入的旧密码加密
         String inputOldPasswordMd5 = PasswordEncryptUtils.MyPasswordEncryptUtil(username,inputOldPassword);
-
         if(!inputOldPasswordMd5.equals(oldPasswordMd5)){
             return 2;
         }

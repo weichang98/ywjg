@@ -53,5 +53,6 @@ public interface TSysDeptService {
      * @return list
      */
      List<TSysDept> selectAllByEntity(TSysDept tSysDept)throws Exception;
-     
+
+    List<String> selectDeptUnit();
 }

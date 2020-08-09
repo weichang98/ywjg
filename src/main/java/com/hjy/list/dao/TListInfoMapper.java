@@ -1,5 +1,6 @@
 package com.hjy.list.dao;
 
+import com.hjy.common.utils.page.PageRequest;
 import com.hjy.list.entity.TListInfo;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -63,4 +64,8 @@ public interface TListInfoMapper {
     List<TListInfo> selectWaitApproval();
 
     TListInfo selectByIdCard(@Param("IdCard") String IdCard);
+
+    int selectSize(TListInfo listInfo);
+
+    List<TListInfo> selectAllPage(Integer startRow, Integer endRow,@Param("listType")String listType,@Param("fullName")String fullName,@Param("IdCard")String IdCard);
 }

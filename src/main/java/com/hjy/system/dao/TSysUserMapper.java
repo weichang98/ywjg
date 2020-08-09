@@ -70,13 +70,15 @@ public interface TSysUserMapper {
      */
     int deleteUserRoleByUserId(@Param("fkUserId")String fk_user_id);
     /**
-     * 分页查询所有行数据
-     * @return 对象列表
-     */
-    PageResult selectAllPage(PageRequest pageRequest);
-    /**
      * 通过用户名查询用户信息
      * @return TSysUser
      */
     TSysUser selectUserByUsername(@Param("username")String username);
+
+    int selectSize(TSysUser user);
+    /**
+     * 分页查询所有行数据
+     * @return 对象列表
+     */
+    List<TSysUser> selectAllPage(int startRow, int endRow, @Param("unit")String unit, @Param("fullName")String fullName, @Param("IDcard")String IDcard, @Param("policeNum")String policeNum);
 }

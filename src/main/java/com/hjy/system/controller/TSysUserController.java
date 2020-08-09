@@ -113,24 +113,16 @@ public class TSysUserController {
      */
     @RequiresPermissions({"user:view"})
     @PostMapping("/system/user/list")
-    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest ) throws FebsException{
+    public CommonResult tSysUserList(@RequestBody String param ) throws FebsException{
         try {
             //
-            List<TSysUser> tSysUserList = tSysUserService.selectAll();
-            int total= tSysUserList.size();
-            int pageSize = pageRequest.getPageSize();
-            PageResult result = new PageResult();
-            result.setContent(tSysUserList);
-            result.setTotal(total);
-            result.setPages((int) Math.ceil(total/pageSize));
-            result.setPageSize(pageSize);
-            result.setPageNum(pageRequest.getPageNum());
-//            PageResult result = tSysUserService.selectAllPage(pageRequest);
+            PageResult result = tSysUserService.selectAllPage(param);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("PageResult",result);
             //部门
             List<TSysDept> depts = tSysDeptService.selectAll();
-            jsonObject.put("depts",depts);
+            List<String> deptName = tSysDeptService.selectDeptUnit();
+            jsonObject.put("depts",deptName);
             return new CommonResult(200,"success","查询数据成功!",jsonObject);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -139,24 +131,35 @@ public class TSysUserController {
         }
     }
     /**
-     * 2 通过实体查询所有数据
+     * 2 查询所有数据
      * @return 所有数据
      */
-    @RequiresPermissions({"user:view"})
-    @PostMapping("/system/user/listByEntity")
-    public CommonResult tSysUserListByEntity(@RequestBody TSysUser tSysUser) throws FebsException{
-        System.err.println("listByEntity"+tSysUser);
-        try {
-            //
-            List<TSysUser> tSysUserList = tSysUserService.selectAllByEntity(tSysUser);
-            System.err.println(tSysUserList);
-            return new CommonResult(200,"success","查询数据成功!",tSysUserList);
-        } catch (Exception e) {
-            String message = "查询数据失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-    }
+//    @RequiresPermissions({"user:view"})
+//    @PostMapping("/system/user/list")
+//    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest ) throws FebsException{
+//        try {
+//            //
+//            List<TSysUser> tSysUserList = tSysUserService.selectAll();
+//            int total= tSysUserList.size();
+//            int pageSize = pageRequest.getPageSize();
+//            PageResult result = new PageResult();
+//            result.setContent(tSysUserList);
+//            result.setTotal(total);
+//            result.setPages((int) Math.ceil(total/pageSize));
+//            result.setPageSize(pageSize);
+//            result.setPageNum(pageRequest.getPageNum());
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("PageResult",result);
+//            //部门
+//            List<TSysDept> depts = tSysDeptService.selectAll();
+//            jsonObject.put("depts",depts);
+//            return new CommonResult(200,"success","查询数据成功!",jsonObject);
+//        } catch (Exception e) {
+//            String message = "查询数据失败";
+//            log.error(message, e);
+//            throw new FebsException(message);
+//        }
+//    }
 
     /**
      * 3 删除数据

@@ -1,11 +1,19 @@
 package com.hjy.list.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.file.MyFileUtil;
+import com.hjy.common.utils.page.PageObjectUtils;
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
+import com.hjy.common.utils.page.PageUtil;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.list.dao.TListInfoMapper;
 import com.hjy.list.service.TListInfoService;
 import com.hjy.system.entity.ActiveUser;
+import com.hjy.system.entity.TSysUser;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -104,6 +112,25 @@ public class TListInfoServiceImpl implements TListInfoService {
         }
         System.err.println(tListInfo);
         return tListInfoMapper.insertSelective(tListInfo);
+    }
+
+    @Override
+    public PageResult selectAllPage(String param) {
+        JSONObject json = JSON.parseObject(param);
+        //实体数据
+        String listType = String.valueOf(json.get("listType"));
+        String fullName = String.valueOf(json.get("fullName"));
+        String IdCard = String.valueOf(json.get("IdCard"));
+        TListInfo listInfo = new TListInfo();
+        listInfo.setListType(listType);
+        listInfo.setFullName(fullName);
+        listInfo.setIdCard(IdCard);
+        //分页记录条数
+        int total = tListInfoMapper.selectSize(listInfo);
+        PageResult result = PageUtil.getPageResult(param,total);
+        List<TListInfo> listInfos = tListInfoMapper.selectAllPage(result.getStartRow(),result.getEndRow(),listType,fullName,IdCard);
+        result.setContent(listInfos);
+        return result;
     }
 
 }

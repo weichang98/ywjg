@@ -57,4 +57,6 @@ public interface TSysDeptMapper {
      * @return 对象列表
      */
     List<TSysDept> selectAllByEntity(TSysDept tSysDept);
+
+    List<String> selectDeptUnit();
 }

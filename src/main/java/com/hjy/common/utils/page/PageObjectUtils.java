@@ -17,7 +17,7 @@ public class PageObjectUtils {
         pageIndex = (pageIndex == null || pageIndex < PAGE_START_INDEX) ? PAGE_START_INDEX : pageIndex;
         int startRow = (pageIndex - 1) * limit+1;
         pageRequest.setStartRow(startRow);
-        pageRequest.setEndtRow(pageIndex*limit);
+        pageRequest.setEndRow(pageIndex*limit);
         return pageRequest;
     }
 }

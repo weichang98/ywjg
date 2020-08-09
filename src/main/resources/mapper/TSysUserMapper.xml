@@ -238,19 +238,44 @@
     <select id="selectUserRoleByUserId" resultType="java.lang.String" parameterType="java.lang.String">
         select "fk_role_id" from "liuchun"."re_user_role" where "fk_user_id" = #{fkUserId,jdbcType=VARCHAR}
     </select>
-    <select id="selectAllPage" resultType="com.hjy.common.utils.page.PageResult" parameterType="com.hjy.common.utils.page.PageRequest">
-        select t.*
-        from (select rownum rn, u.*
-        from "liuchun"."t_sys_user" u
-        where rownum &lt;= #{pageSize,jdbcType=INTEGER}) t
-        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
-    </select>
-    <select id="selectByUsername" resultType="com.hjy.system.entity.TSysUser">
-
-    </select>
     <select id="selectUserByUsername" resultType="com.hjy.system.entity.TSysUser"
             parameterType="java.lang.String">
         select * from "liuchun"."t_sys_user" where "username" = #{username,jdbcType=VARCHAR}
     </select>
-
+    <select id="selectSize" resultType="java.lang.Integer">
+        select count(*) from "liuchun"."t_sys_user"
+        where 1 = 1
+        <if test="unit != null and unit != '' and unit != 'null'">
+            and "unit" = #{unit}
+        </if>
+        <if test="fullName != null and fullName != ''and fullName != 'null'">
+            and  "full_name" = #{fullName}
+        </if>
+        <if test="IDcard != null and IDcard != '' and IDcard != 'null'">
+            and "IdCard" like '%${IDcard}%'
+        </if>
+        <if test="policeNum != null and policeNum != '' and policeNum != 'null'">
+            and "police_num" = #{policeNum}
+        </if>
+    </select>
+    <select id="selectAllPage" resultType="com.hjy.system.entity.TSysUser">
+        select t.*
+        from
+        (select rownum rn, u.*
+        from "liuchun"."t_sys_user" u
+        where rownum &lt;= #{endRow,jdbcType=INTEGER}) t
+        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
+        <if test="unit != null and unit != '' and unit != 'null'">
+            and "unit" = #{unit}
+        </if>
+        <if test="fullName != null and fullName != ''and fullName != 'null'">
+            and  "full_name" = #{fullName}
+        </if>
+        <if test="IDcard != null and IDcard != '' and IDcard != 'null'">
+            and "IdCard" like '%${IDcard}%'
+        </if>
+        <if test="policeNum != null and policeNum != '' and policeNum != 'null'">
+            and "police_num" = #{policeNum}
+        </if>
+    </select>
 </mapper>

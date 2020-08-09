@@ -67,7 +67,7 @@ public interface TSysUserService {
      * 分页查询所有数据
      * @return list
      */
-    PageResult selectAllPage(PageRequest pageRequest);
+    PageResult selectAllPage(String param);
     /**
      * 修改密码
      */

@@ -2,6 +2,8 @@ package com.hjy.list.controller;
 
 import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
+import com.hjy.common.utils.page.PageRequest;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.list.service.TListInfoService;
 import com.alibaba.fastjson.JSON;
@@ -76,13 +78,13 @@ public class TListInfoController {
      * @return 所有数据
      */
     @RequiresPermissions({"list:view"})
-    @GetMapping("/list/info/list")
-    public CommonResult tListInfoList() throws FebsException{
+    @PostMapping("/list/info/list")
+    public CommonResult tListInfoList(@RequestBody String param) throws FebsException{
         try {
             //
-            List<TListInfo> tListInfoList = tListInfoService.selectAll();
-            System.err.println(tListInfoList);
-            return new CommonResult(200,"success","查询数据成功!",tListInfoList);
+            PageResult result = tListInfoService.selectAllPage(param);
+            System.err.println(result);
+            return new CommonResult(200,"success","查询数据成功!",result);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);

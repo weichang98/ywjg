@@ -211,5 +211,8 @@
     <select id="selectAll" resultType="com.hjy.system.entity.TSysDept">
         select * from "liuchun"."t_sys_dept"
     </select>
+    <select id="selectDeptUnit" resultType="java.lang.String">
+        select "t_sys_dept"."dept_unit" from "liuchun"."t_sys_dept"
+    </select>
 
 </mapper>

@@ -83,4 +83,9 @@ public class TSysDeptServiceImpl implements TSysDeptService {
     public List<TSysDept> selectAllByEntity(TSysDept tSysDept) throws Exception{
         return this.tSysDeptMapper.selectAllByEntity(tSysDept);
     }
+
+    @Override
+    public List<String> selectDeptUnit() {
+        return tSysDeptMapper.selectDeptUnit();
+    }
 }
