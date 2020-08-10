@@ -8,6 +8,7 @@ import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.dao.THallQueueMapper;
 import com.hjy.hall.dao.THallTakenumberMapper;
+import com.hjy.hall.entity.Statistics;
 import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.hall.entity.THallTakenumber;
@@ -18,14 +19,18 @@ import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysBusinesstypeMapper;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.dao.TSysWindowMapper;
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysBusinesstype;
 import com.hjy.system.entity.TSysWindow;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -159,9 +164,69 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public THallQueueCount StatisticsTime(THallQueue tHallQueue) {
+    public List<Statistics> StatisticsNumMethod(THallQueue tHallQueue) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date queryStart = tHallQueue.getQueryStart();
         Date queryEnd = tHallQueue.getQueryEnd();
-        //将endTime日期加1便于数据库统计
+        String queryStartStr = sdf.format(queryStart);
+        String queryEndStr = sdf.format(queryEnd);
+        //总业务量
+        List<THallQueueCount> totalList = this.totalCount(queryStartStr, queryEndStr);
+        //实际业务量统计
+        List<THallQueueCount> realList = this.realCount(queryStartStr, queryEndStr);
+        //空号统计
+        List<THallQueueCount> nullList = this.nullCount(queryStartStr, queryEndStr);
+        //退办统计
+        List<THallQueueCount> backLsit = this.backCount(queryStartStr, queryEndStr);
+        List<Statistics> statisticsList = new ArrayList<>();
+
+        HashMap<String, Integer> realmap = new HashMap();
+        for (THallQueueCount realSingle : realList) {
+            String agent = realSingle.getAgent();
+            String businessType = typeTransUtil.typeTrans(realSingle.getBusinessType()).get(0);
+            realSingle.setBusinessType(businessType);
+            if (realmap.containsKey(agent) == false) {
+                realmap.put(agent, null);
+                Statistics statistics = new Statistics();
+                statistics.setAgent(agent);
+                //通过反射的invoke方法动态调用对应的方法
+                Class<?> clazz = Statistics.class;
+                Method method = clazz.getMethod("set" + businessType, Integer.class);
+                method.invoke(statistics, realSingle.getRealCount());
+                statisticsList.add(statistics);
+            } else {
+                for (Statistics statistics : statisticsList) {
+                    if (agent.equals(statistics.getAgent())) {
+                        Class<?> clazz = Statistics.class;
+                        Method method = clazz.getMethod("set" + businessType, Integer.class);
+                        method.invoke(statistics, realSingle.getRealCount());
+                    }
+                }
+            }
+        }
+        for (THallQueueCount totalSingle : totalList) {
+            String agent = totalSingle.getAgent();
+            for (Statistics statistics : statisticsList) {
+                if (agent.equals(statistics.getAgent())) {
+                    statistics.setTotalNum(totalSingle.getTotalCount());
+                }
+            }
+        }
+        for (THallQueueCount nullSingle : nullList) {
+            String agent = nullSingle.getAgent();
+            for (Statistics statistics : statisticsList) {
+                if (agent.equals(statistics.getAgent())) {
+                    statistics.setNullNum(nullSingle.getNullCount());
+                }
+            }
+        }
+        return statisticsList;
+    }
+
+    @Override
+    public THallQueueCount StatisticsTime(THallQueue tHallQueue) throws Exception {
+        Date queryEnd = tHallQueue.getQueryEnd();
+//        将endTime日期加1便于数据库统计
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(queryEnd);
         calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
@@ -197,6 +262,9 @@ public class THallQueueServiceImpl implements THallQueueService {
             TotalWaitTime += SingleWaitTime;
             TotalServiceTime += SingleServiceTime;
         }
+        if(mark==0){
+            return  null;
+        }
         long avgWaitTime = (TotalWaitTime / mark) / 1000;//算出的long类型除以1000则为实际秒数
         long avgServiceTime = (TotalServiceTime / mark) / 1000;
         System.out.print("总等待时间为：" + TotalWaitTime / 1000 + "秒，平均等待时间为:" + avgWaitTime + "秒");
@@ -217,9 +285,9 @@ public class THallQueueServiceImpl implements THallQueueService {
     @Override
     public String downNum(TSysWindow window, HttpSession session) {
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName()+"HandingQueue");
-        if(nowQueue==null){
-            String message="已无号";
+        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        if (nowQueue == null) {
+            String message = "已无号";
             return message;
         }
         nowQueue.setRemarks("办结");
@@ -227,7 +295,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
+        THallTakenumber tnum = tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
@@ -237,35 +305,35 @@ public class THallQueueServiceImpl implements THallQueueService {
     @Override
     public String backNum(TSysWindow window, HttpSession session) {
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName()+"HandingQueue");
-        if(nowQueue==null){
-            String message="已无号";
+        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        if (nowQueue == null) {
+            String message = "已无号";
             return message;
         }
         nowQueue.setRemarks("退号");
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
+        THallTakenumber tnum = tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
-        return  ordinal;
+        return ordinal;
     }
 
     @Override
-    public String nullNum(TSysWindow window,HttpSession session) {
+    public String nullNum(TSysWindow window, HttpSession session) {
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName()+"HandingQueue");
-        if(nowQueue==null){
-            String message="已无号";
+        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        if (nowQueue == null) {
+            String message = "已无号";
             return message;
         }
         nowQueue.setRemarks("空号");
         this.updateById(nowQueue);
         //更新取号表状态flag
         String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum=tHallTakenumberService.getByOrdinal(ordinal);
+        THallTakenumber tnum = tHallTakenumberService.getByOrdinal(ordinal);
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
@@ -283,7 +351,7 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public THallQueue vipCall(TSysWindow window, String vip_ordinal) throws  Exception{
+    public THallQueue vipCall(TSysWindow window, String vip_ordinal) throws Exception {
         String agent = window.getOperatorPeople();
         String windowName = window.getWindowName();
         String businessType = window.getBusinessType();
@@ -299,13 +367,13 @@ public class THallQueueServiceImpl implements THallQueueService {
         String dateStr = formatter.format(date);//format()方法bai将Date转换成指定格式的String
         THallQueue queueVip = this.getByOrdinalAndDatestr(vip_ordinal, dateStr);
         //需要将endtime置空，queueVIP.setEndTime(null)无用，故新建个对象
-        THallQueue queueinsert=new THallQueue();
+        THallQueue queueinsert = new THallQueue();
         queueinsert.setPkQueueId(IDUtils.currentTimeMillis());
         queueinsert.setOrdinal(queueVip.getOrdinal());
         queueinsert.setWindowName(queueVip.getWindowName());
         queueinsert.setAgent(queueVip.getAgent());
         queueinsert.setBusinessType(queueVip.getBusinessType());
-        if(queueVip.getAIdcard()!=null){
+        if (queueVip.getAIdcard() != null) {
             queueinsert.setAIdcard(queueVip.getAIdcard());
             queueinsert.setAName(queueVip.getAName());
             queueinsert.setACertificatesType(queueVip.getACertificatesType());
@@ -324,20 +392,20 @@ public class THallQueueServiceImpl implements THallQueueService {
     @Override
     public Map<String, Object> getOrdinal(String param) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        THallQueue tHallQueue= new THallQueue();
-        TListInfo tListInfoB=new TListInfo();
+        THallQueue tHallQueue = new THallQueue();
+        TListInfo tListInfoB = new TListInfo();
         JSONObject jsonObject = JSON.parseObject(param);
-        String businessType=String.valueOf(jsonObject.get("businessType"));
-        if(businessType == null||businessType.equals("")){
-            map.put("code",447);
-            map.put("status","error");
-            map.put("msg","您还没有选择办理业务！");
+        String businessType = String.valueOf(jsonObject.get("businessType"));
+        if (businessType == null || businessType.equals("")) {
+            map.put("code", 447);
+            map.put("status", "error");
+            map.put("msg", "您还没有选择办理业务！");
             return map;
         }
-        String bCertificatesType=String.valueOf(jsonObject.get("bCertificatesType"));
-        String bName=String.valueOf(jsonObject.get("bName"));
-        String bIdCard=String.valueOf(jsonObject.get("bIdCard"));
-        String isAgent=String.valueOf(jsonObject.get("isAgent"));
+        String bCertificatesType = String.valueOf(jsonObject.get("bCertificatesType"));
+        String bName = String.valueOf(jsonObject.get("bName"));
+        String bIdCard = String.valueOf(jsonObject.get("bIdCard"));
+        String isAgent = String.valueOf(jsonObject.get("isAgent"));
         //查询代理次数
         int handleNum = tHallQueueMapper.handleNum(tHallQueue);
         int agentNum = tHallQueueMapper.agentNum(tHallQueue);
@@ -350,41 +418,41 @@ public class THallQueueServiceImpl implements THallQueueService {
         tHallQueue.setBCertificatesType(bCertificatesType);
         tHallQueue.setBName(bName);
         //本人业务
-        if(isAgent.equals("1")){
+        if (isAgent.equals("1")) {
             //查询办理本人是否在黑名单中
             tListInfoB.setIdCard(bIdCard);
-            TListInfo infoB= tListInfoMapper.selectByIdCard(bIdCard);
-            if(infoB != null){
-                map.put("code",444);
-                map.put("status","error");
-                map.put("msg","办理本人在黑名单中！不予取号");
+            TListInfo infoB = tListInfoMapper.selectByIdCard(bIdCard);
+            if (infoB != null) {
+                map.put("code", 444);
+                map.put("status", "error");
+                map.put("msg", "办理本人在黑名单中！不予取号");
                 return map;
             }
-        }else {
+        } else {
             //代理业务
-            String aIdcard=String.valueOf(jsonObject.get("aIdCard"));
-            String aName=String.valueOf(jsonObject.get("aName"));
-            String aCertificatesType=String.valueOf(jsonObject.get("aCertificatesType"));
-            TListInfo tListInfoA=new TListInfo();
+            String aIdcard = String.valueOf(jsonObject.get("aIdCard"));
+            String aName = String.valueOf(jsonObject.get("aName"));
+            String aCertificatesType = String.valueOf(jsonObject.get("aCertificatesType"));
+            TListInfo tListInfoA = new TListInfo();
             tListInfoA.setIdCard(aIdcard);
             //查询代办人是否在黑名单中
-            TListInfo infoA=tListInfoMapper.selectByIdCard(aIdcard);
-            if(infoA!=null){
-                map.put("code",445);
-                map.put("status","error");
-                map.put("msg","该代办人在黑名单中！不予取号");
+            TListInfo infoA = tListInfoMapper.selectByIdCard(aIdcard);
+            if (infoA != null) {
+                map.put("code", 445);
+                map.put("status", "error");
+                map.put("msg", "该代办人在黑名单中！不予取号");
                 return map;
             }
-            if(agentNum>=4){
+            if (agentNum >= 4) {
                 tListInfoA.setPkListId(IDUtils.currentTimeMillis());
                 tListInfoA.setListType("黑名单");
                 tListInfoA.setFullName(tHallQueue.getAName());
                 tListInfoA.setExplain("代理次数过多");
                 //待补全
                 tListInfoMapper.insertSelective(tListInfoA);
-                map.put("code",446);
-                map.put("status","error");
-                map.put("msg","该代办人代次数超过5次！不予取号");
+                map.put("code", 446);
+                map.put("status", "error");
+                map.put("msg", "该代办人代次数超过5次！不予取号");
                 return map;
             }
             //代办人信息
@@ -395,24 +463,24 @@ public class THallQueueServiceImpl implements THallQueueService {
         //开始取号
         //调用取号工具将取号结果放入ordinalQueue
         //序号
-        int ordinal_num = tHallTakenumberMapper.count()+1;
+        int ordinal_num = tHallTakenumberMapper.count() + 1;
         //拿到该业务类型的标识
         List<TSysBusinesstype> typeList = businesstypeMapper.selectAll();
         String type = null;
-        if(typeList != null){
-            for(TSysBusinesstype obj:typeList){
-                if(obj.getTypeName().equals(businessType)){
+        if (typeList != null) {
+            for (TSysBusinesstype obj : typeList) {
+                if (obj.getTypeName().equals(businessType)) {
                     type = obj.getTypeLevel();
                 }
             }
         }
-        String ordinal="";
-        if(ordinal_num<10){
-            ordinal = type+"00"+ ordinal_num;
-        }else if(ordinal_num<=99){
-            ordinal=type+"0"+ ordinal_num;
-        }else{
-            ordinal=type+ ordinal_num;
+        String ordinal = "";
+        if (ordinal_num < 10) {
+            ordinal = type + "00" + ordinal_num;
+        } else if (ordinal_num <= 99) {
+            ordinal = type + "0" + ordinal_num;
+        } else {
+            ordinal = type + ordinal_num;
         }
         THallTakenumber takenumber = new THallTakenumber();
         takenumber.setPkTakenumId(IDUtils.currentTimeMillis());
@@ -427,10 +495,10 @@ public class THallQueueServiceImpl implements THallQueueService {
         tHallQueue.setIsVip(0);
         tHallQueue.setPkQueueId(IDUtils.currentTimeMillis());
         tHallQueueMapper.insertSelective(tHallQueue);
-        map.put("code",200);
-        map.put("status","error");
-        map.put("msg","取号成功");
-        map.put("ordinalQueue",tHallQueue);
+        map.put("code", 200);
+        map.put("status", "success");
+        map.put("msg", "取号成功");
+        map.put("ordinalQueue", tHallQueue);
         return map;
     }
 
@@ -445,8 +513,10 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public THallQueue call(TSysWindow window) throws Exception {
-        String agent = window.getOperatorPeople();
+    public THallQueue call(TSysWindow window,HttpSession session) throws Exception {
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        String agent=activeUser.getFullName();
+//        String agent=window.getOperatorPeople();
         String windowName = window.getWindowName();
         String businessType = window.getBusinessType();
         List<String> typeList = typeTransUtil.typeTrans(businessType);//通过此工具类可以将该窗口可办理的业务类型转化为字母显示且已经排序的List集合
@@ -481,5 +551,14 @@ public class THallQueueServiceImpl implements THallQueueService {
         queueUpdate.setAgent(agent);
         this.updateById(queueUpdate);
         return queueUpdate;
+    }
+
+    @Override
+    public Date Datepush(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
+        date = calendar.getTime();//这个时间就是日期向后推一天的结果
+        return date;
     }
 }

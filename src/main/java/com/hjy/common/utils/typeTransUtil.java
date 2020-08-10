@@ -39,7 +39,6 @@ public class  typeTransUtil {
           }
        }
        Collections.sort (typeDealList);
-       System.out.print("工具类：该窗口可办理的号码类型有:"+typeDealList+",应优先办理:"+typeDealList.get(0)+"\n");
         return  typeDealList;
     }
 }

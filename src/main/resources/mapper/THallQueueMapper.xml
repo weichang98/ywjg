@@ -74,7 +74,7 @@
                 and "get_time" >= #{queryStart,jdbcType=DATE}
             </if>
             <if test="queryEnd != null">
-                and "get_time"  &lt;= #{queryEnd,jdbcType=DATE}
+                and "get_time"  &lt; #{queryEnd,jdbcType=DATE}
             </if>
             <if test="remarks != null">
                 and  "remarks" = #{remarks,jdbcType=VARCHAR}
@@ -262,8 +262,8 @@
 
     <select id="queryByTime" resultType="com.hjy.hall.entity.THallQueue">
         SELECT * FROM "c##root"."t_hall_queue"
-    WHERE "get_time" >= '${startTime}'
-    AND "get_time" &lt;='${endTime}'
+    WHERE to_char("get_time",'yyyy-mm-dd') >= '${startTime}'
+    AND to_char("get_time",'yyyy-mm-dd') &lt;='${endTime}'
     </select>
 
     <select id="getNowNum" resultType="com.hjy.hall.entity.THallQueue">
@@ -317,6 +317,8 @@
         where "a_Idcard"=#{aIdcard,jdbcType=VARCHAR}
         and "remarks" ='办结'
     </select>
+
+
 
 
 </mapper>

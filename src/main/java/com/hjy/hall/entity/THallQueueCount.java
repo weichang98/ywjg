@@ -18,6 +18,11 @@ public class THallQueueCount implements Serializable {
      */
     private String agent;
     /**
+     * 业务类型
+     */
+    private String businessType;
+
+    /**
      * 总业务量(用于装载数据库自定义字段的实体)
      */
     private Integer totalCount;

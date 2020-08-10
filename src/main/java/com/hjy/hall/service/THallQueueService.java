@@ -1,5 +1,6 @@
 package com.hjy.hall.service;
 
+import com.hjy.hall.entity.Statistics;
 import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.system.entity.SysToken;
@@ -67,41 +68,60 @@ public interface THallQueueService {
     List<THallQueue> selectAllByEntity(THallQueue tHallQueue);
 
     //通过号码与日期字符串查询数据
-    THallQueue getByOrdinalAndDatestr(String Ordinal,String DateStr);
+    THallQueue getByOrdinalAndDatestr(String Ordinal, String DateStr);
+
     //根据日期字符串查询数据
-    List<THallQueue> queryByTime(String startTime,String endTime);
+    List<THallQueue> queryByTime(String startTime, String endTime);
+
     //查询现在正在办理的号码
-    THallQueue getNowNum(String windowName,String nowDateStr);
+    THallQueue getNowNum(String windowName, String nowDateStr);
+
     //根据日期字符串查询总业务量
     List<THallQueueCount> totalCount(String queryStart, String queryEnd);
+
     //根据日期字符串查询实际业务量
     List<THallQueueCount> realCount(String queryStart, String queryEnd);
+
     //根据日期字符串查询空号业务量
     List<THallQueueCount> nullCount(String queryStart, String queryEnd);
+
     //根据日期字符串查询退号业务量
     List<THallQueueCount> backCount(String queryStart, String queryEnd);
+
     //token
     SysToken findByToken(String accessToken);
+
     //叫号
-    THallQueue call(TSysWindow window )  throws Exception;
+    THallQueue call(TSysWindow window,HttpSession session) throws Exception;
+
     //业务查询与时间统计
-    THallQueueCount StatisticsTime(THallQueue tHallQueue);
+    THallQueueCount StatisticsTime(THallQueue tHallQueue) throws Exception;
+
     //设置空号
-    String nullNum(TSysWindow window,HttpSession session);
+    String nullNum(TSysWindow window, HttpSession session);
+
     //退号
-    String backNum(TSysWindow window,HttpSession session);
+    String backNum(TSysWindow window, HttpSession session);
+
     //办结
     String downNum(TSysWindow window, HttpSession session);
+
     //办理次数
-   int handleNum(THallQueue tHallQueue);
+    int handleNum(THallQueue tHallQueue);
+
     //代办次数
     int agentNum(THallQueue tHallQueue);
+
     //特呼
-    THallQueue vipCall(TSysWindow window,String vip_ordinal) throws Exception;
+    THallQueue vipCall(TSysWindow window, String vip_ordinal) throws Exception;
 
     Map<String, Object> getOrdinal(String param) throws Exception;
 
     String selectWindowNameByIp(String ip);
 
     TSysWindow selectWindowByIp(String ip);
+
+    List<Statistics> StatisticsNumMethod(THallQueue tHallQueue) throws Exception;
+
+    Date Datepush(Date date);
 }
