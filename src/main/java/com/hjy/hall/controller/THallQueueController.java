@@ -346,7 +346,7 @@ public class THallQueueController {
      *
      * @return 统计结果
      */
-    @PostMapping("/hall/queue/StatisticsNumToday")
+    @GetMapping("/hall/queue/StatisticsPage")
     public CommonResult StatisticsNumToday() throws FebsException {
         try {
           THallQueue tHallQueue=new THallQueue();

@@ -16,51 +16,51 @@ public class Statistics implements Serializable {
     /**
      *A类型业务数
      */
-    private Integer A;
+    private Integer A=0;
     /**
      *B类型业务数
      */
-    private Integer B;
+    private Integer B=0;
     /**
      *C类型业务数
      */
-    private Integer C;
+    private Integer C=0;
     /**
      *D类型业务数
      */
-    private Integer D;
+    private Integer D=0;
     /**
      *E类型业务数
      */
-    private Integer E;
+    private Integer E=0;
     /**
      *F类型业务数
      */
-    private Integer F;
+    private Integer F=0;
     /**
      *G类型业务数
      */
-    private Integer G;
+    private Integer G=0;
     /**
      *H类型业务数
      */
-    private Integer H;
+    private Integer H=0;
     /**
      *I类型业务数
      */
-    private Integer I;
+    private Integer I=0;
     /**
      *空号数
      */
-    private Integer nullNum;
+    private Integer nullNum=0;
     /**
      *实际办理业务数
      */
-    private Integer trueNum;
+    private Integer trueNum=0;
     /**
      * 总业务数
      */
-    private Integer totalNum;
+    private Integer totalNum=0;
 
 
 }
