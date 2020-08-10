@@ -88,4 +88,6 @@ public interface TSysRoleService {
     List<String> selectUserRole_userIded();
 
     TSysRole selectRoleByUserId(String pkUserId);
+
+    String selectRoleIdByUserId(String idStr);
 }

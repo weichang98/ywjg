@@ -110,14 +110,22 @@
             <artifactId>ojdbc6</artifactId>
             <version>12.1.0.1-atlassian-hosted</version>
         </dependency>
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/oracle/oracle-jdbc &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>oracle</groupId>-->
-<!--            <artifactId>oracle-jdbc</artifactId>-->
-<!--            <version>11.2.0.3.0</version>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
+        <!-- websocket-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+        </dependency>
+        <!-- messaging-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+        <!-- javax.servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- shiro-->
         <dependency>

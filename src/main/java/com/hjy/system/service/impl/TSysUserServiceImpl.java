@@ -208,4 +208,52 @@ public class TSysUserServiceImpl implements TSysUserService {
         }
         return result;
     }
+
+    @Override
+    public int updateUser(String param) {
+        JSONObject json = JSON.parseObject(param);
+        TSysUser user = new TSysUser();
+        //用户基本信息
+        String pkUserId = String.valueOf(json.get("pkUserId"));
+        user.setPkUserId(pkUserId);
+        String username = String.valueOf(json.get("username"));
+        user.setUsername(username);
+        String email = String.valueOf(json.get("email"));
+        user.setEmail(email);
+        String tel = String.valueOf(json.get("tel"));
+        user.setTel(tel);
+        String IDcard = String.valueOf(json.get("IDcard"));
+        user.setIDcard(IDcard);
+        String fullName = String.valueOf(json.get("fullName"));
+        user.setFullName(fullName);
+        String policeNum = String.valueOf(json.get("policeNum"));
+        user.setPoliceNum(policeNum);
+        String unit = String.valueOf(json.get("unit"));
+        user.setUnit(unit);
+        String ip = String.valueOf(json.get("ip"));
+        user.setIp(ip);
+        String address = String.valueOf(json.get("address"));
+        user.setIp(ip);
+        String enableStatus = String.valueOf(json.get("enableStatus"));
+        user.setEnableStatus(enableStatus);
+        user.setAddress(address);
+        //修改用户信息
+        tSysUserMapper.updateById(user);
+        //用户角色信息
+        String fkRoleId = String.valueOf(json.get("roleId"));
+        //删除原有角色
+        tSysUserMapper.deleteUserRoleByUserId(pkUserId);
+        if(fkRoleId.equals("0")){
+            //暂不分配角色
+        }
+        if(!fkRoleId.equals("") ||fkRoleId !=null ||fkRoleId != "null"){
+            ReUserRole userRole = new ReUserRole();
+            userRole.setPk_userRole_id(IDUtils.currentTimeMillis());
+            userRole.setFk_role_id(fkRoleId);
+            userRole.setFk_user_id(pkUserId);
+            //更改用户角色
+            tSysRoleMapper.addUserRoleByUserRole(userRole);
+        }
+        return 0;
+    }
 }

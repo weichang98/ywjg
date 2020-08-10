@@ -16,10 +16,10 @@ public class PageUtil {
         //分页数据
         String pageNumStr = String.valueOf(json.get("pageNum"));
         String pageSizeStr = String.valueOf(json.get("pageSize"));
-        if(pageNumStr.equals("") ||pageNumStr == null){
+        if(pageNumStr.equals("") ||pageNumStr == null||pageSizeStr == "null"){
             pageNumStr = "1";
         }
-        if(pageSizeStr.equals("") ||pageSizeStr == null){
+        if(pageSizeStr.equals("") ||pageSizeStr == null||pageSizeStr == "null"){
             pageSizeStr = "10";
         }
         int pageNum = Integer.parseInt(pageNumStr);

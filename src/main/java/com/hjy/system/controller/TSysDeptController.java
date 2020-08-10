@@ -72,24 +72,6 @@ public class TSysDeptController {
         try {
             //
             List<TSysDept> tSysDeptList = tSysDeptService.selectAll();
-            System.err.println(tSysDeptList);
-            return new CommonResult(200,"success","查询数据成功!",tSysDeptList);
-        } catch (Exception e) {
-            String message = "查询数据失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-    }
-    /**
-     * 2 通过实体查询所有数据
-     * @return 所有数据
-     */
-    @GetMapping("/system/dept/listByEntity")
-    public CommonResult tSysDeptListByEntity(@RequestBody TSysDept tSysDept) throws FebsException{
-        try {
-            //
-            List<TSysDept> tSysDeptList = tSysDeptService.selectAllByEntity(tSysDept);
-            System.err.println(tSysDeptList);
             return new CommonResult(200,"success","查询数据成功!",tSysDeptList);
         } catch (Exception e) {
             String message = "查询数据失败";

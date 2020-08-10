@@ -174,7 +174,7 @@
     <update id="updateById" parameterType="com.hjy.system.entity.TSysUser">
         update "liuchun"."t_sys_user"
         <set>
-            <if test="username != null and username != ''">
+            <if test="username != null and username != '' and username != 'null'">
                 "username" = #{username,jdbcType=VARCHAR},
             </if>
             <if test="password != null and password != ''">
@@ -186,38 +186,38 @@
             <if test="fkDeptId != null">
                 "fk_dept_id" = #{fkDeptId,jdbcType=VARCHAR},
             </if>
-            <if test="email != null and email != ''">
+            <if test="email != null and email != '' and email != 'null'">
                 "email" = #{email,jdbcType=VARCHAR},
             </if>
-            <if test="tel != null and tel != ''">
+            <if test="tel != null and tel != '' and tel != 'null'">
                 "tel" = #{tel,jdbcType=VARCHAR},
             </if>
-            <if test="enableStatus != null">
+            <if test="enableStatus != null and enableStatus != '' and enableStatus != 'null'">
                 "enable_status" = #{enableStatus,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 "create_time" = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="IDcard != null and IDcard != ''">
+            <if test="IDcard != null and IDcard != '' and IDcard != 'null'">
                 "IDcard" = #{IDcard,jdbcType=VARCHAR},
             </if>
             <if test="modifyTime != null">
                 "modify_time" = #{modifyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="fullName != null and fullName != ''">
+            <if test="fullName != null and fullName != '' and fullName != 'null'">
                 "full_name" = #{fullName,jdbcType=VARCHAR},
             </if>
-            <if test="policeNum != null and policeNum != ''">
+            <if test="policeNum != null and policeNum != '' and policeNum != 'null'">
                 "police_num" = #{policeNum,jdbcType=VARCHAR},
             </if>
-            <if test="unit != null and unit != ''">
+            <if test="unit != null and unit != '' and unit != 'null'">
                 "unit" = #{unit,jdbcType=VARCHAR},
             </if>
             <if test="onLine != null">
                 "on_line" = #{onLine,jdbcType=VARCHAR},
-            </if><if test="ip != null">
+            </if><if test="ip != null and ip != ''and ip != 'null'" >
                 "ip" = #{ip,jdbcType=VARCHAR},
-            </if><if test="address != null">
+            </if><if test="address != null and address != '' and address != 'null'">
                 "address" = #{address,jdbcType=VARCHAR},
             </if>
         </set>
@@ -251,8 +251,8 @@
         <if test="fullName != null and fullName != ''and fullName != 'null'">
             and  "full_name" = #{fullName}
         </if>
-        <if test="IDcard != null and IDcard != '' and IDcard != 'null'">
-            and "IdCard" like '%${IDcard}%'
+        <if test="IDcard != null and IDcard != ''and IDcard != 'null'">
+            and "IDcard" = #{IDcard,jdbcType=VARCHAR}
         </if>
         <if test="policeNum != null and policeNum != '' and policeNum != 'null'">
             and "police_num" = #{policeNum}
@@ -271,8 +271,8 @@
         <if test="fullName != null and fullName != ''and fullName != 'null'">
             and  "full_name" = #{fullName}
         </if>
-        <if test="IDcard != null and IDcard != '' and IDcard != 'null'">
-            and "IdCard" like '%${IDcard}%'
+        <if test="IDcard != null and IDcard != ''and IDcard != 'null'">
+            and "IDcard" = #{IDcard}
         </if>
         <if test="policeNum != null and policeNum != '' and policeNum != 'null'">
             and "police_num" = #{policeNum}

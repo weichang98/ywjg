@@ -1,6 +1,5 @@
 package com.hjy.system.service;
 
-import com.hjy.common.utils.page.PageRequest;
 import com.hjy.common.utils.page.PageResult;
 import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysUser;
@@ -76,4 +75,8 @@ public interface TSysUserService {
      * 添加用户且添加角色
      */
     Map<String,Object> insertUserAndRole(String param);
+    /**
+     * 修改用户且修改角色
+     */
+    int updateUser(String param);
 }

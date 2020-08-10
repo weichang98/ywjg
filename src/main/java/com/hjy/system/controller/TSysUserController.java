@@ -70,25 +70,6 @@ public class TSysUserController {
             throw new FebsException(message);
         }
      }
-//    /**
-//     * 1 新增数据
-//     * @param tSysUser 实体对象
-//     * @return 新增结果
-//     */
-//    @RequiresPermissions({"user:add"})
-//    @PostMapping("/system/user/addOnlyUser")
-//    public CommonResult tSysUserAdd(@RequestBody TSysUser tSysUser) throws FebsException{
-//        System.err.println(tSysUser);
-//        try {
-//            //
-//            tSysUserService.insert(tSysUser);
-//            return new CommonResult(200,"success","数据添加成功!",null);
-//        } catch (Exception e) {
-//            String message = "数据添加失败";
-//            log.error(message, e);
-//            throw new FebsException(message);
-//        }
-//    }
     /**
      * 1 新增数据，连带角色
      * @param param
@@ -134,32 +115,6 @@ public class TSysUserController {
      * 2 查询所有数据
      * @return 所有数据
      */
-//    @RequiresPermissions({"user:view"})
-//    @PostMapping("/system/user/list")
-//    public CommonResult tSysUserList(@RequestBody PageRequest pageRequest ) throws FebsException{
-//        try {
-//            //
-//            List<TSysUser> tSysUserList = tSysUserService.selectAll();
-//            int total= tSysUserList.size();
-//            int pageSize = pageRequest.getPageSize();
-//            PageResult result = new PageResult();
-//            result.setContent(tSysUserList);
-//            result.setTotal(total);
-//            result.setPages((int) Math.ceil(total/pageSize));
-//            result.setPageSize(pageSize);
-//            result.setPageNum(pageRequest.getPageNum());
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("PageResult",result);
-//            //部门
-//            List<TSysDept> depts = tSysDeptService.selectAll();
-//            jsonObject.put("depts",depts);
-//            return new CommonResult(200,"success","查询数据成功!",jsonObject);
-//        } catch (Exception e) {
-//            String message = "查询数据失败";
-//            log.error(message, e);
-//            throw new FebsException(message);
-//        }
-//    }
 
     /**
      * 3 删除数据
@@ -197,11 +152,12 @@ public class TSysUserController {
         try {
             //
             TSysUser tSysUser = tSysUserService.selectById(idStr);
-            System.err.println(tSysUser);
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("tSysUser",tSysUser);
-            List<TSysPerms> perms = tSysPermsService.selectAll();
-            jsonObject2.put("perms",perms);
+            List<TSysRole> roles = tSysRoleService.selectAll();
+            jsonObject2.put("roles",roles);
+            String role = tSysRoleService.selectRoleIdByUserId(idStr);
+            jsonObject2.put("roleId",role);
             //如果permsType=1为角色权限，permsType=2为自由权限
             jsonObject2.put("permsType","1");
             return new CommonResult(200,"success","数据获取成功!",jsonObject2);
@@ -214,15 +170,15 @@ public class TSysUserController {
     
     /**
      * 4 修改数据
-     * @param tSysUser 实体对象
+     * @param param 实体对象
      * @return 修改结果
      */
     @RequiresPermissions({"user:update"})
     @PutMapping("/system/user/admin/update")
-    public CommonResult tSysUserAdminUpdate(@RequestBody TSysUser tSysUser) throws FebsException{
+    public CommonResult tSysUserAdminUpdate(@RequestBody String param) throws FebsException{
         try {
             //
-            tSysUserService.updateById(tSysUser);
+            tSysUserService.updateUser(param);
             return new CommonResult(200,"success","修改成功!",null);
         } catch (Exception e) {
             String message = "修改失败";
