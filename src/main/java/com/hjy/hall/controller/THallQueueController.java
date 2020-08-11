@@ -20,10 +20,13 @@ import com.hjy.list.service.TListAgentService;
 import com.hjy.list.service.TListInfoService;
 import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysBusinesstype;
+import com.hjy.system.entity.TSysParam;
 import com.hjy.system.entity.TSysWindow;
 import com.hjy.system.service.ShiroService;
 import com.hjy.system.service.TSysBusinesstypeService;
+import com.hjy.system.service.TSysParamService;
 import com.hjy.system.service.TSysWindowService;
+import com.hjy.system.service.impl.TSysParamServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import oracle.sql.DATE;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +58,9 @@ public class THallQueueController {
     @Autowired
     private THallTakenumberService tHallTakenumberService;
     @Autowired
-    private TSysWindowService tSysWindowService;
-    @Autowired
     private TSysBusinesstypeService tSysBusinesstypeService;
     @Autowired
-    private TListAgentService tListAgentService;
-    @Autowired
-    private TListInfoService tListInfoService;
+    private TSysParamService tSysParamService;
 
     /**
      * 1 跳转到新增页面
@@ -454,7 +453,7 @@ public class THallQueueController {
      *
      * @return 查询结果
      */
-    @PostMapping("/hall/queue/nowWaitNum")
+    @GetMapping("/hall/queue/nowWaitNum")
     public CommonResult nowWaitNum() throws FebsException {
         try {
             THallTakenumber tHallTakenumber = new THallTakenumber();
@@ -488,6 +487,54 @@ public class THallQueueController {
             throw new FebsException(message);
         }
     }
+
+    /**
+     * 查询当日办结窗口业务量
+     *
+     * @return 查询数据
+     */
+    @GetMapping("/hall/queue/windowNumToday")
+    public CommonResult windowNumToday() throws FebsException {
+        try {
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            String startStr=sdf.format(new Date());
+            String endStr=sdf.format(new Date());
+            List<THallQueueCount> countList = tHallQueueService.windowNumToday(startStr,endStr);
+            return new CommonResult(200, "success", "查询数据成功!", countList);
+        } catch (Exception e) {
+            String message = "查询数据失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 查询当日各办理人员业务办结统计
+     *
+     * @return 查询数据
+     */
+    @GetMapping("/hall/queue/agentNumToday")
+    public CommonResult agentNumToday() throws FebsException {
+        try {
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            String startStr=sdf.format(new Date());
+            String endStr=sdf.format(new Date());
+            TSysParam param= tSysParamService.selectById("PTCJGYWCS");
+            int overTime=900;
+            if(param!=null){
+                String overTimeStr=param.getParamValue();
+                overTime=Integer.parseInt(overTimeStr);
+            }
+            List<THallQueueCount> countList = tHallQueueService.agentNumToday(startStr,endStr,overTime);
+            return new CommonResult(200, "success", "查询数据成功!", countList);
+        } catch (Exception e) {
+            String message = "查询数据失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+
 
 
 }

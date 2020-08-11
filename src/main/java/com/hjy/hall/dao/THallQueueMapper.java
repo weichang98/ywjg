@@ -78,6 +78,10 @@ public interface THallQueueMapper {
 
     List<THallQueueCount> backCount(@Param("queryStart")String queryStart, @Param("queryEnd")String queryEnd);
 
+    List<THallQueueCount> windowNumToday(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr);
+
+    List<THallQueueCount> agentNumToday(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr,@Param("overTime") int overTime);
+
     int handleNum(THallQueue tHallQueue);
 
     int agentNum(THallQueue tHallQueue);

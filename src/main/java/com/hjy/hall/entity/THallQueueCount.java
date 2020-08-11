@@ -3,7 +3,6 @@ package com.hjy.hall.entity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -67,5 +66,9 @@ public class THallQueueCount implements Serializable {
      * 大厅实时等待人数
      */
     private Integer nowWaitNum;
+    /**
+     * 超时数
+     */
+    private Integer overTimeNum;
 
 }

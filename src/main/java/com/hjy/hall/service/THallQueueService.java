@@ -92,7 +92,7 @@ public interface THallQueueService {
     SysToken findByToken(String accessToken);
 
     //叫号
-    THallQueue call(TSysWindow window,HttpSession session) throws Exception;
+    THallQueue call(TSysWindow window, HttpSession session) throws Exception;
 
     //业务查询与时间统计
     THallQueueCount StatisticsTime(THallQueue tHallQueue) throws Exception;
@@ -115,6 +115,12 @@ public interface THallQueueService {
     //特呼
     THallQueue vipCall(TSysWindow window, String vip_ordinal) throws Exception;
 
+    //当日窗口办结业务统计
+    List<THallQueueCount> windowNumToday(String startTimeStr, String endTimeStr);
+
+    //当日办理人员业务统计
+    List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int overTime);
+
     Map<String, Object> getOrdinal(String param) throws Exception;
 
     String selectWindowNameByIp(String ip);
@@ -124,4 +130,5 @@ public interface THallQueueService {
     List<Statistics> StatisticsNumMethod(THallQueue tHallQueue) throws Exception;
 
     Date Datepush(Date date);
+
 }

@@ -27,4 +27,6 @@ public interface TSysParamService {
      */
      List<TSysParam> selectAll() throws Exception;
 
+     TSysParam selectById(String pkParamId) throws Exception;
+
 }
