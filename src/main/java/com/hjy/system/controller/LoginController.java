@@ -57,19 +57,20 @@ public class LoginController {
         String password = PasswordEncryptUtils.MyPasswordEncryptUtil(username,passwordN0);
         //用户信息
         TSysUser user = shiroService.selectUserByUsername(username);
-        String ip1= IPUtil.getIpAddress1(request);
-        String ip2= IPUtil.getIpAddress2(request);
-        String ip3= IPUtil.getIpAddress3(request);
-        String ip4= IPUtil.getIpAddress4(request);
-        String ip5= IPUtil.getIpAddress5();
-        String ip6= IPUtil.getIpAddress6();
-        System.err.println("ip1：--------"+ip1);
-        System.err.println("ip2：--------"+ip2);
-        System.err.println("ip3：--------"+ip3);
-        System.err.println("ip4：--------"+ip4);
-        System.err.println("ip5：--------"+ip5);
-        System.err.println("ip6：--------"+ip6);
-        user.setIp(ip3);
+//        String ip1= IPUtil.getIpAddress1(request);
+//        String ip2= IPUtil.getIpAddress2(request);
+//        String ip3= IPUtil.getIpAddress3(request);
+//        String ip4= IPUtil.getIpAddress4(request);
+//        String ip5= IPUtil.getIpAddress5();
+//        String ip6= IPUtil.getIpAddress6();
+//        System.err.println("ip1：--------"+ip1);
+//        System.err.println("ip2：--------"+ip2);
+//        System.err.println("ip3：--------"+ip3);
+//        System.err.println("ip4：--------"+ip4);
+//        System.err.println("ip5：--------"+ip5);
+//        System.err.println("ip6：--------"+ip6);
+//        System.err.println("userip：--------"+user);
+//        user.setIp(ip3);
         //账号不存在、密码错误
         if (user == null) {
             return new CommonResult(444,"error","账号不存在");
