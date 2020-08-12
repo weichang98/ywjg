@@ -56,7 +56,8 @@ public class TSysRoleController {
      * @param tSysRole 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"role:add"})
+    @RequiresPermissions({"role:view"})
+//    @RequiresPermissions({"role:add"})
     @PostMapping("/system/role/add")
     public CommonResult tSysRoleAdd(@RequestBody TSysRole tSysRole) throws FebsException{
         System.err.println(tSysRole);
@@ -113,7 +114,8 @@ public class TSysRoleController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"role:del"})
+    @RequiresPermissions({"role:view"})
+//    @RequiresPermissions({"role:del"})
     @DeleteMapping("/system/role/del")
     public CommonResult tSysRoleDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -161,7 +163,8 @@ public class TSysRoleController {
      * @param tSysRole 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"role:update"})
+    @RequiresPermissions({"role:view"})
+//    @RequiresPermissions({"role:update"})
     @PutMapping("/system/role/update")
     public CommonResult tSysRoleUpdate(@RequestBody TSysRole tSysRole) throws FebsException{
         System.err.println(tSysRole);
@@ -203,7 +206,8 @@ public class TSysRoleController {
     /**
      * 5 给角色分配菜单权限
      */
-    @RequiresPermissions({"role:distributePerms"})
+    @RequiresPermissions({"role:view"})
+//    @RequiresPermissions({"role:distributePerms"})
     @PostMapping("/system/role/distribute")
     public CommonResult FPRoleMenu(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
@@ -253,7 +257,8 @@ public class TSysRoleController {
     /**
      * 6 给角色下发用户
      */
-    @RequiresPermissions({"role:addUser"})
+    @RequiresPermissions({"role:view"})
+//    @RequiresPermissions({"role:addUser"})
     @PostMapping("/system/role/addUser")
     public CommonResult systemRoleAddUser(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);

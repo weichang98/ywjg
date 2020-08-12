@@ -52,7 +52,8 @@ public class TSysPermsController {
      * @param tSysPerms 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"perms:add"})
+    @RequiresPermissions({"perms:view"})
+//    @RequiresPermissions({"perms:add"})
     @PostMapping("/system/perms/add")
     public CommonResult tSysPermsAdd(@RequestBody TSysPerms tSysPerms, HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
@@ -109,7 +110,8 @@ public class TSysPermsController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"perms:del"})
+    @RequiresPermissions({"perms:view"})
+//    @RequiresPermissions({"perms:del"})
     @DeleteMapping("/system/perms/del")
     public CommonResult tSysPermsDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -150,7 +152,8 @@ public class TSysPermsController {
      * @param tSysPerms 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"perms:update"})
+    @RequiresPermissions({"perms:view"})
+//    @RequiresPermissions({"perms:update"})
     @PutMapping("/system/perms/update")
     public CommonResult tSysPermsUpdate(@RequestBody TSysPerms tSysPerms) throws FebsException{
         System.err.println(tSysPerms);

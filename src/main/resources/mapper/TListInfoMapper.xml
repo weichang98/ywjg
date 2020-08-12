@@ -18,6 +18,7 @@
         apply_book,
         code_certificates,
         operator,
+        create_time,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.list.entity.TListInfo" parameterType="com.hjy.list.entity.TListInfo">
@@ -69,6 +70,9 @@
             </if><if test="operator != null and operator != ''">
                 and "operator" = #{operator,jdbcType=VARCHAR}
             </if>
+            <if test="createTime != null ">
+                and "create_time" = #{createTime,jdbcType=TIMESTAMP}
+            </if>
         </where>
     </select>
 
@@ -116,6 +120,9 @@
         </if><if test="operator != null and operator != ''">
                 "operator",
         </if>
+            <if test="createTime != null ">
+                "create_time",
+        </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkListId != null and pkListId != ''">
@@ -157,6 +164,9 @@
                 #{codeCertificates,jdbcType=VARCHAR},
             </if><if test="operator != null and operator != ''">
                 #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
             </if>
                 </trim>
     </insert>
@@ -203,6 +213,9 @@
                 "code_certificates" = #{codeCertificates,jdbcType=VARCHAR},
             </if><if test="operator != null and operator != ''">
                 "operator" = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                "create_time" = #{createTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where "pk_list_id" = #{pkListId,jdbcType=VARCHAR}

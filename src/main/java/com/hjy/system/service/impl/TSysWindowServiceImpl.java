@@ -108,11 +108,65 @@ public class TSysWindowServiceImpl implements TSysWindowService {
     /**
      * 修改数据
      *
-     * @param tSysWindow 实例对象
+     * @param param 实例对象
      * @return 实例对象
      */
     @Override
-    public int updateById(TSysWindow tSysWindow) throws Exception{
+    public int updateById(String param) throws Exception{
+        TSysWindow tSysWindow = new TSysWindow();
+        JSONObject jsonObject = JSON.parseObject(param);
+        String pkWindowId=String.valueOf(jsonObject.get("pkWindowId"));
+        String deptName=String.valueOf(jsonObject.get("deptName"));
+        String windowName=String.valueOf(jsonObject.get("windowName"));
+        String ip=String.valueOf(jsonObject.get("ip"));
+        String operatorPeople=String.valueOf(jsonObject.get("operatorPeople"));
+        String controlCard=String.valueOf(jsonObject.get("controlCard"));
+        String branchNumber=String.valueOf(jsonObject.get("branchNumber"));
+        String registrationWindow=String.valueOf(jsonObject.get("registrationWindow"));
+        String com=String.valueOf(jsonObject.get("com"));
+        tSysWindow.setPkWindowId(pkWindowId);
+        tSysWindow.setDeptName(deptName);
+        tSysWindow.setWindowName(windowName);
+        tSysWindow.setIp(ip);
+        if(operatorPeople != null || operatorPeople != ""){
+            tSysWindow.setOperatorPeople(operatorPeople);
+        }
+        if(controlCard != null || controlCard != ""){
+            tSysWindow.setControlCard(controlCard);
+        }
+        if(branchNumber != null || branchNumber != ""){
+            tSysWindow.setBranchNumber(branchNumber);
+        }
+        if(registrationWindow != null || registrationWindow != ""){
+            tSysWindow.setRegistrationWindow(registrationWindow);
+        }
+        if(com != null || com != ""){
+            tSysWindow.setCom(com);
+        }
+        //业务类型
+        JSONArray jsonArray = jsonObject.getJSONArray("businessTypes");
+        String businesstypes = jsonArray.toString();
+        List<TSysBusinesstype> businesstypeList = JSONArray.parseArray(businesstypes, TSysBusinesstype.class);
+        if(businesstypeList != null){
+            StringBuffer businessType = new StringBuffer();
+            //先排序
+            Collections.sort(businesstypeList, new Comparator<TSysBusinesstype>() {
+                @Override
+                public int compare(TSysBusinesstype o1, TSysBusinesstype o2) {
+                    //升序
+                    return o1.getTypeLevel().compareTo(o2.getTypeLevel());
+                }
+            });
+            List<TSysBusinesstype> businesstypeList2 = businesstypeList;
+            for(TSysBusinesstype obj:businesstypeList2){
+                if(obj.getTypeLevel().equals("1")){
+                    businessType.append(obj.getTypeName());
+                }else {
+                    businessType.append("/"+obj.getTypeName());
+                }
+            }
+            tSysWindow.setBusinessType(businessType.toString());
+        }
         return tSysWindowMapper.updateById(tSysWindow);
     }
 

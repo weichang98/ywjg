@@ -53,5 +53,6 @@ public interface TSysBusinesstypeService {
      * @return list
      */
      List<TSysBusinesstype> selectAllByEntity(TSysBusinesstype tSysBusinesstype)throws Exception;
-     
+
+    List<String> selectBusinessName();
 }

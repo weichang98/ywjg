@@ -57,4 +57,6 @@ public interface TSysBusinesstypeMapper {
      * @return 对象列表
      */
     List<TSysBusinesstype> selectAllByEntity(TSysBusinesstype tSysBusinesstype);
+
+    List<String> selectBusinessName();
 }

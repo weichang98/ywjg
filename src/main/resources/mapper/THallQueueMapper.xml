@@ -23,12 +23,12 @@
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
         select
-          pk_queue_id, ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time,remarks        from "c##root"."t_hall_queue"
+          pk_queue_id, ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time,remarks        from "liuchun"."t_hall_queue"
         where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
-        select * from "c##root"."t_hall_queue"
+        select * from "liuchun"."t_hall_queue"
         <where>
             <if test="pkQueueId != null and pkQueueId != ''">
                 and "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
@@ -87,11 +87,11 @@
 
     <!--新增所有列-->
     <insert id="insert">
-        insert into "c##root"."t_hall_queue"(ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time)
+        insert into "liuchun"."t_hall_queue"(ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time)
         values (#{ordinal}, #{windowName}, #{agent}, #{businessType}, #{aCertificatesType}, #{aName}, #{aIdcard}, #{bCertificatesType}, #{bName}, #{bIdcard}, #{getTime}, #{startTime}, #{endTime})
     </insert>
     <insert id="insertSelective" parameterType="com.hjy.hall.entity.THallQueue">
-        insert into "c##root"."t_hall_queue"
+        insert into "liuchun"."t_hall_queue"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pkQueueId != null and pkQueueId != ''">
                "pk_queue_id",
@@ -196,7 +196,7 @@
 
     <!--通过主键修改数据-->
     <update id="updateById" parameterType="com.hjy.hall.entity.THallQueue">
-        update "c##root"."t_hall_queue"
+        update "liuchun"."t_hall_queue"
         <set>
             <if test="ordinal != null and ordinal != ''">
                 "ordinal" = #{ordinal,jdbcType=VARCHAR},
@@ -246,43 +246,45 @@
 
     <!--通过主键删除-->
     <delete id="deleteById" parameterType="com.hjy.hall.entity.THallQueue">
-        delete from "c##root"."t_hall_queue" where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
+        delete from "liuchun"."t_hall_queue" where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
     </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.hall.entity.THallQueue">
-        select * from "c##root"."t_hall_queue"
+        select * from "liuchun"."t_hall_queue"
     </select>
     <!--通过号码和日期查询-->
     <select id="getByOrdinalAndDatestr" resultType="com.hjy.hall.entity.THallQueue">
-        SELECT * FROM "c##root"."t_hall_queue"
+        SELECT * FROM "liuchun"."t_hall_queue"
     WHERE "ordinal"= #{Ordinal}
     AND to_char("get_time",'yyyy-mm-dd')='${DateStr}'
     AND "is_vip" !=1
     </select>
 
     <select id="queryByTime" resultType="com.hjy.hall.entity.THallQueue">
-        SELECT * FROM "c##root"."t_hall_queue"
+        SELECT * FROM "liuchun"."t_hall_queue"
     WHERE to_char("get_time",'yyyy-mm-dd') >= '${startTime}'
     AND to_char("get_time",'yyyy-mm-dd') &lt;='${endTime}'
     </select>
 
     <select id="getNowNum" resultType="com.hjy.hall.entity.THallQueue">
-        SELECT * FROM "c##root"."t_hall_queue"
-        WHERE "window_name" =#{windowName}
-        AND to_char("get_time",'yyyy-mm-dd') = '${nowDate}'
-		AND "remarks" is null
-		or  "remarks" ='特呼'
+		SELECT *
+FROM "liuchun"."t_hall_queue" t
+WHERE t."get_time" =
+(SELECT MAX(t."get_time")
+FROM "liuchun"."t_hall_queue" t where "window_name" = #{windowName,jdbcType=VARCHAR})
+AND "remarks" is null
+or  "remarks" ='特呼'
     </select>
 
     <select id="totalCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "totalCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name",COUNT(*)as "totalCount" FROM "liuchun"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         GROUP BY "agent","window_name"
     </select>
 
     <select id="realCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name","business_type",COUNT("business_type")as "realCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name","business_type",COUNT("business_type")as "realCount" FROM "liuchun"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         AND "remarks"='办结'
@@ -290,7 +292,7 @@
     </select>
 
     <select id="nullCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "nullCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name",COUNT(*)as "nullCount" FROM "liuchun"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         AND "remarks"='空号'
@@ -298,7 +300,7 @@
     </select>
 
     <select id="backCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "backCount" FROM "c##root"."t_hall_queue"
+        SELECT "agent","window_name",COUNT(*)as "backCount" FROM "liuchun"."t_hall_queue"
         WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         AND "remarks"='退号'
@@ -306,14 +308,14 @@
     </select>
 
     <select id="handleNum" resultType="Integer">
-        select count(*) from "c##root"."t_hall_queue"
+        select count(*) from "liuchun"."t_hall_queue"
         where "b_Idcard"=#{bIdcard,jdbcType=VARCHAR}
         and "a_Idcard" is null
         and "remarks" ='办结'
     </select>
 
     <select id="agentNum" resultType="Integer">
-        select count(*) from "c##root"."t_hall_queue"
+        select count(*) from "liuchun"."t_hall_queue"
         where "a_Idcard"=#{aIdcard,jdbcType=VARCHAR}
         and "remarks" ='办结'
     </select>

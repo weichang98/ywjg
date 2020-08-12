@@ -80,4 +80,9 @@ public class TSysBusinesstypeServiceImpl implements TSysBusinesstypeService {
     public List<TSysBusinesstype> selectAllByEntity(TSysBusinesstype tSysBusinesstype) throws Exception{
         return this.tSysBusinesstypeMapper.selectAllByEntity(tSysBusinesstype);
     }
+
+    @Override
+    public List<String> selectBusinessName() {
+        return tSysBusinesstypeMapper.selectBusinessName();
+    }
 }

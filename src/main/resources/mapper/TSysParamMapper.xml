@@ -6,6 +6,8 @@
         pk_param_id,
         param_key,
         param_value,
+        operator_people,
+        operator_time,
   </sql>
 
     <!--通过主键修改数据-->
@@ -18,8 +20,14 @@
             <if test="paramValue != null and paramValue != ''">
                 "param_value" = #{paramValue,jdbcType=VARCHAR},
             </if>
+            <if test="operatorPeople != null and operatorPeople != ''">
+                "operator_people" = #{operatorPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorTime != null">
+                "operator_time" = #{operatorTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
-        where "pk_param_id" = #{pkParamId,jdbcType=}
+        where "pk_param_id" = #{pkParamId,jdbcType=VARCHAR}
     </update>
 
     <!--查询所有行数据-->

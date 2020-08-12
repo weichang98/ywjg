@@ -5,9 +5,12 @@ import com.hjy.common.domin.CommonResult;
 import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IPUtil;
 import com.hjy.common.utils.PasswordEncryptUtils;
+import com.hjy.common.utils.TokenUtil;
 import com.hjy.hall.service.THallTakenumberService;
 import com.hjy.system.entity.ActiveUser;
+import com.hjy.system.entity.SysToken;
 import com.hjy.system.entity.TSysUser;
+import com.hjy.system.entity.TSysWindow;
 import com.hjy.system.service.ShiroService;
 import com.hjy.system.service.TSysUserService;
 import io.swagger.annotations.Api;
@@ -50,26 +53,26 @@ public class LoginController {
      */
     @ApiOperation(value = "登陆", notes = "参数:用户名 密码")
     @PostMapping("/login")
-    public CommonResult login(@RequestBody TSysUser tSysUser,HttpServletRequest request) throws UnknownHostException, SocketException {
+    public CommonResult login(@RequestBody TSysUser tSysUser,HttpServletRequest request,HttpSession session) throws UnknownHostException, SocketException {
         boolean rememberMe =true;
         String username = tSysUser.getUsername();
         String passwordN0 = tSysUser.getPassword();
         String password = PasswordEncryptUtils.MyPasswordEncryptUtil(username,passwordN0);
         //用户信息
         TSysUser user = shiroService.selectUserByUsername(username);
-//        String ip1= IPUtil.getIpAddress1(request);
-//        String ip2= IPUtil.getIpAddress2(request);
-//        String ip3= IPUtil.getIpAddress3(request);
-//        String ip4= IPUtil.getIpAddress4(request);
-//        String ip5= IPUtil.getIpAddress5();
-//        String ip6= IPUtil.getIpAddress6();
-//        System.err.println("ip1：--------"+ip1);
-//        System.err.println("ip2：--------"+ip2);
-//        System.err.println("ip3：--------"+ip3);
-//        System.err.println("ip4：--------"+ip4);
-//        System.err.println("ip5：--------"+ip5);
-//        System.err.println("ip6：--------"+ip6);
-//        System.err.println("userip：--------"+user);
+        String ip1= IPUtil.getIpAddress1(request);
+        String ip2= IPUtil.getIpAddress2(request);
+        String ip3= IPUtil.getIpAddress3(request);
+        String ip4= IPUtil.getIpAddress4(request);
+        String ip5= IPUtil.getIpAddress5();
+        String ip6= IPUtil.getIpAddress6();
+        System.err.println("ip1：--------"+ip1);
+        System.err.println("ip2：--------"+ip2);
+        System.err.println("ip3：--------"+ip3);
+        System.err.println("ip4：--------"+ip4);
+        System.err.println("ip5：--------"+ip5);
+        System.err.println("ip6：--------"+ip6);
+        System.err.println("userip：--------"+user);
 //        user.setIp(ip3);
         //账号不存在、密码错误
         if (user == null) {
@@ -80,7 +83,7 @@ public class LoginController {
             return new CommonResult(446,"error","该账户已被管理员禁用，请联系管理员");
         }else {
             //生成token，并保存到数据库
-            Map<String, Object> result = shiroService.createToken(user);
+            Map<String, Object> result = shiroService.createToken(user, session);
             return new CommonResult(200,"success","登陆成功",result);
         }
     }

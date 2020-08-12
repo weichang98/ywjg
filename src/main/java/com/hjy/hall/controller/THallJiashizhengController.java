@@ -6,6 +6,7 @@ import com.hjy.common.exception.FebsException;
 import com.hjy.hall.entity.THallJiashizheng;
 import com.hjy.hall.service.THallJiashizhengService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.hjy.common.domin.CommonResult;
@@ -67,6 +68,7 @@ public class THallJiashizhengController {
      *
      * @return 所有数据
      */
+    @RequiresPermissions({"jiashizheng:view"})
     @GetMapping("/hall/jiashizheng/list")
     public CommonResult tHallJiashizhengList() throws FebsException {
         try {
@@ -105,6 +107,7 @@ public class THallJiashizhengController {
      *
      * @return 删除结果
      */
+    @RequiresPermissions({"jiashizheng:view"})
     @DeleteMapping("/hall/jiashizheng/del")
     public CommonResult tHallJiashizhengDel(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -147,6 +150,7 @@ public class THallJiashizhengController {
      * @param tHallJiashizheng 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"jiashizheng:view"})
     @PutMapping("/hall/jiashizheng/update")
     public CommonResult tHallJiashizhengUpdate(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
         System.err.println(tHallJiashizheng);

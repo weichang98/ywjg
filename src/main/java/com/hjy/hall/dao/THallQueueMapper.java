@@ -68,7 +68,7 @@ public interface THallQueueMapper {
 
     List<THallQueue> queryByTime(@Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    THallQueue getNowNum(@Param("windowName") String windowName,@Param("nowDate") String nowDateStr);
+    THallQueue getNowNum(@Param("windowName") String windowName);
 
     List<THallQueueCount> totalCount(@Param("queryStart") String queryStart, @Param("queryEnd") String queryEnd);
 

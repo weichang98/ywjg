@@ -31,10 +31,10 @@ public interface TSysWindowService {
     /**
      * 修改数据
      *
-     * @param tSysWindow 实例对象
+     * @param param
      * @return 实例对象
      */
-    int updateById(TSysWindow tSysWindow) throws Exception;
+    int updateById(String param) throws Exception;
 
     /**
      * 通过主键删除数据

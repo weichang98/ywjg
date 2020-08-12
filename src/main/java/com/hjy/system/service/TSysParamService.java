@@ -1,6 +1,8 @@
 package com.hjy.system.service;
 
 import com.hjy.system.entity.TSysParam;
+
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public interface TSysParamService {
      * @param tSysParam 实例对象
      * @return 实例对象
      */
-    int updateById(TSysParam tSysParam) throws Exception;
+    int updateById(TSysParam tSysParam, HttpSession session) throws Exception;
 
 
     /**

@@ -48,7 +48,8 @@ public class TSysBusinesstypeController {
      * @param tSysBusinesstype 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"businessType:add"})
+    @RequiresPermissions({"businessType:view"})
+//    @RequiresPermissions({"businessType:add"})
     @PostMapping("/system/businessType/add")
     public CommonResult tSysBusinesstypeAdd(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
         System.err.println(tSysBusinesstype);
@@ -84,7 +85,7 @@ public class TSysBusinesstypeController {
      * 2 通过实体查询所有数据
      * @return 所有数据
      */
-    @GetMapping("/system/businessType/listByEntity")
+    @PostMapping("/system/businessType/listByEntity")
     public CommonResult tSysBusinesstypeListByEntity(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
         try {
             //
@@ -102,7 +103,8 @@ public class TSysBusinesstypeController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"businessType:del"})
+    @RequiresPermissions({"businessType:view"})
+//    @RequiresPermissions({"businessType:del"})
     @DeleteMapping("/system/businessType/del")
     public CommonResult tSysBusinesstypeDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -143,7 +145,8 @@ public class TSysBusinesstypeController {
      * @param tSysBusinesstype 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"businessType:update"})
+    @RequiresPermissions({"businessType:view"})
+//    @RequiresPermissions({"businessType:update"})
     @PutMapping("/system/businessType/update")
     public CommonResult tSysBusinesstypeUpdate(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
         System.err.println(tSysBusinesstype);

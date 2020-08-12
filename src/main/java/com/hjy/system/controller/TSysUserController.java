@@ -75,7 +75,8 @@ public class TSysUserController {
      * @param param
      * @return 新增结果
      */
-    @RequiresPermissions({"user:add"})
+    @RequiresPermissions({"user:view"})
+//    @RequiresPermissions({"user:add"})
     @PostMapping("/system/user/add")
     public CommonResult tSysUserAdd(@RequestBody String param) throws FebsException{
         try {
@@ -120,7 +121,8 @@ public class TSysUserController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"user:del"})
+    @RequiresPermissions({"user:view"})
+//    @RequiresPermissions({"user:del"})
     @DeleteMapping("/system/user/del")
     public CommonResult tSysUserDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -173,7 +175,8 @@ public class TSysUserController {
      * @param param 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"user:update"})
+    @RequiresPermissions({"user:view"})
+//    @RequiresPermissions({"user:update"})
     @PutMapping("/system/user/admin/update")
     public CommonResult tSysUserAdminUpdate(@RequestBody String param) throws FebsException{
         try {
@@ -231,7 +234,8 @@ public class TSysUserController {
     /**
      * 5 分配角色
      */
-    @RequiresPermissions({"user:distributeRole"})
+    @RequiresPermissions({"user:view"})
+//    @RequiresPermissions({"user:distributeRole"})
     @PostMapping(value = "/system/user/distributeRole")
     public CommonResult roleDistribute(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);
@@ -258,7 +262,8 @@ public class TSysUserController {
      * @param parm 参数
      * @return 修改结果
      */
-    @RequiresPermissions({"user:resetPassword"})
+    @RequiresPermissions({"user:view"})
+//    @RequiresPermissions({"user:resetPassword"})
     @PutMapping("/system/user/resetPassword")
     public CommonResult resetPassword(@RequestBody String parm) throws FebsException{
         JSONObject json = JSON.parseObject(parm);

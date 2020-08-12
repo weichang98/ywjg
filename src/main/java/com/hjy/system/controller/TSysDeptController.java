@@ -48,7 +48,8 @@ public class TSysDeptController {
      * @param tSysDept 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"dept:add"})
+    @RequiresPermissions({"dept:view"})
+//    @RequiresPermissions({"dept:add"})
     @PostMapping("/system/dept/add")
     public CommonResult tSysDeptAdd(@RequestBody TSysDept tSysDept) throws FebsException{
         System.err.println(tSysDept);
@@ -84,7 +85,8 @@ public class TSysDeptController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"dept:del"})
+    @RequiresPermissions({"dept:view"})
+//    @RequiresPermissions({"dept:del"})
     @DeleteMapping("/system/dept/del")
     public CommonResult tSysDeptDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -125,7 +127,8 @@ public class TSysDeptController {
      * @param tSysDept 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"dept:update"})
+    @RequiresPermissions({"dept:view"})
+//    @RequiresPermissions({"dept:update"})
     @PutMapping("/system/dept/update")
     public CommonResult tSysDeptUpdate(@RequestBody TSysDept tSysDept) throws FebsException{
         System.err.println(tSysDept);

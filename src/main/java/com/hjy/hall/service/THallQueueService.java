@@ -74,7 +74,7 @@ public interface THallQueueService {
     List<THallQueue> queryByTime(String startTime, String endTime);
 
     //查询现在正在办理的号码
-    THallQueue getNowNum(String windowName, String nowDateStr);
+    THallQueue getNowNum(String windowName);
 
     //根据日期字符串查询总业务量
     List<THallQueueCount> totalCount(String queryStart, String queryEnd);

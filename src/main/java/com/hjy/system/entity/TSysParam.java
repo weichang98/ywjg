@@ -1,6 +1,8 @@
 package com.hjy.system.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -12,11 +14,21 @@ import lombok.Data;
 @Data
 public class TSysParam implements Serializable {
     private static final long serialVersionUID = 800017878587187039L;
-        private String pkParamId;
-        /**
-    * 参数名
-    */    private String paramKey;
-        /**
-    * 参数值
-    */    private String paramValue;
+    private String pkParamId;
+    /**
+     * 参数名
+     */
+    private String paramKey;
+    /**
+     * 参数值
+     */
+    private String paramValue;
+    /**
+     * 操作人
+     */
+    private String operatorPeople;
+    /**
+     * 操作时间
+     */
+    private Date operatorTime;
 }

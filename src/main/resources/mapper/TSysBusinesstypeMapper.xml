@@ -22,9 +22,9 @@
                 and "pk_businessType_id" = #{pkBusinesstypeId,jdbcType=VARCHAR}
             </if>
             <if test="typeName != null and typeName != ''">
-                and "type_name" = #{typeName,jdbcType=VARCHAR}
+                and "type_name" like '%${typeName}%'
             </if>
-            <if test="typeLevel != null">
+            <if test="typeLevel != null and typeLevel != ''">
                 and "type_level" = #{typeLevel,jdbcType=INTEGER}
             </if>
             <if test="whetherNull != null">
@@ -106,6 +106,9 @@
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.system.entity.TSysBusinesstype">
         select * from "liuchun"."t_sys_businessType"
+    </select>
+    <select id="selectBusinessName" resultType="java.lang.String">
+        select "t_sys_businessType"."type_name" from "liuchun"."t_sys_businessType"
     </select>
 
 </mapper>

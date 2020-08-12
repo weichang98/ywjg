@@ -64,7 +64,8 @@ public class TSysWindowController {
      * @param parm
      * @return 新增结果
      */
-    @RequiresPermissions({"window:add"})
+    @RequiresPermissions({"window:view"})
+//    @RequiresPermissions({"window:add"})
     @PostMapping("/system/window/add")
     public CommonResult tSysWindowAdd(@RequestBody String parm ) throws FebsException{
         try {
@@ -87,8 +88,13 @@ public class TSysWindowController {
         try {
             //
             List<TSysWindow> tSysWindowList = tSysWindowService.selectAll();
-            System.err.println(tSysWindowList);
-            return new CommonResult(200,"success","查询数据成功!",tSysWindowList);
+            List<String> depts = tSysDeptService.selectDeptUnit();
+            List<String> business = tSysBusinesstypeService.selectBusinessName();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("tSysWindowList",tSysWindowList);
+            jsonObject.put("depts",depts);
+            jsonObject.put("business",business);
+            return new CommonResult(200,"success","查询数据成功!",jsonObject);
         } catch (Exception e) {
             String message = "查询数据失败";
             log.error(message, e);
@@ -99,7 +105,7 @@ public class TSysWindowController {
      * 2 通过实体查询所有数据
      * @return 所有数据
      */
-    @GetMapping("/system/window/listByEntity")
+    @PostMapping("/system/window/listByEntity")
     public CommonResult tSysWindowListByEntity(@RequestBody TSysWindow tSysWindow) throws FebsException{
         try {
             //
@@ -117,7 +123,8 @@ public class TSysWindowController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"window:del"})
+    @RequiresPermissions({"window:view"})
+//    @RequiresPermissions({"window:del"})
     @DeleteMapping("/system/window/del")
     public CommonResult tSysWindowDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -155,16 +162,17 @@ public class TSysWindowController {
     
     /**
      * 4 修改数据
-     * @param tSysWindow 实体对象
+     * @param parm 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"window:update"})
+    @RequiresPermissions({"window:view"})
+//    @RequiresPermissions({"window:update"})
     @PutMapping("/system/window/update")
-    public CommonResult tSysWindowUpdate(@RequestBody TSysWindow tSysWindow) throws FebsException{
-        System.err.println(tSysWindow);
+    public CommonResult tSysWindowUpdate(@RequestBody String parm) throws FebsException{
+        System.err.println(parm);
         try {
             //
-            tSysWindowService.updateById(tSysWindow);
+            tSysWindowService.updateById(parm);
             return new CommonResult(200,"success","修改成功!",null);
         } catch (Exception e) {
             String message = "修改失败";

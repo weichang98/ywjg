@@ -32,13 +32,13 @@
                 and "dept_name" = #{deptName,jdbcType=VARCHAR}
             </if>
             <if test="windowName != null and windowName != ''">
-                and "window_name" = #{windowName,jdbcType=VARCHAR}
+                and "window_name" like '%${windowName}%'
             </if>
             <if test="ip != null and ip != ''">
                 and "ip" = #{ip,jdbcType=VARCHAR}
             </if>
             <if test="businessType != null and businessType != ''">
-                and "business_type" = #{businessType,jdbcType=VARCHAR}
+                and "business_type" like '%${businessType}%'
             </if>
             <if test="operatorPeople != null and operatorPeople != ''">
                 and "operator_people" = #{operatorPeople,jdbcType=VARCHAR}

@@ -10,6 +10,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class TSysParamController {
      * @return 所有数据
      */
 
-    @PostMapping("/system/param/list")
+    @GetMapping("/system/param/list")
     public CommonResult tSysParamList() throws FebsException{
         try {
             //
@@ -53,11 +55,10 @@ public class TSysParamController {
      * @return 修改结果
      */
     @PutMapping("/system/param/update")
-    public CommonResult tSysParamUpdate(@RequestBody TSysParam tSysParam) throws FebsException{
-        System.err.println(tSysParam);
+    public CommonResult tSysParamUpdate(@RequestBody TSysParam tSysParam, HttpSession session) throws FebsException{
         try {
             //
-            tSysParamService.updateById(tSysParam);
+            tSysParamService.updateById(tSysParam,session);
             return new CommonResult(200,"success","修改成功!",null);
         } catch (Exception e) {
             String message = "修改失败";

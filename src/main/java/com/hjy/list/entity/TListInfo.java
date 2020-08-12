@@ -73,4 +73,8 @@ public class TListInfo implements Serializable {
      * 操作人
      */
     private String operator;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 }

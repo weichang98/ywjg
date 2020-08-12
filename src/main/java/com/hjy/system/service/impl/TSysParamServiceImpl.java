@@ -1,10 +1,14 @@
 package com.hjy.system.service.impl;
 
+import com.hjy.system.entity.ActiveUser;
 import com.hjy.system.entity.TSysParam;
 import com.hjy.system.dao.TSysParamMapper;
 import com.hjy.system.service.TSysParamService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +31,11 @@ public class TSysParamServiceImpl implements TSysParamService {
      * @return 实例对象
      */
     @Override
-    public int updateById(TSysParam tSysParam) throws Exception{
+    public int updateById(TSysParam tSysParam, HttpSession session) throws Exception{
+        ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
+        tSysParam.setOperatorPeople(activeUser.getFullName());
+        tSysParam.setOperatorTime(new Date());
+        System.err.println(tSysParam);
         return tSysParamMapper.updateById(tSysParam);
     }
 

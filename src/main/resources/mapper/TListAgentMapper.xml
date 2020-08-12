@@ -105,7 +105,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkAgentId != null and pkAgentId != ''">
-                #{pk_agent_id,jdbcType=VARCHAR},
+                #{pkAgentId,jdbcType=VARCHAR},
             </if>
             <if test="businessType != null and businessType != ''">
                 #{businessType,jdbcType=VARCHAR},

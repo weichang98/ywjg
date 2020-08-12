@@ -40,7 +40,7 @@ public class THallJidongche implements Serializable {
     /**
      * 号牌号码
      */
-    private String number;
+    private String numberPlate;
     /**
      * 缺少项
      */

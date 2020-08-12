@@ -6,15 +6,14 @@ import com.hjy.common.utils.DateUtil;
 import com.hjy.system.dao.TSysRoleMapper;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.dao.TSysUserMapper;
-import com.hjy.system.entity.SysToken;
-import com.hjy.system.entity.TSysPerms;
-import com.hjy.system.entity.TSysRole;
-import com.hjy.system.entity.TSysUser;
+import com.hjy.system.dao.TSysWindowMapper;
+import com.hjy.system.entity.*;
 import com.hjy.system.service.ShiroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +36,8 @@ public class ShiroServiceImpl implements ShiroService {
     private TSysRoleMapper tSysRoleMapper;
     @Autowired
     private TSysTokenMapper tSysTokenMapper;
-
+    @Autowired
+    private TSysWindowMapper tSysWindowMapper;
     /**
      * 根据userid查找角色
      *
@@ -98,7 +98,7 @@ public class ShiroServiceImpl implements ShiroService {
      *@return Result
      */
     @Override
-    public Map<String, Object> createToken(TSysUser tSysUser) {
+    public Map<String, Object> createToken(TSysUser tSysUser, HttpSession session) {
         Map<String, Object> result = new HashMap<>();
         //生成一个token（session）
         String token = TokenGenerator.generateValue();
@@ -134,6 +134,8 @@ public class ShiroServiceImpl implements ShiroService {
             tokenEntity.setIp(tSysUser.getIp());
             tSysTokenMapper.updateToken(tokenEntity);
         }
+        TSysWindow window = tSysWindowMapper.selectWindowByIp(tSysUser.getIp());
+        session.setAttribute(token+"window",window);
         result.put("token", token);
         result.put("expire", expireTime);
         return result;

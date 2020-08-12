@@ -14,7 +14,9 @@ import com.hjy.hall.entity.THallQueueCount;
 import com.hjy.hall.entity.THallTakenumber;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
+import com.hjy.list.dao.TListAgentMapper;
 import com.hjy.list.dao.TListInfoMapper;
+import com.hjy.list.entity.TListAgent;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysBusinesstypeMapper;
 import com.hjy.system.dao.TSysTokenMapper;
@@ -58,6 +60,8 @@ public class THallQueueServiceImpl implements THallQueueService {
     private TSysWindowMapper tSysWindowMapper;
     @Autowired
     private TSysBusinesstypeMapper businesstypeMapper;
+    @Autowired
+    private TListAgentMapper tListAgentMapper;
 
     /**
      * 通过ID查询单条数据
@@ -134,8 +138,8 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public THallQueue getNowNum(String windowName, String nowDateStr) {
-        return this.tHallQueueMapper.getNowNum(windowName, nowDateStr);
+    public THallQueue getNowNum(String windowName) {
+        return this.tHallQueueMapper.getNowNum(windowName);
     }
 
     @Override
@@ -284,8 +288,10 @@ public class THallQueueServiceImpl implements THallQueueService {
 
     @Override
     public String downNum(TSysWindow window, HttpSession session) {
+        System.err.println("当前窗口信息:"+window);
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        THallQueue nowQueue = this.getNowNum(window.getWindowName());
+        System.err.println("当前窗口正在办理的业务:"+nowQueue);
         if (nowQueue == null) {
             String message = "已无号";
             return message;
@@ -299,6 +305,24 @@ public class THallQueueServiceImpl implements THallQueueService {
         tnum.setFlag(2);
         tnum.setOrdinal(ordinal);
         tHallTakenumberService.updateById(tnum);
+        System.err.println(nowQueue);
+        //是否录入代办信息
+        if(nowQueue.getAIdcard()== null ||nowQueue.getAIdcard().equals("")||nowQueue.getAIdcard().equals("null")){
+            //办理的为本人业务，不录入
+        }else {
+            TListAgent agent = new TListAgent();
+            agent.setPkAgentId(IDUtils.currentTimeMillis());
+            agent.setBusinessType(nowQueue.getBusinessType());
+            agent.setACertificatesType(nowQueue.getACertificatesType());
+            agent.setAName(nowQueue.getAName());
+            agent.setAIdcard(nowQueue.getAIdcard());
+            agent.setBCertificatesType(nowQueue.getBCertificatesType());
+            agent.setBName(nowQueue.getBName());
+            agent.setBIdcard(nowQueue.getBIdcard());
+            agent.setAddTime(new Date());
+            agent.setAgent(nowQueue.getAgent());
+            tListAgentMapper.insertSelective(agent);
+        }
         return ordinal;
     }
 
@@ -536,7 +560,7 @@ public class THallQueueServiceImpl implements THallQueueService {
         }
         //*********取得应叫的号码
         String num = tHallTakenumberService.queryNumList(type);
-        System.err.print("叫号：呼叫的号码是:" + num);
+        System.err.println("叫号：呼叫的号码是:" + num);
         //*********处理取号表的flag标识
         THallTakenumber tHallTakenumber = tHallTakenumberService.getByOrdinal(num);
         tHallTakenumber.setFlag(1);

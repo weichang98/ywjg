@@ -26,12 +26,13 @@ import com.hjy.system.service.TSysBusinesstypeService;
 import com.hjy.system.service.TSysWindowService;
 import lombok.extern.slf4j.Slf4j;
 import oracle.sql.DATE;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.schema.Model;
-import sun.management.resources.agent;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
@@ -101,6 +102,7 @@ public class THallQueueController {
      *
      * @return 所有数据
      */
+    @RequiresPermissions({"queue:view"})
     @GetMapping("/hall/queue/list")
     public CommonResult tHallQueueList() throws FebsException {
         try {
@@ -193,6 +195,7 @@ public class THallQueueController {
      *
      * @return 跳转结果
      */
+    @RequiresPermissions({"takeNumber:view"})
     @GetMapping("/hall/queue/getOrdinal/page")
     public CommonResult getOrdinalpage(HttpServletRequest request) throws FebsException {
         try {
@@ -230,6 +233,7 @@ public class THallQueueController {
     /**
      * 叫号页面
      */
+    @RequiresPermissions({"queue:call"})
     @GetMapping("/hall/queue/call/page")
     public CommonResult callPage(HttpServletRequest request) throws FebsException {
         try {
@@ -254,7 +258,6 @@ public class THallQueueController {
 
     /**
      * 顺序叫号
-     *
      * @return 叫号结果
      */
     @PostMapping("/hall/queue/call")
@@ -266,6 +269,7 @@ public class THallQueueController {
             String ip = token.getIp();
             TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             String windowName = window.getWindowName();
+            System.err.println("叫号窗口："+windowName);
             //业务方法
             THallQueue queue = tHallQueueService.call(window,session);
             if (queue == null) {
@@ -275,9 +279,7 @@ public class THallQueueController {
             int agentNum = tHallQueueService.agentNum(queue);
             queue.setAgentNum(agentNum);
             queue.setHandleNum(handleNum);
-            System.err.println("/hall/queue/call-queue" + queue);
-            //将当前窗口正在办理的号码放入session中
-            session.setAttribute(windowName + "HandingQueue", queue);
+            System.err.println("叫号的办理业务信息：" + queue);
             return new CommonResult(200, "success", windowName + ":" + queue.getOrdinal(), queue);
         } catch (Exception e) {
             String message = "叫号失败";
@@ -431,9 +433,7 @@ public class THallQueueController {
      */
     @PostMapping("/hall/queue/downNum")
     public CommonResult downNum(HttpServletRequest request, HttpSession session) throws FebsException {
-//        System.err.println("tHallQueue"+tHallQueue);
         try {
-//            String ordinal=tHallQueue.getOrdinal();
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
             SysToken token = tHallQueueService.findByToken(tokenStr);
@@ -451,7 +451,6 @@ public class THallQueueController {
 
     /**
      * 大厅等待人数
-     *
      * @return 查询结果
      */
     @PostMapping("/hall/queue/nowWaitNum")
@@ -488,6 +487,5 @@ public class THallQueueController {
             throw new FebsException(message);
         }
     }
-
 
 }

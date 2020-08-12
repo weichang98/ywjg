@@ -7,6 +7,7 @@ import com.hjy.common.exception.FebsException;
 import com.hjy.hall.entity.THallJidongche;
 import com.hjy.hall.service.THallJidongcheService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +71,7 @@ public class THallJidongcheController {
      *
      * @return 所有数据
      */
+    @RequiresPermissions({"jidongche:view"})
     @GetMapping("/hall/jidongche/list")
     public CommonResult tHallJidongcheList() throws FebsException {
         try {
@@ -122,6 +124,7 @@ public class THallJidongcheController {
      *
      * @return 删除结果
      */
+    @RequiresPermissions({"jidongche:view"})
     @DeleteMapping("/hall/jidongche/del")
     public CommonResult tHallJidongcheDel(@RequestBody String parm) throws FebsException {
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -164,6 +167,7 @@ public class THallJidongcheController {
      * @param tHallJidongche 实体对象
      * @return 修改结果
      */
+    @RequiresPermissions({"jidongche:view"})
     @PutMapping("/hall/jidongche/update")
     public CommonResult tHallJidongcheUpdate(@RequestBody THallJidongche tHallJidongche) throws FebsException {
         System.err.println(tHallJidongche);

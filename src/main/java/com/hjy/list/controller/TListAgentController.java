@@ -51,7 +51,6 @@ public class TListAgentController {
      * @param tListAgent 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"agentInfo:add"})
     @PostMapping("/agentInfo/add")
     public CommonResult tListAgentAdd(@RequestBody TListAgent tListAgent, HttpSession session) throws FebsException{
         System.err.println(tListAgent);
@@ -107,7 +106,8 @@ public class TListAgentController {
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"agentInfo:del"})
+    @RequiresPermissions({"agentInfo:view"})
+//    @RequiresPermissions({"agentInfo:del"})
     @DeleteMapping("/agentInfo/del")
     public CommonResult tListAgentDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -148,7 +148,8 @@ public class TListAgentController {
      * @param tListAgent 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"agentInfo:update"})
+    @RequiresPermissions({"agentInfo:view"})
+//    @RequiresPermissions({"agentInfo:update"})
     @PutMapping("/agentInfo/update")
     public CommonResult tListAgentUpdate(@RequestBody TListAgent tListAgent) throws FebsException{
         System.err.println(tListAgent);

@@ -7,6 +7,7 @@ import com.hjy.system.entity.TSysRole;
 import com.hjy.system.entity.TSysUser;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public interface ShiroService {
       */
      TSysUser selectUserByUsername(String username);
 
-     Map<String ,Object> createToken(TSysUser user);
+     Map<String ,Object> createToken(TSysUser user, HttpSession session);
      //从数据库获取角色信息
      TSysRole selectRoleByUserId(String pkUserId);
 
