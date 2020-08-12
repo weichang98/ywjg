@@ -330,7 +330,7 @@
     </select>
 
     <select id="agentNumToday" resultType="com.hjy.hall.entity.THallQueueCount" statementType="STATEMENT">
-        SELECT "agent",COUNT(*) as "realCount", TRUNC(AVG("end_time"-"start_time")*86400)  as "avgServiceTime",COUNT(DECODE(SIGN(900-("end_time"-"start_time")*86400),-1, 1, null)) as "overTimeNum" from "c##root"."t_hall_queue"
+        SELECT "agent",COUNT(*) as "realCount", TRUNC(AVG("end_time"-"start_time")*86400)  as "avgServiceTime",COUNT(DECODE(SIGN(${overTime}-("end_time"-"start_time")*86400),-1, 1, null)) as "overTimeNum" from "c##root"."t_hall_queue"
         WHERE "remarks"='办结'
         and to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
         and to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'

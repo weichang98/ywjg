@@ -533,8 +533,4 @@ public class THallQueueController {
             throw new FebsException(message);
         }
     }
-
-
-
-
 }
