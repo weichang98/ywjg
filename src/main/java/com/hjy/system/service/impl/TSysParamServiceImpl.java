@@ -48,4 +48,13 @@ public class TSysParamServiceImpl implements TSysParamService {
     public List<TSysParam> selectAll() throws Exception{
         return this.tSysParamMapper.selectAll();
     }
+
+    /**
+     * 查询单条条数据
+     * @return 对象
+     */
+    @Override
+    public TSysParam selectById(String pkParamId) throws Exception{
+        return this.tSysParamMapper.selectById(pkParamId);
+    }
 }

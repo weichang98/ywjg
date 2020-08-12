@@ -25,4 +25,6 @@ public interface TSysParamMapper {
      * @return 对象列表
      */
     List<TSysParam> selectAll();
+
+    TSysParam selectById(@Param("pkParamId") String pkParamId) throws Exception;
 }

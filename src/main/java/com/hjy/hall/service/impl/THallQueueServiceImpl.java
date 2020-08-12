@@ -227,6 +227,8 @@ public class THallQueueServiceImpl implements THallQueueService {
         return statisticsList;
     }
 
+
+
     @Override
     public THallQueueCount StatisticsTime(THallQueue tHallQueue) throws Exception {
         Date queryEnd = tHallQueue.getQueryEnd();
@@ -584,5 +586,15 @@ public class THallQueueServiceImpl implements THallQueueService {
         calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
         date = calendar.getTime();//这个时间就是日期向后推一天的结果
         return date;
+    }
+
+    @Override
+    public List<THallQueueCount> windowNumToday(String startTimeStr, String endTimeStr) {
+        return tHallQueueMapper.windowNumToday(startTimeStr,endTimeStr);
+    }
+
+    @Override
+    public List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int overTime) {
+        return tHallQueueMapper.agentNumToday(startTimeStr,endTimeStr,overTime);
     }
 }
