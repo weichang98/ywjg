@@ -1,6 +1,7 @@
 package com.hjy.list.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -76,5 +77,9 @@ public class TListInfo implements Serializable {
     /**
      * 创建时间
      */
-    private String createTime;
+    private Date createTime;
+    /**
+     * 审批时间
+     */
+    private Date approvalTime;
 }

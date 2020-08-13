@@ -268,12 +268,12 @@
 
     <select id="getNowNum" resultType="com.hjy.hall.entity.THallQueue">
 		SELECT *
-FROM "liuchun"."t_hall_queue" t
-WHERE t."get_time" =
-(SELECT MAX(t."get_time")
-FROM "liuchun"."t_hall_queue" t where "window_name" = #{windowName,jdbcType=VARCHAR})
-AND "remarks" is null
-or  "remarks" ='特呼'
+        FROM "liuchun"."t_hall_queue" t
+        WHERE t."get_time" =
+        (SELECT MAX(t."get_time")
+        FROM "liuchun"."t_hall_queue" t where "window_name" = #{windowName,jdbcType=VARCHAR})
+        AND "remarks" is null
+        or  "remarks" ='特呼'
     </select>
 
     <select id="totalCount" resultType="com.hjy.hall.entity.THallQueueCount">
@@ -338,7 +338,15 @@ or  "remarks" ='特呼'
         and to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
         GROUP BY "agent"
     </select>
-
+    <select id="getCallNum" resultType="com.hjy.hall.entity.THallQueue">
+        SELECT *
+        FROM "liuchun"."t_hall_queue" t
+        WHERE t."get_time" =
+        (SELECT MAX(t."get_time")
+        FROM "liuchun"."t_hall_queue" t where "ordinal" = #{ordinal,jdbcType=VARCHAR})
+        AND "remarks" is null
+        or  "remarks" ='特呼'
+    </select>
 
 
 </mapper>

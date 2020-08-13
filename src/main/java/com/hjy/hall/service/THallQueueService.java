@@ -104,7 +104,7 @@ public interface THallQueueService {
     String backNum(TSysWindow window, HttpSession session);
 
     //办结
-    String downNum(TSysWindow window, HttpSession session);
+    Map<String ,Object> downNum(TSysWindow window, String param, HttpSession session);
 
     //办理次数
     int handleNum(THallQueue tHallQueue);
@@ -131,4 +131,5 @@ public interface THallQueueService {
 
     Date Datepush(Date date);
 
+    THallQueue getCallNum(String num);
 }

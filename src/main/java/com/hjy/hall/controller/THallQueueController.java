@@ -107,6 +107,7 @@ public class THallQueueController {
     public CommonResult tHallQueueList() throws FebsException {
         try {
             List<THallQueue> tHallQueueList = tHallQueueService.selectAll();
+            //查出黑红名单，进行预警
             return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -382,7 +383,6 @@ public class THallQueueController {
 
     /**
      * 空号
-     *
      * @return 空号结果
      */
     @PostMapping("/hall/queue/nullNum")
@@ -432,7 +432,8 @@ public class THallQueueController {
      * @return 办结结果
      */
     @PostMapping("/hall/queue/downNum")
-    public CommonResult downNum(HttpServletRequest request, HttpSession session) throws FebsException {
+    public Map<String, Object> downNum(HttpServletRequest request, HttpSession session,@RequestBody String param) throws FebsException {
+        Map<String ,Object> map = new HashMap<>();
         try {
             //从token中拿到当前窗口号
             String tokenStr = TokenUtil.getRequestToken(request);
@@ -440,8 +441,8 @@ public class THallQueueController {
             String ip = token.getIp();
             TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             System.err.println("window" + window);
-            String ordinalDown = tHallQueueService.downNum(window, session);
-            return new CommonResult(200, "success", ordinalDown + "办结!", ordinalDown);
+            map = tHallQueueService.downNum(window, param,session);
+            return map;
         } catch (Exception e) {
             String message = "办结失败";
             log.error(message, e);

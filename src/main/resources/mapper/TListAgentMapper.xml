@@ -137,7 +137,7 @@
                     <if test="remarks != null and remarks != ''">
                 #{remarks,jdbcType=VARCHAR},
             </if>
-                </trim>
+       </trim>
     </insert>
 
     <!--通过主键修改数据-->

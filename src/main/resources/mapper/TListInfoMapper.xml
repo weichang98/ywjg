@@ -19,61 +19,12 @@
         code_certificates,
         operator,
         create_time,
+        approval_time,
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.list.entity.TListInfo" parameterType="com.hjy.list.entity.TListInfo">
         select * from "liuchun"."t_list_info"
         where "pk_list_id" = #{pkListId,jdbcType=VARCHAR}
-    </select>
-    <!--通过实体作为筛选条件查询-->
-    <select id="selectAllByEntity" resultType="com.hjy.list.entity.TListInfo" parameterType="com.hjy.list.entity.TListInfo">
-        select * from "liuchun"."t_list_info"
-        <where>
-            <if test="pkListId != null and pkListId != ''">
-                and "pk_list_id" = #{pkListId,jdbcType=VARCHAR}
-            </if>
-            <if test="listType != null and listType != ''">
-                and "list_type" = #{listType,jdbcType=VARCHAR}
-            </if>
-            <if test="fullName != null and fullName != ''">
-                and "full_name" = #{fullName,jdbcType=VARCHAR}
-            </if>
-            <if test="IdCard != null and IdCard != ''">
-                and "Idcard" = #{IdCard,jdbcType=VARCHAR}
-            </if>
-            <if test="tel != null and tel != ''">
-                and "tel" = #{tel,jdbcType=VARCHAR}
-            </if>
-            <if test="explain != null and explain != ''">
-                and "explain" = #{explain,jdbcType=VARCHAR}
-            </if>
-            <if test="other != null and other != ''">
-                and "other" = #{other,jdbcType=VARCHAR}
-            </if>
-            <if test="reason != null and reason != ''">
-                and "reason" = #{reason,jdbcType=VARCHAR}
-            </if>
-            <if test="whetherPass != null and whetherPass != ''">
-                and "whether_pass" = #{whetherPass,jdbcType=VARCHAR}
-            </if>
-            <if test="approvalPeople != null and approvalPeople != ''">
-                and "approval_people" = #{approvalPeople,jdbcType=VARCHAR}
-            </if>
-            <if test="unit != null and unit != ''">
-                and "unit" = #{unit,jdbcType=VARCHAR}
-            </if><if test="organizationCode != null and organizationCode != ''">
-                and "organization_code" = #{organizationCode,jdbcType=VARCHAR}
-            </if><if test="applyBook != null and applyBook != ''">
-                and "apply_book" = #{applyBook,jdbcType=VARCHAR}
-            </if><if test="codeCertificates != null and codeCertificates != ''">
-                and "code_certificates" = #{codeCertificates,jdbcType=VARCHAR}
-            </if><if test="operator != null and operator != ''">
-                and "operator" = #{operator,jdbcType=VARCHAR}
-            </if>
-            <if test="createTime != null ">
-                and "create_time" = #{createTime,jdbcType=TIMESTAMP}
-            </if>
-        </where>
     </select>
 
     <!--新增所有列-->
@@ -123,6 +74,9 @@
             <if test="createTime != null ">
                 "create_time",
         </if>
+            <if test="approvalTime != null ">
+                "approval_time",
+        </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkListId != null and pkListId != ''">
@@ -167,6 +121,8 @@
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
+            </if><if test="approvalTime != null">
+                #{approvalTime,jdbcType=TIMESTAMP},
             </if>
                 </trim>
     </insert>
@@ -216,6 +172,8 @@
             </if>
             <if test="createTime != null">
                 "create_time" = #{createTime,jdbcType=TIMESTAMP},
+            </if><if test="approvalTime != null">
+                "approval_time" = #{approvalTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where "pk_list_id" = #{pkListId,jdbcType=VARCHAR}
@@ -229,9 +187,17 @@
     <select id="selectAll" resultType="com.hjy.list.entity.TListInfo">
         select * from "liuchun"."t_list_info"
     </select>
-    <select id="selectWaitApproval" resultType="com.hjy.list.entity.TListInfo">
-        select * from "liuchun"."t_list_info"
+    <select id="selectWaitApprovalSize" resultType="java.lang.Integer">
+        select count(*) from "liuchun"."t_list_info"
         where "t_list_info"."approval_people" is null
+    </select>
+    <select id="selectWaitApproval" resultType="com.hjy.list.entity.TListInfo">
+        select t.*
+        from
+        (select rownum rn, u.*
+        from "liuchun"."t_list_info" u
+        where rownum &lt;= #{endRow,jdbcType=INTEGER} and u."approval_people" is null) t
+        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
     </select>
     <select id="selectByIdCard" resultType="com.hjy.list.entity.TListInfo" parameterType="string">
         select * from "liuchun"."t_list_info" where "Idcard" = #{IdCard,jdbcType=VARCHAR}
@@ -243,7 +209,7 @@
             and "list_type" = #{listType,jdbcType=VARCHAR}
         </if>
         <if test="fullName != null and fullName != ''and fullName != 'null'">
-            and  "full_name" = #{fullName,jdbcType=VARCHAR}
+            and  "full_name" like '%${fullName}%'
         </if><if test="IdCard != null and IdCard != '' and IdCard != 'null'">
             and "Idcard" like '%${IdCard}%'
         </if>
@@ -259,7 +225,7 @@
             and "list_type" = #{listType}
         </if>
         <if test="fullName != null and fullName != ''and fullName != 'null'">
-            and  "full_name" = #{fullName}
+            and  "full_name" like '%${fullName}%'
         </if>
         <if test="IdCard != null and IdCard != '' and IdCard != 'null'">
             and "Idcard" like '%${IdCard}%'

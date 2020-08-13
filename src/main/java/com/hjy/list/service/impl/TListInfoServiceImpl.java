@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,6 +63,7 @@ public class TListInfoServiceImpl implements TListInfoService {
      */
     @Override
     public int updateById(TListInfo tListInfo) throws Exception{
+        tListInfo.setApprovalTime(new Date());
         return tListInfoMapper.updateById(tListInfo);
     }
 
@@ -84,24 +86,20 @@ public class TListInfoServiceImpl implements TListInfoService {
     public List<TListInfo> selectAll() throws Exception{
         return this.tListInfoMapper.selectAll();
     }
-    /**
-     * 通过实体查询多条数据
-     * @return 对象列表
-     */
-    @Override
-    public List<TListInfo> selectAllByEntity(TListInfo tListInfo) throws Exception{
-        System.err.println("-----"+tListInfo);
-        return this.tListInfoMapper.selectAllByEntity(tListInfo);
-    }
 
     @Override
-    public List<TListInfo> selectWaitApproval() throws Exception{
-        return tListInfoMapper.selectWaitApproval();
+    public PageResult selectWaitApproval(String param) throws Exception{
+        int total = tListInfoMapper.selectWaitApprovalSize();
+        PageResult result = PageUtil.getPageResult(param,total);
+        List<TListInfo> listInfos = tListInfoMapper.selectWaitApproval(result.getStartRow(),result.getEndRow());
+        result.setContent(listInfos);
+        return result;
     }
 
     @Override
     public int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception {
         tListInfo.setPkListId(IDUtils.currentTimeMillis());
+        tListInfo.setCreateTime(new Date());
         if(files!=null){
             String []strings = MyFileUtil.FileUtil(tListInfo.getListType(),files,tListInfo.getIdCard());
             tListInfo.setApplyBook(strings[0]);
@@ -110,7 +108,6 @@ public class TListInfoServiceImpl implements TListInfoService {
             tListInfo.setApplyBook(null);
             tListInfo.setCodeCertificates(null);
         }
-        System.err.println(tListInfo);
         return tListInfoMapper.insertSelective(tListInfo);
     }
 

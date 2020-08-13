@@ -81,4 +81,6 @@ public interface TSysUserMapper {
      * @return 对象列表
      */
     List<TSysUser> selectAllPage(int startRow, int endRow, @Param("unit")String unit, @Param("fullName")String fullName, @Param("IDcard")String IDcard, @Param("policeNum")String policeNum);
+
+    List<String> selectAllUsername();
 }

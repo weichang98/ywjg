@@ -39,5 +39,9 @@
         select * from "liuchun"."t_sys_param"
         where  "pk_param_id"='${pkParamId}'
     </select>
+    <select id="selectParamById" resultType="java.lang.String">
+        select "t_sys_param"."param_value" from "liuchun"."t_sys_param"
+        where  "pk_param_id" = #{pkParamId,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

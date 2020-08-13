@@ -278,4 +278,7 @@
             and "police_num" = #{policeNum}
         </if>
     </select>
+    <select id="selectAllUsername" resultType="java.lang.String">
+        select "t_sys_user"."username" from "liuchun"."t_sys_user"
+    </select>
 </mapper>

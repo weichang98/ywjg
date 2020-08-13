@@ -19,12 +19,10 @@ import com.hjy.list.dao.TListInfoMapper;
 import com.hjy.list.entity.TListAgent;
 import com.hjy.list.entity.TListInfo;
 import com.hjy.system.dao.TSysBusinesstypeMapper;
+import com.hjy.system.dao.TSysParamMapper;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.dao.TSysWindowMapper;
-import com.hjy.system.entity.ActiveUser;
-import com.hjy.system.entity.SysToken;
-import com.hjy.system.entity.TSysBusinesstype;
-import com.hjy.system.entity.TSysWindow;
+import com.hjy.system.entity.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,6 +60,8 @@ public class THallQueueServiceImpl implements THallQueueService {
     private TSysBusinesstypeMapper businesstypeMapper;
     @Autowired
     private TListAgentMapper tListAgentMapper;
+    @Autowired
+    private TSysParamMapper tSysParamMapper;
 
     /**
      * 通过ID查询单条数据
@@ -289,25 +289,39 @@ public class THallQueueServiceImpl implements THallQueueService {
 
 
     @Override
-    public String downNum(TSysWindow window, HttpSession session) {
-        System.err.println("当前窗口信息:"+window);
+    public Map<String ,Object> downNum(TSysWindow window, String param, HttpSession session) {
+        JSONObject jsonObject = JSON.parseObject(param);
+        Map<String ,Object> map = new HashMap<>();
+        String whether = String.valueOf(jsonObject.get("whether"));
+        int agentNum = Integer.parseInt(String.valueOf(jsonObject.get("agentNum")));
         //查询当前窗口正在办理的业务
         THallQueue nowQueue = this.getNowNum(window.getWindowName());
-        System.err.println("当前窗口正在办理的业务:"+nowQueue);
         if (nowQueue == null) {
-            String message = "已无号";
-            return message;
+            map.put("code", 444);
+            map.put("status", "error");
+            map.put("msg", "该窗口无号可办结！");
+            return map;
         }
         nowQueue.setRemarks("办结");
         nowQueue.setEndTime(new Date());
-        this.updateById(nowQueue);
-        //更新取号表状态flag
-        String ordinal = nowQueue.getOrdinal();
-        THallTakenumber tnum = tHallTakenumberService.getByOrdinal(ordinal);
-        tnum.setFlag(2);
-        tnum.setOrdinal(ordinal);
-        tHallTakenumberService.updateById(tnum);
-        System.err.println(nowQueue);
+        try{
+            this.updateById(nowQueue);
+            //更新取号表状态flag
+            String ordinal = nowQueue.getOrdinal();
+            THallTakenumber tnum = tHallTakenumberService.getByOrdinal(ordinal);
+            tnum.setFlag(2);
+            tnum.setOrdinal(ordinal);
+            tHallTakenumberService.updateById(tnum);
+            map.put("code", 200);
+            map.put("status", "success");
+            map.put("msg", ordinal+"号办结成功！");
+            map.put("data", "下一张号码：");
+        }catch (Exception e){
+            map.put("code", 445);
+            map.put("status", "error");
+            map.put("msg", "系统内部异常，办结失败！");
+            return map;
+        }
         //是否录入代办信息
         if(nowQueue.getAIdcard()== null ||nowQueue.getAIdcard().equals("")||nowQueue.getAIdcard().equals("null")){
             //办理的为本人业务，不录入
@@ -323,15 +337,47 @@ public class THallQueueServiceImpl implements THallQueueService {
             agent.setBIdcard(nowQueue.getBIdcard());
             agent.setAddTime(new Date());
             agent.setAgent(nowQueue.getAgent());
-            tListAgentMapper.insertSelective(agent);
+            try{
+                tListAgentMapper.insertSelective(agent);
+            }catch (Exception e){
+                map.put("code", 446);
+                map.put("status", "error");
+                map.put("msg", "录入代办信息异常，办结成功！");
+                return map;
+            }
+            //是否自动录入黑名单
+            String tSysParam = tSysParamMapper.selectParamById("JRHMDDBCSXZ");
+            int maxNum = Integer.parseInt(tSysParam);
+            if(agentNum >= maxNum){
+                TListInfo blackList = new TListInfo();
+                blackList.setListType("黑名单");
+                blackList.setFullName(nowQueue.getAName());
+                blackList.setIdCard(nowQueue.getAIdcard());
+                blackList.setExplain("代办次数过多");
+                blackList.setReason("代办次数过多");
+                blackList.setWhetherPass("通过");
+                blackList.setApprovalPeople("系统添加");
+                blackList.setOperator("系统");
+                blackList.setCreateTime(new Date());
+                blackList.setApprovalTime(new Date());
+                try{
+                    tListInfoMapper.insertSelective(blackList);
+                    return map;
+                }catch (Exception e){
+                    map.put("code", 447);
+                    map.put("status", "error");
+                    map.put("msg", "录入黑名单异常，办结成功！");
+                    return map;
+                }
+            }
         }
-        return ordinal;
+        return map;
     }
 
     @Override
     public String backNum(TSysWindow window, HttpSession session) {
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        THallQueue nowQueue = this.getNowNum(window.getWindowName());
         if (nowQueue == null) {
             String message = "已无号";
             return message;
@@ -350,7 +396,7 @@ public class THallQueueServiceImpl implements THallQueueService {
     @Override
     public String nullNum(TSysWindow window, HttpSession session) {
         //查询当前窗口正在办理的业务
-        THallQueue nowQueue = (THallQueue) session.getAttribute(window.getWindowName() + "HandingQueue");
+        THallQueue nowQueue = this.getNowNum(window.getWindowName());
         if (nowQueue == null) {
             String message = "已无号";
             return message;
@@ -470,12 +516,6 @@ public class THallQueueServiceImpl implements THallQueueService {
                 return map;
             }
             if (agentNum >= 4) {
-                tListInfoA.setPkListId(IDUtils.currentTimeMillis());
-                tListInfoA.setListType("黑名单");
-                tListInfoA.setFullName(tHallQueue.getAName());
-                tListInfoA.setExplain("代理次数过多");
-                //待补全
-                tListInfoMapper.insertSelective(tListInfoA);
                 map.put("code", 446);
                 map.put("status", "error");
                 map.put("msg", "该代办人代次数超过5次！不予取号");
@@ -561,17 +601,14 @@ public class THallQueueServiceImpl implements THallQueueService {
             return null;
         }
         //*********取得应叫的号码
-        String num = tHallTakenumberService.queryNumList(type);
-        System.err.println("叫号：呼叫的号码是:" + num);
+        String ordinal = tHallTakenumberService.queryNumList(type);
+        System.err.println("叫号：呼叫的号码是:" + ordinal);
         //*********处理取号表的flag标识
-        THallTakenumber tHallTakenumber = tHallTakenumberService.getByOrdinal(num);
+        THallTakenumber tHallTakenumber = tHallTakenumberService.getByOrdinal(ordinal);
         tHallTakenumber.setFlag(1);
         tHallTakenumberService.updateById(tHallTakenumber);
         //******更新排队信息表
-        Date date = new Date();//通过当前日期和序号拿到当前号的排队信息
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateStr = formatter.format(date);//format()方法bai将Date转换成指定格式的String
-        THallQueue queueUpdate = this.getByOrdinalAndDatestr(num, dateStr);
+        THallQueue queueUpdate = this.getCallNum(ordinal);
         queueUpdate.setStartTime(new Date());
         queueUpdate.setWindowName(windowName);
         queueUpdate.setAgent(agent);
@@ -586,6 +623,11 @@ public class THallQueueServiceImpl implements THallQueueService {
         calendar.add(calendar.DATE, 1);//日期向后+1天，整数往后推，负数向前推
         date = calendar.getTime();//这个时间就是日期向后推一天的结果
         return date;
+    }
+
+    @Override
+    public THallQueue getCallNum(String ordinal) {
+        return tHallQueueMapper.getCallNum(ordinal);
     }
 
     @Override

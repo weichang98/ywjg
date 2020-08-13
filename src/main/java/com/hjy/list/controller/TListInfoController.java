@@ -39,7 +39,7 @@ public class TListInfoController {
     /**
      * 1 跳转到新增页面
      */
-     @RequiresPermissions({"list:addPage"})
+//     @RequiresPermissions({"list:addPage"})
      @GetMapping(value = "/list/info/addPage")
      public CommonResult tListInfoAddPage() throws FebsException {
         try {
@@ -56,9 +56,10 @@ public class TListInfoController {
      * @param tListInfo 实体对象
      * @return 新增结果
      */
-    @RequiresPermissions({"list:add"})
+    @RequiresPermissions({"list:view"})
+//    @RequiresPermissions({"list:add"})
     @PostMapping("/list/info/add")
-    public CommonResult tListInfoAdd(TListInfo tListInfo,@RequestParam(value = "file", required = false) MultipartFile[] files,HttpSession session) throws FebsException{
+    public CommonResult tListInfoAdd(@RequestBody TListInfo tListInfo,@RequestParam(value = "file", required = false) MultipartFile[] files,HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tListInfo.setOperator(activeUser.getFullName());
         System.err.println(tListInfo);
@@ -91,29 +92,13 @@ public class TListInfoController {
             throw new FebsException(message);
         }
     }
-    /**
-     * 2 通过实体查询所有数据
-     * @return 所有数据
-     */
-    @PostMapping("/list/info/listByEntity")
-    public CommonResult tListInfoListByEntity(@RequestBody TListInfo tListInfo) throws FebsException{
-        try {
-            //
-            List<TListInfo> tListInfoList = tListInfoService.selectAllByEntity(tListInfo);
-            System.err.println(tListInfoList);
-            return new CommonResult(200,"success","查询数据成功!",tListInfoList);
-        } catch (Exception e) {
-            String message = "查询数据失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-    }
 
     /**
      * 3 删除数据
      * @return 删除结果
      */
-    @RequiresPermissions({"list:del"})
+    @RequiresPermissions({"list:view"})
+//    @RequiresPermissions({"list:del"})
     @DeleteMapping("/list/info/del")
     public CommonResult tListInfoDel(@RequestBody String parm) throws FebsException{
         JSONObject jsonObject = JSON.parseObject(parm);
@@ -158,7 +143,8 @@ public class TListInfoController {
      * @param tListInfo 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"list:update"})
+    @RequiresPermissions({"list:view"})
+//    @RequiresPermissions({"list:update"})
     @PutMapping("/list/info/update")
     public CommonResult tListInfoUpdate(@RequestBody TListInfo tListInfo) throws FebsException{
         System.err.println(tListInfo);
@@ -173,28 +159,12 @@ public class TListInfoController {
         }
     }
     /**
-     * 5 待审批
-     * @return 修改结果
-     */
-    @RequiresPermissions({"approval:view"})
-    @GetMapping("/list/info/waitApproval")
-    public CommonResult tListInfoApprovalList() throws FebsException{
-        try {
-            //
-            List<TListInfo> listInfos = tListInfoService.selectWaitApproval();
-            return new CommonResult(200,"success","待审批记录获取成功!",listInfos);
-        } catch (Exception e) {
-            String message = "待审批记录获取失败";
-            log.error(message, e);
-            throw new FebsException(message);
-        }
-    }
-    /**
      * 5 审批
      * @param tListInfo 实体对象
      * @return 修改结果
      */
-    @RequiresPermissions({"approval:add"})
+    @RequiresPermissions({"approval:view"})
+//    @RequiresPermissions({"approval:add"})
     @PutMapping("/list/info/approval")
     public CommonResult tListInfoApproval(@RequestBody TListInfo tListInfo, HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
@@ -206,6 +176,23 @@ public class TListInfoController {
             return new CommonResult(200,"success","审批成功!",null);
         } catch (Exception e) {
             String message = "审批失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+    /**
+     * 5 待审批
+     * @return 修改结果
+     */
+    @RequiresPermissions({"approval:view"})
+    @PostMapping("/list/info/waitApproval")
+    public CommonResult tListInfoApprovalList(@RequestBody String param) throws FebsException{
+        try {
+            //
+            PageResult result = tListInfoService.selectWaitApproval(param);
+            return new CommonResult(200,"success","待审批记录获取成功!",result);
+        } catch (Exception e) {
+            String message = "待审批记录获取失败";
             log.error(message, e);
             throw new FebsException(message);
         }

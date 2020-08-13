@@ -52,15 +52,14 @@ public interface TListInfoService {
      * @return list
      */
      List<TListInfo> selectAll() throws Exception;
-     /**
-     * 通过实体查询所有数据
-     * @return list
-     */
-     List<TListInfo> selectAllByEntity(TListInfo tListInfo)throws Exception;
 
-    List<TListInfo> selectWaitApproval()throws Exception;
+
+    PageResult selectWaitApproval(String param)throws Exception;
 
     int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception;
-
+    /**
+     * 通过实体查询所有数据
+     * @return PageResult
+     */
     PageResult selectAllPage(String param);
 }

@@ -50,22 +50,17 @@ public interface TListInfoMapper {
      * @return 对象列表
      */
     List<TListInfo> selectAll();
-     /**
-     * 通过实体作为筛选条件查询
-     *
-     * @param tListInfo 实例对象
-     * @return 对象列表
-     */
-    List<TListInfo> selectAllByEntity(TListInfo tListInfo);
     /**
      * 查询所有待审批数据
      * @return TListInfo 对象列表
      */
-    List<TListInfo> selectWaitApproval();
+    List<TListInfo> selectWaitApproval(Integer startRow, Integer endRow);
 
     TListInfo selectByIdCard(@Param("IdCard") String IdCard);
 
     int selectSize(TListInfo listInfo);
 
     List<TListInfo> selectAllPage(Integer startRow, Integer endRow,@Param("listType")String listType,@Param("fullName")String fullName,@Param("IdCard")String IdCard);
+
+    int selectWaitApprovalSize();
 }

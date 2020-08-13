@@ -85,4 +85,6 @@ public interface THallQueueMapper {
     int handleNum(THallQueue tHallQueue);
 
     int agentNum(THallQueue tHallQueue);
+
+    THallQueue getCallNum(@Param("ordinal")String ordinal);
 }

@@ -63,11 +63,6 @@
         </where>
     </select>
 
-    <!--新增所有列-->
-    <insert id="insert">
-        insert into "liuchun"."t_sys_window"(dept_name, window_name, ip, business_type, operator_people, operator_time, control_card, remarks,branch_number,registrationWindow,com)
-        values (#{deptName}, #{windowName}, #{ip}, #{businessType}, #{operatorPeople}, #{operatorTime}, #{controlCard}, #{remarks}, #{branchNumber}, #{registrationWindow}, #{com})
-    </insert>
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysWindow">
         insert into "liuchun"."t_sys_window"
         <trim prefix="(" suffix=")" suffixOverrides=",">
