@@ -249,6 +249,10 @@ public class THallQueueController {
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
             TSysWindow window = tHallQueueService.selectWindowByIp(ip);
+            THallQueue tHallQueue=tHallQueueService.getNowNum(window.getWindowName());
+            if(tHallQueue!=null){
+                return new CommonResult(200, "success", "当前还有正在处理的号码!",tHallQueue);
+            }
             jsonObject.put("windowName", window.getWindowName());
             //获取当前窗口可办理的业务类型
             String businesstypeList = window.getBusinessType();
@@ -520,13 +524,45 @@ public class THallQueueController {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
             String startStr=sdf.format(new Date());
             String endStr=sdf.format(new Date());
-            TSysParam param= tSysParamService.selectById("PTCJGYWCS");
-            int overTime=900;
-            if(param!=null){
-                String overTimeStr=param.getParamValue();
-                overTime=Integer.parseInt(overTimeStr);
+            TSysParam paramService= tSysParamService.selectById("PTCJGYWCS");
+            int serviceOverTime=900;
+            if(paramService!=null){
+                String serviceOverTimeStr=paramService.getParamValue();
+                serviceOverTime=Integer.parseInt(serviceOverTimeStr);
             }
-            List<THallQueueCount> countList = tHallQueueService.agentNumToday(startStr,endStr,overTime);
+            List<THallQueueCount> countList = tHallQueueService.agentNumToday(startStr,endStr,serviceOverTime);
+            return new CommonResult(200, "success", "查询数据成功!", countList);
+        } catch (Exception e) {
+            String message = "查询数据失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 业务办理预警统计
+     *
+     * @return 查询数据
+     */
+    @GetMapping("/hall/queue/WarningCount")
+    public CommonResult WarningCount(String param) throws FebsException {
+        try {
+            JSONObject json = JSON.parseObject(param);
+            String queryStartStr = String.valueOf(json.get("queryStart"));
+            String queryEndStr = String.valueOf(json.get("queryEnd"));
+            TSysParam paramService= tSysParamService.selectById("PTCJGYWCS");
+            TSysParam paramWait= tSysParamService.selectById("DDCSSJXZ");
+            int serviceOverTime=900;
+            int waitOverTime=1800;
+            if(paramService!=null){
+                String serviceOverTimeStr=paramService.getParamValue();
+                serviceOverTime=Integer.parseInt(serviceOverTimeStr);
+            }
+            if(paramWait !=null){
+                String waitOverTimeStr=paramWait.getParamValue();
+                waitOverTime=Integer.parseInt(waitOverTimeStr);
+            }
+            List<THallQueueCount> countList = tHallQueueService.WarningCount(queryStartStr,queryEndStr,serviceOverTime,waitOverTime);
             return new CommonResult(200, "success", "查询数据成功!", countList);
         } catch (Exception e) {
             String message = "查询数据失败";

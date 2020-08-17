@@ -1,19 +1,16 @@
 package com.hjy.hall.service.impl;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hjy.common.domin.CommonResult;
 import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.page.PageResult;
 import com.hjy.common.utils.page.PageUtil;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.dao.THallQueueMapper;
 import com.hjy.hall.dao.THallTakenumberMapper;
-import com.hjy.hall.entity.Statistics;
-import com.hjy.hall.entity.THallQueue;
-import com.hjy.hall.entity.THallQueueCount;
-import com.hjy.hall.entity.THallTakenumber;
+import com.hjy.hall.entity.*;
+import com.hjy.synthetical.entity.THallMakecard;
+import com.hjy.synthetical.service.THallMakecardService;
 import com.hjy.hall.service.THallQueueService;
 import com.hjy.hall.service.THallTakenumberService;
 import com.hjy.list.dao.TListAgentMapper;
@@ -25,14 +22,11 @@ import com.hjy.system.dao.TSysParamMapper;
 import com.hjy.system.dao.TSysTokenMapper;
 import com.hjy.system.dao.TSysWindowMapper;
 import com.hjy.system.entity.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -65,6 +59,8 @@ public class THallQueueServiceImpl implements THallQueueService {
     private TListAgentMapper tListAgentMapper;
     @Autowired
     private TSysParamMapper tSysParamMapper;
+    @Autowired
+    private THallMakecardService tHallMakecardService;
 
     /**
      * 通过ID查询单条数据
@@ -301,6 +297,20 @@ public class THallQueueServiceImpl implements THallQueueService {
             map.put("status", "error");
             map.put("msg", "该窗口无号可办结！");
             return map;
+        }
+        //是否制证
+        if("1".equals(whether)){
+            THallMakecard tHallMakecard=new THallMakecard();
+            tHallMakecard.setPkCardId(IDUtils.currentTimeMillis());
+            if(nowQueue.getAIdcard()!=null){
+                tHallMakecard.setAIdcard(nowQueue.getAIdcard());
+                tHallMakecard.setAName(nowQueue.getAName());
+            }
+            tHallMakecard.setBName(nowQueue.getBName());
+            tHallMakecard.setBIdcard(nowQueue.getBIdcard());
+            tHallMakecard.setGetTime(new Date());
+            tHallMakecard.setStatus("未开始");
+            tHallMakecardService.insert(tHallMakecard);
         }
         nowQueue.setRemarks("办结");
         nowQueue.setEndTime(new Date());
@@ -668,8 +678,12 @@ public class THallQueueServiceImpl implements THallQueueService {
     }
 
     @Override
-    public List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int overTime) {
-        return tHallQueueMapper.agentNumToday(startTimeStr,endTimeStr,overTime);
+    public List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int serviceOverTime) {
+        return tHallQueueMapper.agentNumToday(startTimeStr,endTimeStr,serviceOverTime);
     }
 
+    @Override
+    public List<THallQueueCount> WarningCount(String startTimeStr, String endTimeStr, int serviceOverTime, int waitOverTime) {
+        return tHallQueueMapper.WarningCount( startTimeStr,endTimeStr,serviceOverTime,waitOverTime);
+    }
 }

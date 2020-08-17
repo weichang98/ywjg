@@ -80,7 +80,7 @@ public interface THallQueueMapper {
 
     List<THallQueueCount> windowNumToday(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr);
 
-    List<THallQueueCount> agentNumToday(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr,@Param("overTime") int overTime);
+    List<THallQueueCount> agentNumToday(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr,@Param("serviceOverTime") int serviceOverTime);
 
     int handleNum(THallQueue tHallQueue);
 
@@ -89,6 +89,8 @@ public interface THallQueueMapper {
     THallQueue getCallNum(@Param("ordinal")String ordinal);
 
     int selectSize();
+
+    List<THallQueueCount> WarningCount(@Param("queryStart") String startTimeStr,  @Param("queryEnd")String endTimeStr, @Param("serviceOverTime")int serviceOverTime,@Param("waitOverTime") int waitOverTime);
 
     List<THallQueue> selectAllPage(int startRow, int endRow, @Param("ordinal")String ordinal,@Param("windowName") String windowName,@Param("agent") String agent,@Param("businessType") String businessType, @Param("remarks") String remarks,@Param("bName")String bName, Date queryStart, Date queryEnd);
 }

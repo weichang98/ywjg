@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hjy.synthetical.dao.THallMakecardMapper">
+
+    <sql id="BaseColumnList">
+        pk_card_id,
+        a_name,
+        a_Idcard,
+        b_name,
+        b_Idcard,
+        license_plate,
+        create_time,
+        oprator_peple,
+        status,
+        start_time,
+        end_time,
+        get_time,
+  </sql>
+    <!--通过主键查询单个-->
+    <select id="selectById" resultType="com.hjy.synthetical.entity.THallMakecard"
+            parameterType="com.hjy.synthetical.entity.THallMakecard">
+        select *  from "c##root"."t_hall_makeCard"
+        where "pk_card_id" = #{pkCardId,jdbcType=VARCHAR}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAllByEntity" resultType="com.hjy.synthetical.entity.THallMakecard"
+            parameterType="com.hjy.synthetical.entity.THallMakecard">
+        select * from "c##root"."t_hall_makeCard"
+        <where>
+            <if test="pkCardId != null and pkCardId != ''">
+                and "pk_card_id" = #{pkCardId,jdbcType=VARCHAR}
+            </if>
+            <if test="bName != null and bName != ''">
+                and "b_name" = #{bName,jdbcType=VARCHAR}
+            </if>
+            <if test="bIdcard != null and bIdcard != ''">
+                and "b_Idcard" = #{bIdcard,jdbcType=VARCHAR}
+            </if>
+            <if test="aName != null and aName != ''">
+                and "a_name" = #{aName,jdbcType=VARCHAR}
+            </if>
+            <if test="aIdcard != null and aIdcard != ''">
+                and "a_bIdcard" = #{aIdcard,jdbcType=VARCHAR}
+            </if>
+            <if test="licensePlate != null and licensePlate != ''">
+                and "license_plate" = #{licensePlate,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and "create_time" = #{createTime,jdbcType=DATE}
+            </if>
+            <if test="opratorPeple != null and opratorPeple != ''">
+                and "oprator_peple" = #{opratorPeple,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                and "status" = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null">
+                and "start_time" = #{startTime,jdbcType=DATE}
+            </if>
+            <if test="endTime != null">
+                and "end_time" = #{endTime,jdbcType=DATE}
+            </if>
+            <if test="getTime != null">
+                and "get_time" = #{getTime,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into "c##root"."t_hall_makeCard"(b_name, b_Idcard,a_name,a_Idcard, license_plate, create_time, oprator_peple, status, start_time, end_time, get_time)
+        values (#{bName}, #{bIdcard},#{aName}, #{aIdcard}, #{licensePlate}, #{createTime}, #{opratorPeple}, #{status}, #{startTime}, #{endTime}, #{getTime})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hjy.synthetical.entity.THallMakecard">
+        insert into "c##root"."t_hall_makeCard"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pkCardId != null and pkCardId != ''">
+                "pk_card_id",
+            </if>
+            <if test="bName != null and bName != ''">
+                "b_name",
+            </if>
+            <if test="bIdcard != null and bIdcard != ''">
+                "b_Idcard",
+            </if>
+            <if test="aName != null and aName != ''">
+                "a_name",
+            </if>
+            <if test="aIdcard != null and aIdcard != ''">
+                "a_Idcard",
+            </if>
+            <if test="licensePlate != null and licensePlate != ''">
+                "license_plate",
+            </if>
+            <if test="createTime != null">
+                "create_time",
+            </if>
+            <if test="opratorPeple != null and opratorPeple != ''">
+                "oprator_peple",
+            </if>
+            <if test="status != null and status != ''">
+                "status",
+            </if>
+            <if test="startTime != null">
+                "start_time",
+            </if>
+            <if test="endTime != null">
+                "end_time",
+            </if>
+            <if test="getTime != null">
+                "get_time",
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pkCardId != null and pkCardId != ''">
+                #{pkCardId,jdbcType=VARCHAR},
+            </if>
+            <if test="bName != null and bName != ''">
+                #{bName,jdbcType=VARCHAR},
+            </if>
+            <if test="bIdcard != null and bIdcard != ''">
+                #{bIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="aName != null and bName != ''">
+                #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="aIdcard != null and bIdcard != ''">
+                #{aIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="licensePlate != null and licensePlate != ''">
+                #{licensePlate,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=DATE},
+            </if>
+            <if test="opratorPeple != null and opratorPeple != ''">
+                #{opratorPeple,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=DATE},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=DATE},
+            </if>
+            <if test="getTime != null">
+                #{getTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="updateById" parameterType="com.hjy.synthetical.entity.THallMakecard">
+        update "c##root"."t_hall_makeCard"
+        <set>
+            <if test="bName != null and bName != ''">
+                "b_name" = #{bName,jdbcType=VARCHAR},
+            </if>
+            <if test="bIdcard != null and bIdcard != ''">
+                "b_bIdcard" = #{bIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="aName != null and aName != ''">
+                "a_name" = #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="aIdcard != null and aIdcard != ''">
+                "a_Idcard" = #{aIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="licensePlate != null and licensePlate != ''">
+                "license_plate" = #{licensePlate,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                "create_time" = #{createTime,jdbcType=DATE},
+            </if>
+            <if test="opratorPeple != null and opratorPeple != ''">
+                "oprator_peple" = #{opratorPeple,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                "status" = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                "start_time" = #{startTime,jdbcType=DATE},
+            </if>
+            <if test="endTime != null">
+                "end_time" = #{endTime,jdbcType=DATE},
+            </if>
+            <if test="getTime != null">
+                "get_time" = #{getTime,jdbcType=DATE},
+            </if>
+        </set>
+        where "pk_card_id" = #{pkCardId,jdbcType=VARCHAR}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="com.hjy.synthetical.entity.THallMakecard">
+        delete from "c##root"."t_hall_makeCard" where "pk_card_id" = #{pkCardId,jdbcType=VARCHAR}
+    </delete>
+    <!--查询所有行数据-->
+    <select id="selectAll" resultType="com.hjy.synthetical.entity.THallMakecard">
+        select * from "c##root"."t_hall_makeCard"
+    </select>
+
+</mapper>

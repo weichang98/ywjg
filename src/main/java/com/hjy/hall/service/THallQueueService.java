@@ -121,7 +121,7 @@ public interface THallQueueService {
     List<THallQueueCount> windowNumToday(String startTimeStr, String endTimeStr);
 
     //当日办理人员业务统计
-    List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int overTime);
+    List<THallQueueCount> agentNumToday(String startTimeStr, String endTimeStr,int serviceOverTime);
 
     Map<String, Object> getOrdinal(String param) throws Exception;
 
@@ -136,4 +136,6 @@ public interface THallQueueService {
     THallQueue getCallNum(String num);
 
     PageResult selectAllPage(String param) throws ParseException;
+
+    List<THallQueueCount> WarningCount(String startTimeStr, String endTimeStr,int serviceOverTime,int waitOverTime);
 }

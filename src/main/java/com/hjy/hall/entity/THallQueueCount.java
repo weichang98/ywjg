@@ -3,6 +3,7 @@ package com.hjy.hall.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,7 +21,10 @@ public class THallQueueCount implements Serializable {
      * 业务类型
      */
     private String businessType;
-
+    /**
+     * 统计日期
+     */
+    private Date countDate;
     /**
      * 总业务量(用于装载数据库自定义字段的实体)
      */
@@ -67,8 +71,12 @@ public class THallQueueCount implements Serializable {
      */
     private Integer nowWaitNum;
     /**
-     * 超时数
+     * 办理超时数
      */
-    private Integer overTimeNum;
+    private Integer serviceOverTimeNum;
+    /**
+     * 等待超时数
+     */
+    private Integer waitOverTimeNum;
 
 }

@@ -331,11 +331,22 @@
     </select>
 
     <select id="agentNumToday" resultType="com.hjy.hall.entity.THallQueueCount" statementType="STATEMENT">
-        SELECT agent,COUNT(*) as realCount, TRUNC(AVG(end_time-start_time)*86400)  as avgServiceTime,COUNT(DECODE(SIGN(${overTime}-(end_time-start_time)*86400),-1, 1, null)) as overTimeNum from t_hall_queue
+        SELECT agent,COUNT(*) as realCount, TRUNC(AVG(end_time-start_time)*86400)  as avgServiceTime,COUNT(DECODE(SIGN(${serviceOverTime}-(end_time-start_time)*86400),-1, 1, null)) as overTimeNum from t_hall_queue
         WHERE remarks='办结'
         and to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
         and to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
         GROUP BY agent
+    </select>
+
+    <select id="WarningCount" resultType="com.hjy.hall.entity.THallQueueCount" statementType="STATEMENT">
+        SELECT to_char("get_time",'yyyy-mm-dd') as "countDate",COUNT(*) as "totalNum",trunc(AVG(("start_time"-"get_time")*86400)) as "avgWaitTime",COUNT(DECODE(SIGN(${serviceOverTime}-("end_time"-"start_time")*86400),-1, 1, null)) as "waitOverTimeNum",trunc(AVG(("end_time"-"start_time")*86400)) as "avgServiceTime" ,COUNT(DECODE(SIGN(${waitOverTime}-("start_time"-"get_time")*86400),-1, 1, null)) as "serviceOverTimeNum"from "c##root"."t_hall_queue"
+        WHERE "end_time" is NOT NULL
+        AND "start_time" is NOT NULL
+        and "remarks" = '办结'
+        and to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
+        and to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
+        GROUP BY to_char("get_time",'yyyy-mm-dd')
+
     </select>
     <!--no problem-->
     <select id="getCallNum" resultType="com.hjy.hall.entity.THallQueue">
