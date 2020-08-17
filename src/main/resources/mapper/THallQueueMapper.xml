@@ -22,124 +22,123 @@
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
-        select
-          pk_queue_id, ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time,remarks        from "liuchun"."t_hall_queue"
-        where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
+        select * from t_hall_queue
+        where pk_queue_id = #{pkQueueId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.hall.entity.THallQueue" parameterType="com.hjy.hall.entity.THallQueue">
-        select * from "liuchun"."t_hall_queue"
+        select * from t_hall_queue
         <where>
             <if test="pkQueueId != null and pkQueueId != ''">
-                and "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
+                and pk_queue_id = #{pkQueueId,jdbcType=VARCHAR}
             </if>
             <if test="ordinal != null and ordinal != ''">
-                and "ordinal" = #{ordinal,jdbcType=VARCHAR}
+                and ordinal = #{ordinal,jdbcType=VARCHAR}
             </if>
             <if test="windowName != null and windowName != ''">
-                and "window_name" = #{windowName,jdbcType=VARCHAR}
+                and window_name = #{windowName,jdbcType=VARCHAR}
             </if>
             <if test="agent != null and agent != ''">
-                and "agent" = #{agent,jdbcType=VARCHAR}
+                and agent = #{agent,jdbcType=VARCHAR}
             </if>
             <if test="businessType != null and businessType != ''">
-                and "business_type" = #{businessType,jdbcType=VARCHAR}
+                and business_type = #{businessType,jdbcType=VARCHAR}
             </if>
             <if test="aCertificatesType != null and aCertificatesType != ''">
-                and "a_certificates_type" = #{aCertificatesType,jdbcType=VARCHAR}
+                and a_certificates_type = #{aCertificatesType,jdbcType=VARCHAR}
             </if>
             <if test="aName != null and aName != ''">
-                and "a_name" = #{aName,jdbcType=VARCHAR}
+                and a_name = #{aName,jdbcType=VARCHAR}
             </if>
             <if test="aIdcard != null and aIdcard != ''">
-                and "a_Idcard" = #{aIdcard,jdbcType=VARCHAR}
+                and a_Idcard = #{aIdcard,jdbcType=VARCHAR}
             </if>
             <if test="bCertificatesType != null and bCertificatesType != ''">
-                and "b_certificates_type" = #{bCertificatesType,jdbcType=VARCHAR}
+                and b_certificates_type = #{bCertificatesType,jdbcType=VARCHAR}
             </if>
             <if test="bName != null and bName != ''">
-                and "b_name" = #{bName,jdbcType=VARCHAR}
+                and b_name = #{bName,jdbcType=VARCHAR}
             </if>
             <if test="bIdcard != null and bIdcard != ''">
-                and "b_Idcard" = #{bIdcard,jdbcType=VARCHAR}
+                and b_Idcard = #{bIdcard,jdbcType=VARCHAR}
             </if>
 
             <if test="startTime != null">
-                and "start_time" = #{startTime,jdbcType=DATE}
+                and start_time = #{startTime,jdbcType=DATE}
             </if>
             <if test="endTime != null">
-                and "end_time" = #{endTime,jdbcType=DATE}
+                and end_time = #{endTime,jdbcType=DATE}
             </if>
             <if test="queryStart != null">
-                and "get_time" >= #{queryStart,jdbcType=DATE}
+                and get_time &gt; #{queryStart,jdbcType=DATE}
             </if>
             <if test="queryEnd != null">
-                and "get_time"  &lt; #{queryEnd,jdbcType=DATE}
+                and get_time  &lt; #{queryEnd,jdbcType=DATE}
             </if>
             <if test="remarks != null">
-                and  "remarks" = #{remarks,jdbcType=VARCHAR}
+                and  remarks = #{remarks,jdbcType=VARCHAR}
             </if>
             <if test="isVip != null">
-                and  "is_vip" = #{isVip,jdbcType=INTEGER}
+                and  is_vip = #{isVip,jdbcType=INTEGER}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert">
-        insert into "liuchun"."t_hall_queue"(ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time)
+        insert into t_hall_queue(ordinal, window_name, agent, business_type, a_certificates_type, a_name, a_Idcard, b_certificates_type, b_name, b_Idcard, get_time, start_time, end_time)
         values (#{ordinal}, #{windowName}, #{agent}, #{businessType}, #{aCertificatesType}, #{aName}, #{aIdcard}, #{bCertificatesType}, #{bName}, #{bIdcard}, #{getTime}, #{startTime}, #{endTime})
     </insert>
     <insert id="insertSelective" parameterType="com.hjy.hall.entity.THallQueue">
-        insert into "liuchun"."t_hall_queue"
+        insert into t_hall_queue
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pkQueueId != null and pkQueueId != ''">
-               "pk_queue_id",
+               pk_queue_id,
             </if>
         <if test="ordinal != null and ordinal != ''">
-                "ordinal",
+                ordinal,
         </if>
         <if test="windowName != null and windowName != ''">
-                "window_name",
+                window_name,
         </if>
         <if test="agent != null and agent != ''">
-                "agent",
+                agent,
         </if>
         <if test="businessType != null and businessType != ''">
-                "business_type",
+                business_type,
         </if>
         <if test="aCertificatesType != null and aCertificatesType != ''">
-                "a_certificates_type",
+                a_certificates_type,
         </if>
         <if test="aName != null and aName != ''">
-                "a_name",
+                a_name,
         </if>
         <if test="aIdcard != null and aIdcard != ''">
-                "a_Idcard",
+                a_Idcard,
         </if>
         <if test="bCertificatesType != null and bCertificatesType != ''">
-                "b_certificates_type",
+                b_certificates_type,
         </if>
         <if test="bName != null and bName != ''">
-                "b_name",
+                b_name,
         </if>
         <if test="bIdcard != null and bIdcard != ''">
-                "b_Idcard",
+                b_Idcard,
         </if>
         <if test="getTime != null">
-                "get_time",
+                get_time,
         </if>
         <if test="startTime != null">
-                "start_time",
+                start_time,
         </if>
         <if test="endTime != null">
-                "end_time",
+                end_time,
         </if>
             <if test="remarks != null">
-                "remarks",
+                remarks,
             </if>
             <if test="isVip != null">
-                "is_vip",
+                is_vip,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -196,156 +195,201 @@
 
     <!--通过主键修改数据-->
     <update id="updateById" parameterType="com.hjy.hall.entity.THallQueue">
-        update "liuchun"."t_hall_queue"
+        update t_hall_queue
         <set>
             <if test="ordinal != null and ordinal != ''">
-                "ordinal" = #{ordinal,jdbcType=VARCHAR},
+                ordinal = #{ordinal,jdbcType=VARCHAR},
             </if>
             <if test="windowName != null and windowName != ''">
-                "window_name" = #{windowName,jdbcType=VARCHAR},
+                window_name = #{windowName,jdbcType=VARCHAR},
             </if>
             <if test="agent != null and agent != ''">
-                "agent" = #{agent,jdbcType=VARCHAR},
+                agent = #{agent,jdbcType=VARCHAR},
             </if>
             <if test="businessType != null and businessType != ''">
-                "business_type" = #{businessType,jdbcType=VARCHAR},
+                business_type = #{businessType,jdbcType=VARCHAR},
             </if>
             <if test="aCertificatesType != null and aCertificatesType != ''">
-                "a_certificates_type" = #{aCertificatesType,jdbcType=VARCHAR},
+                a_certificates_type = #{aCertificatesType,jdbcType=VARCHAR},
             </if>
             <if test="aName != null and aName != ''">
-                "a_name" = #{aName,jdbcType=VARCHAR},
+                a_name = #{aName,jdbcType=VARCHAR},
             </if>
             <if test="aIdcard != null and aIdcard != ''">
-                "a_Idcard" = #{aIdcard,jdbcType=VARCHAR},
+                a_Idcard = #{aIdcard,jdbcType=VARCHAR},
             </if>
             <if test="bCertificatesType != null and bCertificatesType != ''">
-                "b_certificates_type" = #{bCertificatesType,jdbcType=VARCHAR},
+                b_certificates_type = #{bCertificatesType,jdbcType=VARCHAR},
             </if>
             <if test="bName != null and bName != ''">
-                "b_name" = #{bName,jdbcType=VARCHAR},
+                b_name = #{bName,jdbcType=VARCHAR},
             </if>
             <if test="bIdcard != null and bIdcard != ''">
-                "b_Idcard" = #{bIdcard,jdbcType=VARCHAR},
+                b_Idcard = #{bIdcard,jdbcType=VARCHAR},
             </if>
             <if test="getTime != null">
-                "get_time" = #{getTime,jdbcType=DATE},
+                get_time = #{getTime,jdbcType=DATE},
             </if>
             <if test="startTime != null">
-                "start_time" = #{startTime,jdbcType=DATE},
+                start_time = #{startTime,jdbcType=DATE},
             </if>
             <if test="endTime != null">
-                "end_time" = #{endTime,jdbcType=DATE},
+                end_time = #{endTime,jdbcType=DATE},
             </if>
             <if test="remarks != null">
-                "remarks" = #{remarks,jdbcType=VARCHAR},
+                remarks = #{remarks,jdbcType=VARCHAR},
             </if>
         </set>
-        where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
+        where pk_queue_id = #{pkQueueId,jdbcType=VARCHAR}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById" parameterType="com.hjy.hall.entity.THallQueue">
-        delete from "liuchun"."t_hall_queue" where "pk_queue_id" = #{pkQueueId,jdbcType=VARCHAR}
+        delete from t_hall_queue where pk_queue_id = #{pkQueueId,jdbcType=VARCHAR}
     </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.hall.entity.THallQueue">
-        select * from "liuchun"."t_hall_queue"
+        select * from t_hall_queue
     </select>
     <!--通过号码和日期查询-->
     <select id="getByOrdinalAndDatestr" resultType="com.hjy.hall.entity.THallQueue">
-        SELECT * FROM "liuchun"."t_hall_queue"
-    WHERE "ordinal"= #{Ordinal}
-    AND to_char("get_time",'yyyy-mm-dd')='${DateStr}'
-    AND "is_vip" !=1
+        SELECT * FROM t_hall_queue
+    WHERE ordinal= #{Ordinal}
+    AND to_char(get_time,'yyyy-mm-dd')='${DateStr}'
+    AND is_vip !=1
     </select>
 
     <select id="queryByTime" resultType="com.hjy.hall.entity.THallQueue">
-        SELECT * FROM "liuchun"."t_hall_queue"
-    WHERE to_char("get_time",'yyyy-mm-dd') >= '${startTime}'
-    AND to_char("get_time",'yyyy-mm-dd') &lt;='${endTime}'
+        SELECT * FROM t_hall_queue
+    WHERE to_char(get_time,'yyyy-mm-dd') >= '${startTime}'
+    AND to_char(get_time,'yyyy-mm-dd') &lt;='${endTime}'
     </select>
-
+<!--no problem-->
     <select id="getNowNum" resultType="com.hjy.hall.entity.THallQueue">
 		SELECT *
-        FROM "liuchun"."t_hall_queue" t
-        WHERE t."get_time" =
-        (SELECT MAX(t."get_time")
-        FROM "liuchun"."t_hall_queue" t where "window_name" = #{windowName,jdbcType=VARCHAR})
-        AND "remarks" is null
-        or  "remarks" ='特呼'
+        FROM t_hall_queue t
+        WHERE t.get_time =
+        (SELECT MAX(t.get_time)
+        FROM t_hall_queue t where window_name = #{windowName,jdbcType=VARCHAR})
+        AND remarks is null
+        or  remarks ='特呼'
     </select>
 
     <select id="totalCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "totalCount" FROM "liuchun"."t_hall_queue"
-        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        GROUP BY "agent","window_name"
+        SELECT agent,window_name,COUNT(*)as totalCount FROM t_hall_queue
+        WHERE to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        GROUP BY agent,window_name
     </select>
 
     <select id="realCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name","business_type",COUNT("business_type")as "realCount" FROM "liuchun"."t_hall_queue"
-        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        AND "remarks"='办结'
-        GROUP BY "agent","window_name","business_type"
+        SELECT agent,window_name,business_type,COUNT(business_type)as realCount FROM t_hall_queue
+        WHERE to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND remarks='办结'
+        GROUP BY agent,window_name,business_type
     </select>
 
     <select id="nullCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "nullCount" FROM "liuchun"."t_hall_queue"
-        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        AND "remarks"='空号'
-        GROUP BY "agent","window_name"
+        SELECT agent,window_name,COUNT(*)as nullCount FROM t_hall_queue
+        WHERE to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND remarks='空号'
+        GROUP BY agent,window_name
     </select>
 
     <select id="backCount" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT "agent","window_name",COUNT(*)as "backCount" FROM "liuchun"."t_hall_queue"
-        WHERE to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        AND to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        AND "remarks"='退号'
-        GROUP BY "agent","window_name"
+        SELECT agent,window_name,COUNT(*)as backCount FROM t_hall_queue
+        WHERE to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        AND to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        AND remarks='退号'
+        GROUP BY agent,window_name
     </select>
-
-    <select id="handleNum" resultType="Integer">
-        select count(*) from "liuchun"."t_hall_queue"
-        where "b_Idcard"=#{bIdcard,jdbcType=VARCHAR}
-        and "a_Idcard" is null
-        and "remarks" ='办结'
+    <!--no problem-->
+    <select id="handleNum" resultType="java.lang.Integer">
+        select count(*) from t_hall_queue
+        where b_Idcard=#{bIdcard,jdbcType=VARCHAR}
+        and a_Idcard is null
+        and remarks ='办结'
     </select>
-
-    <select id="agentNum" resultType="Integer">
-        select count(*) from "liuchun"."t_hall_queue"
-        where "a_Idcard"=#{aIdcard,jdbcType=VARCHAR}
-        and "remarks" ='办结'
+    <!--no problem-->
+    <select id="agentNum" resultType="java.lang.Integer">
+        select count(*) from t_hall_queue
+        where a_Idcard=#{aIdcard,jdbcType=VARCHAR}
+        and remarks ='办结'
     </select>
 
     <select id="windowNumToday" resultType="com.hjy.hall.entity.THallQueueCount">
-        SELECT a."window_name", NVL(b."num",0)as "realCount" FROM "c##root"."t_sys_window" a
-        LEFT JOIN (SELECT "window_name",COUNT(*) as "num" from "c##root"."t_hall_queue"
-        WHERE "remarks"='办结'
-        and to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        and to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        GROUP BY "window_name") b
-        on a."window_name"=b."window_name"
-        ORDER BY "window_name"
+        SELECT a.window_name, NVL(b.num,0)as realCount FROM t_sys_window a
+        LEFT JOIN (SELECT window_name,COUNT(*) as num from t_hall_queue
+        WHERE remarks='办结'
+        and to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        and to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        GROUP BY window_name) b
+        on a.window_name=b.window_name
+        ORDER BY window_name
     </select>
 
     <select id="agentNumToday" resultType="com.hjy.hall.entity.THallQueueCount" statementType="STATEMENT">
-        SELECT "agent",COUNT(*) as "realCount", TRUNC(AVG("end_time"-"start_time")*86400)  as "avgServiceTime",COUNT(DECODE(SIGN(${overTime}-("end_time"-"start_time")*86400),-1, 1, null)) as "overTimeNum" from "c##root"."t_hall_queue"
-        WHERE "remarks"='办结'
-        and to_char("get_time",'yyyy-mm-dd') >= '${queryStart}'
-        and to_char("get_time",'yyyy-mm-dd')&lt;='${queryEnd}'
-        GROUP BY "agent"
+        SELECT agent,COUNT(*) as realCount, TRUNC(AVG(end_time-start_time)*86400)  as avgServiceTime,COUNT(DECODE(SIGN(${overTime}-(end_time-start_time)*86400),-1, 1, null)) as overTimeNum from t_hall_queue
+        WHERE remarks='办结'
+        and to_char(get_time,'yyyy-mm-dd') >= '${queryStart}'
+        and to_char(get_time,'yyyy-mm-dd')&lt;='${queryEnd}'
+        GROUP BY agent
     </select>
+    <!--no problem-->
     <select id="getCallNum" resultType="com.hjy.hall.entity.THallQueue">
         SELECT *
-        FROM "liuchun"."t_hall_queue" t
-        WHERE t."get_time" =
-        (SELECT MAX(t."get_time")
-        FROM "liuchun"."t_hall_queue" t where "ordinal" = #{ordinal,jdbcType=VARCHAR})
-        AND "remarks" is null
-        or  "remarks" ='特呼'
+        FROM t_hall_queue t
+        WHERE t.get_time =
+        (SELECT MAX(t.get_time)
+        FROM t_hall_queue t where ordinal = #{ordinal,jdbcType=VARCHAR})
+        AND remarks is null
+        or  remarks ='特呼'
+    </select>
+    <select id="selectSize" resultType="java.lang.Integer">
+        select count(*) from t_hall_queue
+    </select>
+    <select id="selectAllPage" resultType="com.hjy.hall.entity.THallQueue">
+        select t.*
+        from
+        (
+        select rownum rn, u.*
+        from t_hall_queue u
+        where rownum &lt;= #{endRow,jdbcType=INTEGER}
+        and TO_CHAR(get_time,'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
+        <if test="ordinal != null and ordinal != '' and ordinal != 'null'">
+            and ordinal like '%${ordinal}%'
+        </if>
+        <if test="windowName != null and windowName != ''and windowName != 'null'">
+            and  window_name like '%${windowName}%'
+        </if>
+        <if test="agent != null and agent != ''and agent != 'null'">
+            and agent like '%${agent}%'
+        </if>
+        <if test="businessType != null and businessType != '' and businessType != 'null'">
+            and business_type like '%${businessType}%'
+        </if>
+        <if test="remarks != null and remarks != '' and remarks != 'null' and remarks != '正在办理'">
+            and remarks = #{remarks}
+        </if>
+        <if test="remarks == '正在办理'">
+            and remarks is null  and start_time is not null and end_time is null
+        </if>
+        <if test="bName != null and bName != '' and bName != 'null'">
+            and b_name like '%${bName}%'
+        </if>
+        <if test="queryStart == null and queryEnd == null">
+            and TO_CHAR(get_time,'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
+        </if>
+        <if test="queryStart != null">
+            and get_time &gt;= #{queryStart}
+        </if>
+        <if test="queryEnd != null">
+            and get_time &lt;= #{queryEnd}
+        </if>
+        ) t
+        where t.rn &gt;= #{startRow,jdbcType=INTEGER}
     </select>
 
 

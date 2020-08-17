@@ -54,7 +54,6 @@ public class THallJidongcheController {
      */
     @PostMapping("/hall/jidongche/add")
     public CommonResult tHallJidongcheAdd(@RequestBody THallJidongche tHallJidongche) throws FebsException {
-        System.err.println(tHallJidongche);
         try {
             //
             tHallJidongcheService.insert(tHallJidongche);
@@ -77,7 +76,6 @@ public class THallJidongcheController {
         try {
             //
             List<THallJidongche> tHallJidongcheList = tHallJidongcheService.selectAll();
-            System.err.println(tHallJidongcheList);
             return new CommonResult(200, "success", "查询数据成功!", tHallJidongcheList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -107,10 +105,8 @@ public class THallJidongcheController {
             endTime = calendar.getTime();//这个时间就是日期向后推一天的结果
             String startTimeStr=sdf.format(startTime);
             endTimeStr = sdf.format(endTime);//date-->String
-            System.out.println("时间要大于"+startTimeStr+"小于"+endTimeStr);
 
             List<THallJidongche> tHallJidongcheList = tHallJidongcheService.selectAllByEntity(tHallJidongche);
-            System.err.println(tHallJidongcheList);
             return new CommonResult(200, "success", "查询数据成功!", tHallJidongcheList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -152,7 +148,6 @@ public class THallJidongcheController {
         try {
             //
             THallJidongche tHallJidongche = tHallJidongcheService.selectById(idStr);
-            System.err.println(tHallJidongche);
             return new CommonResult(200, "success", "数据获取成功!", tHallJidongche);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -170,7 +165,6 @@ public class THallJidongcheController {
     @RequiresPermissions({"jidongche:view"})
     @PutMapping("/hall/jidongche/update")
     public CommonResult tHallJidongcheUpdate(@RequestBody THallJidongche tHallJidongche) throws FebsException {
-        System.err.println(tHallJidongche);
         try {
             //
             tHallJidongcheService.updateById(tHallJidongche);

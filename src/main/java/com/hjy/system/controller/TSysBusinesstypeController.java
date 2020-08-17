@@ -52,7 +52,6 @@ public class TSysBusinesstypeController {
 //    @RequiresPermissions({"businessType:add"})
     @PostMapping("/system/businessType/add")
     public CommonResult tSysBusinesstypeAdd(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
-        System.err.println(tSysBusinesstype);
         try {
             //
             tSysBusinesstypeService.insert(tSysBusinesstype);
@@ -90,7 +89,6 @@ public class TSysBusinesstypeController {
         try {
             //
             List<TSysBusinesstype> tSysBusinesstypeList = tSysBusinesstypeService.selectAllByEntity(tSysBusinesstype);
-            System.err.println(tSysBusinesstypeList);
             return new CommonResult(200,"success","查询数据成功!",tSysBusinesstypeList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -131,7 +129,6 @@ public class TSysBusinesstypeController {
         try {
             //
             TSysBusinesstype tSysBusinesstype = tSysBusinesstypeService.selectById(idStr);
-            System.err.println(tSysBusinesstype);
             return new CommonResult(200,"success","数据获取成功!",tSysBusinesstype);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -149,7 +146,6 @@ public class TSysBusinesstypeController {
 //    @RequiresPermissions({"businessType:update"})
     @PutMapping("/system/businessType/update")
     public CommonResult tSysBusinesstypeUpdate(@RequestBody TSysBusinesstype tSysBusinesstype) throws FebsException{
-        System.err.println(tSysBusinesstype);
         try {
             //
             tSysBusinesstypeService.updateById(tSysBusinesstype);

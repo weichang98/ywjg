@@ -1,5 +1,6 @@
 package com.hjy.hall.service;
 
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.hall.entity.Statistics;
 import com.hjy.hall.entity.THallQueue;
 import com.hjy.hall.entity.THallQueueCount;
@@ -8,6 +9,7 @@ import com.hjy.system.entity.TSysWindow;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -132,4 +134,6 @@ public interface THallQueueService {
     Date Datepush(Date date);
 
     THallQueue getCallNum(String num);
+
+    PageResult selectAllPage(String param) throws ParseException;
 }

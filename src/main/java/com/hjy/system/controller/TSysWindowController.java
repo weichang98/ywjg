@@ -110,7 +110,6 @@ public class TSysWindowController {
         try {
             //
             List<TSysWindow> tSysWindowList = tSysWindowService.selectAllByEntity(tSysWindow);
-            System.err.println(tSysWindowList);
             return new CommonResult(200,"success","查询数据成功!",tSysWindowList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -151,7 +150,6 @@ public class TSysWindowController {
         try {
             //
             TSysWindow tSysWindow = tSysWindowService.selectById(idStr);
-            System.err.println(tSysWindow);
             return new CommonResult(200,"success","数据获取成功!",tSysWindow);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -169,7 +167,6 @@ public class TSysWindowController {
 //    @RequiresPermissions({"window:update"})
     @PutMapping("/system/window/update")
     public CommonResult tSysWindowUpdate(@RequestBody String parm) throws FebsException{
-        System.err.println(parm);
         try {
             //
             tSysWindowService.updateById(parm);

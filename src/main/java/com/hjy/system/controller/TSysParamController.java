@@ -40,7 +40,6 @@ public class TSysParamController {
         try {
             //
             List<TSysParam> tSysParamList = tSysParamService.selectAll();
-            System.err.println(tSysParamList);
             return new CommonResult(200,"success","查询数据成功!",tSysParamList);
         } catch (Exception e) {
             String message = "查询数据失败";

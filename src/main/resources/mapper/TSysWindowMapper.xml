@@ -16,91 +16,91 @@
         registration_window,
         com,
   </sql>
-    <!--通过主键查询单个-->
+    <!--No problem通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.system.entity.TSysWindow" parameterType="com.hjy.system.entity.TSysWindow">
-        select * from "liuchun"."t_sys_window"
-        where "pk_window_id" = #{pkWindowId,jdbcType=VARCHAR}
+        select * from t_sys_window
+        where pk_window_id = #{pkWindowId,jdbcType=VARCHAR}
     </select>
-    <!--通过实体作为筛选条件查询-->
+    <!--No problem通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.system.entity.TSysWindow" parameterType="com.hjy.system.entity.TSysWindow">
-        select * from "liuchun"."t_sys_window"
+        select * from t_sys_window
         <where>
             <if test="pkWindowId != null">
-                and "pk_window_id" = #{pkWindowId,jdbcType=VARCHAR}
+                and pk_window_id = #{pkWindowId,jdbcType=VARCHAR}
             </if>
             <if test="deptName != null and deptName != ''">
-                and "dept_name" = #{deptName,jdbcType=VARCHAR}
+                and dept_name = #{deptName,jdbcType=VARCHAR}
             </if>
             <if test="windowName != null and windowName != ''">
-                and "window_name" like '%${windowName}%'
+                and window_name like '%${windowName}%'
             </if>
             <if test="ip != null and ip != ''">
-                and "ip" = #{ip,jdbcType=VARCHAR}
+                and ip = #{ip,jdbcType=VARCHAR}
             </if>
             <if test="businessType != null and businessType != ''">
-                and "business_type" like '%${businessType}%'
+                and business_type like '%${businessType}%'
             </if>
             <if test="operatorPeople != null and operatorPeople != ''">
-                and "operator_people" = #{operatorPeople,jdbcType=VARCHAR}
+                and operator_people = #{operatorPeople,jdbcType=VARCHAR}
             </if>
             <if test="operatorTime != null">
-                and "operator_time" = #{operatorTime,jdbcType=TIMESTAMP}
+                and operator_time = #{operatorTime,jdbcType=DATE}
             </if>
             <if test="controlCard != null and controlCard != ''">
-                and "control_card" = #{controlCard,jdbcType=VARCHAR}
+                and control_card = #{controlCard,jdbcType=VARCHAR}
             </if>
             <if test="remarks != null and remarks != ''">
-                and "remarks" = #{remarks,jdbcType=VARCHAR}
+                and remarks = #{remarks,jdbcType=VARCHAR}
             </if>
              <if test="branchNumber != null and branchNumber != ''">
-                and "branch_number" = #{branchNumber,jdbcType=VARCHAR}
+                and branch_number = #{branchNumber,jdbcType=VARCHAR}
             </if>
             <if test="registrationWindow != null and registrationWindow != ''">
-            and "registration_window" = #{registrationWindow,jdbcType=VARCHAR}
+            and registration_window = #{registrationWindow,jdbcType=VARCHAR}
         </if><if test="com != null and com != ''">
-            and "com" = #{com,jdbcType=VARCHAR}
+            and com = #{com,jdbcType=VARCHAR}
         </if>
         </where>
     </select>
-
+    <!--No problem 新增数据-->
     <insert id="insertSelective" parameterType="com.hjy.system.entity.TSysWindow">
-        insert into "liuchun"."t_sys_window"
+        insert into t_sys_window
         <trim prefix="(" suffix=")" suffixOverrides=",">
         <if test="pkWindowId != null and pkWindowId != ''">
-                "pk_window_id",
+                pk_window_id,
         </if>
             <if test="deptName != null and deptName != ''">
-                "dept_name",
+                dept_name,
             </if>
         <if test="windowName != null and windowName != ''">
-                "window_name",
+                window_name,
         </if>
         <if test="ip != null and ip != ''">
-                "ip",
+                ip,
         </if>
         <if test="businessType != null and businessType != ''">
-                "business_type",
+                business_type,
         </if>
         <if test="operatorPeople != null and operatorPeople != ''">
-                "operator_people",
+                operator_people,
         </if>
         <if test="operatorTime != null">
-                "operator_time",
+                operator_time,
         </if>
         <if test="controlCard != null and controlCard != ''">
-                "control_card",
+                control_card,
         </if>
         <if test="remarks != null and remarks != ''">
-                "remarks",
+                remarks,
         </if>
         <if test="branchNumber != null and branchNumber != ''">
-                "branch_number",
+                branch_number,
         </if>
         <if test="registrationWindow != null and registrationWindow != ''">
-                 "registration_window",
+                 registration_window,
         </if>
         <if test="com != null and com != ''">
-                "com",
+                com,
         </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -123,7 +123,7 @@
                 #{operatorPeople,jdbcType=VARCHAR},
             </if>
             <if test="operatorTime != null">
-                #{operatorTime,jdbcType=TIMESTAMP},
+                #{operatorTime,jdbcType=DATE},
             </if>
                     <if test="controlCard != null and controlCard != ''">
                 #{controlCard,jdbcType=VARCHAR},
@@ -145,58 +145,64 @@
 
     <!--通过主键修改数据-->
     <update id="updateById" parameterType="com.hjy.system.entity.TSysWindow">
-        update "liuchun"."t_sys_window"
+        update t_sys_window
         <set>
             <if test="deptName != null and deptName != ''">
-                "dept_name" = #{deptName,jdbcType=VARCHAR},
+                dept_name = #{deptName,jdbcType=VARCHAR},
             </if>
             <if test="windowName != null and windowName != ''">
-                "window_name" = #{windowName,jdbcType=VARCHAR},
+                window_name = #{windowName,jdbcType=VARCHAR},
             </if>
             <if test="ip != null and ip != ''">
-                "ip" = #{ip,jdbcType=VARCHAR},
+                ip = #{ip,jdbcType=VARCHAR},
             </if>
             <if test="businessType != null and businessType != ''">
-                "business_type" = #{businessType,jdbcType=VARCHAR},
+                business_type = #{businessType,jdbcType=VARCHAR},
             </if>
             <if test="operatorPeople != null and operatorPeople != ''">
-                "operator_people" = #{operatorPeople,jdbcType=VARCHAR},
+                operator_people = #{operatorPeople,jdbcType=VARCHAR},
             </if>
             <if test="operatorTime != null">
-                "operator_time" = #{operatorTime,jdbcType=TIMESTAMP},
+                operator_time = #{operatorTime,jdbcType=DATE},
             </if>
             <if test="controlCard != null and controlCard != ''">
-                "control_card" = #{controlCard,jdbcType=VARCHAR},
+                control_card = #{controlCard,jdbcType=VARCHAR},
             </if>
             <if test="remarks != null and remarks != ''">
-                "remarks" = #{remarks,jdbcType=VARCHAR},
+                remarks = #{remarks,jdbcType=VARCHAR},
             </if>
             <if test="branchNumber != null and branchNumber != ''">
-                 "branch_number" = #{branchNumber,jdbcType=VARCHAR},
+                 branch_number = #{branchNumber,jdbcType=VARCHAR},
             </if>
             <if test="registrationWindow != null and registrationWindow != ''">
-                 "registration_window" = #{registrationWindow,jdbcType=VARCHAR},
-            </if><if test="com != null and com != ''">
-             "com" = #{com,jdbcType=VARCHAR}
-        </if>
+                 registration_window = #{registrationWindow,jdbcType=VARCHAR},
+            </if>
+            <if test="com != null and com != ''">
+                 com = #{com,jdbcType=VARCHAR}
+            </if>
         </set>
-        where "pk_window_id" = #{pkWindowId,jdbcType=VARCHAR}
+        where pk_window_id = #{pkWindowId,jdbcType=VARCHAR}
     </update>
 
-    <!--通过主键删除-->
+    <!-- No problem 通过主键删除-->
     <delete id="deleteById" parameterType="com.hjy.system.entity.TSysWindow">
-        delete from "liuchun"."t_sys_window" where "pk_window_id" = #{pkWindowId,jdbcType=VARCHAR}
+        delete from t_sys_window where pk_window_id = #{pkWindowId,jdbcType=VARCHAR}
     </delete>
-    <!--查询所有行数据-->
+    <!--No problem 查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.system.entity.TSysWindow">
-        select * from "liuchun"."t_sys_window"
+        select * from t_sys_window
     </select>
+    <!--No problem 通过ip查询窗口名-->
     <select id="selectWindowNameByIp" resultType="java.lang.String" parameterType="string">
-        select "t_sys_window"."window_name" from "liuchun"."t_sys_window" where "ip" = #{Ip,jdbcType=VARCHAR}
+        select window_name from t_sys_window where ip = #{Ip,jdbcType=VARCHAR}
     </select>
+    <!--No problem 通过ip查询窗口名，业务类型-->
     <select id="selectWindowByIp" resultType="com.hjy.system.entity.TSysWindow"
             parameterType="string">
-        select "t_sys_window"."window_name","t_sys_window"."business_type" from "liuchun"."t_sys_window" where "ip" = #{Ip,jdbcType=VARCHAR}
+        select window_name,business_type from t_sys_window where ip = #{Ip,jdbcType=VARCHAR}
+    </select>
+    <select id="selectWindowName" resultType="java.lang.String">
+        select window_name from t_sys_window
     </select>
 
 </mapper>

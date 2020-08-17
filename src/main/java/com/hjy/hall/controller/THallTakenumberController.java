@@ -54,7 +54,6 @@ public class THallTakenumberController {
      */
     @PostMapping("/hall/takenumber/add")
     public CommonResult tHallTakenumberAdd(@RequestBody THallTakenumber tHallTakenumber) throws FebsException {
-        System.err.println(tHallTakenumber);
         try {
             //
             tHallTakenumberService.insert(tHallTakenumber);
@@ -76,7 +75,6 @@ public class THallTakenumberController {
         try {
             //
             List<THallTakenumber> tHallTakenumberList = tHallTakenumberService.selectAll();
-            System.err.println(tHallTakenumberList);
             return new CommonResult(200, "success", "查询数据成功!", tHallTakenumberList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -95,7 +93,6 @@ public class THallTakenumberController {
         try {
             //
             List<THallTakenumber> tHallTakenumberList = tHallTakenumberService.selectAllByEntity(tHallTakenumber);
-            System.err.println(tHallTakenumberList);
             return new CommonResult(200, "success", "查询数据成功!", tHallTakenumberList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -136,7 +133,6 @@ public class THallTakenumberController {
         try {
             //
             THallTakenumber tHallTakenumber = tHallTakenumberService.selectById(idStr);
-            System.err.println(tHallTakenumber);
             return new CommonResult(200, "success", "数据获取成功!", tHallTakenumber);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -153,7 +149,6 @@ public class THallTakenumberController {
      */
     @PutMapping("/hall/takenumber/update")
     public CommonResult tHallTakenumberUpdate(@RequestBody THallTakenumber tHallTakenumber) throws FebsException {
-        System.err.println(tHallTakenumber);
         try {
             //
             tHallTakenumberService.updateById(tHallTakenumber);

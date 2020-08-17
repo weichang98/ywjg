@@ -26,7 +26,6 @@ public interface TSysWindowMapper {
      * @param tSysWindow 实例对象
      * @return 影响行数
      */
-    int insert(TSysWindow tSysWindow);
     int insertSelective(TSysWindow tSysWindow);
 
     /**
@@ -61,4 +60,6 @@ public interface TSysWindowMapper {
     String selectWindowNameByIp(@Param("Ip") String Ip);
 
     TSysWindow selectWindowByIp(@Param("Ip")String ip);
+
+    List<String> selectWindowName();
 }

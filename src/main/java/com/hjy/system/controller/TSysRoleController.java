@@ -60,7 +60,6 @@ public class TSysRoleController {
 //    @RequiresPermissions({"role:add"})
     @PostMapping("/system/role/add")
     public CommonResult tSysRoleAdd(@RequestBody TSysRole tSysRole) throws FebsException{
-        System.err.println(tSysRole);
         try {
             //
             tSysRoleService.insert(tSysRole);
@@ -97,11 +96,9 @@ public class TSysRoleController {
      */
     @GetMapping("/system/role/listByEntity")
     public CommonResult tSysRoleListByEntity(@RequestBody TSysRole tSysRole) throws FebsException{
-        System.err.println(tSysRole);
         try {
             //
             List<TSysRole> tSysRoleList = tSysRoleService.selectAllByEntity(tSysRole);
-            System.err.println(tSysRoleList);
             return new CommonResult(200,"success","查询数据成功!",tSysRoleList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -149,7 +146,6 @@ public class TSysRoleController {
         try {
             //
             TSysRole tSysRole = tSysRoleService.selectById(idStr);
-            System.err.println(tSysRole);
             return new CommonResult(200,"success","数据获取成功!",tSysRole);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -167,7 +163,6 @@ public class TSysRoleController {
 //    @RequiresPermissions({"role:update"})
     @PutMapping("/system/role/update")
     public CommonResult tSysRoleUpdate(@RequestBody TSysRole tSysRole) throws FebsException{
-        System.err.println(tSysRole);
         try {
             //
             tSysRoleService.updateById(tSysRole);

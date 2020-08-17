@@ -80,4 +80,6 @@ public interface THallTakenumberMapper {
     THallTakenumber getByOrdinal(@Param("Ordinal") String Ordinal);
 
     void deleteAll();
+
+    int selectWaitNum();
 }

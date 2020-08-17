@@ -28,5 +28,5 @@ public interface TSysParamMapper {
 
     TSysParam selectById(@Param("pkParamId") String pkParamId);
 
-    String selectParamById(String jrhmddbcsxz);
+    String selectParamById(@Param("pkParamId") String pkParamId);
 }

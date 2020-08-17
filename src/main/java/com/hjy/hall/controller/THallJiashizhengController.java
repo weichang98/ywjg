@@ -51,7 +51,6 @@ public class THallJiashizhengController {
      */
     @PostMapping("/hall/jiashizheng/add")
     public CommonResult tHallJiashizhengAdd(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
-        System.err.println(tHallJiashizheng);
         try {
             //
             tHallJiashizhengService.insert(tHallJiashizheng);
@@ -74,7 +73,6 @@ public class THallJiashizhengController {
         try {
             //
             List<THallJiashizheng> tHallJiashizhengList = tHallJiashizhengService.selectAll();
-            System.err.println(tHallJiashizhengList);
             return new CommonResult(200, "success", "查询数据成功!", tHallJiashizhengList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -93,7 +91,6 @@ public class THallJiashizhengController {
         try {
             //
             List<THallJiashizheng> tHallJiashizhengList = tHallJiashizhengService.selectAllByEntity(tHallJiashizheng);
-            System.err.println(tHallJiashizhengList);
             return new CommonResult(200, "success", "查询数据成功!", tHallJiashizhengList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -135,7 +132,6 @@ public class THallJiashizhengController {
         try {
             //
             THallJiashizheng tHallJiashizheng = tHallJiashizhengService.selectById(idStr);
-            System.err.println(tHallJiashizheng);
             return new CommonResult(200, "success", "数据获取成功!", tHallJiashizheng);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -153,7 +149,6 @@ public class THallJiashizhengController {
     @RequiresPermissions({"jiashizheng:view"})
     @PutMapping("/hall/jiashizheng/update")
     public CommonResult tHallJiashizhengUpdate(@RequestBody THallJiashizheng tHallJiashizheng) throws FebsException {
-        System.err.println(tHallJiashizheng);
         try {
             //
             tHallJiashizhengService.updateById(tHallJiashizheng);

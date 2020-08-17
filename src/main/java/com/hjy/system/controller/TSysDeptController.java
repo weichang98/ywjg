@@ -52,7 +52,6 @@ public class TSysDeptController {
 //    @RequiresPermissions({"dept:add"})
     @PostMapping("/system/dept/add")
     public CommonResult tSysDeptAdd(@RequestBody TSysDept tSysDept) throws FebsException{
-        System.err.println(tSysDept);
         try {
             //
             tSysDeptService.insert(tSysDept);
@@ -113,7 +112,6 @@ public class TSysDeptController {
         try {
             //
             TSysDept tSysDept = tSysDeptService.selectById(idStr);
-            System.err.println(tSysDept);
             return new CommonResult(200,"success","数据获取成功!",tSysDept);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -131,7 +129,6 @@ public class TSysDeptController {
 //    @RequiresPermissions({"dept:update"})
     @PutMapping("/system/dept/update")
     public CommonResult tSysDeptUpdate(@RequestBody TSysDept tSysDept) throws FebsException{
-        System.err.println(tSysDept);
         try {
             //
             tSysDeptService.updateById(tSysDept);

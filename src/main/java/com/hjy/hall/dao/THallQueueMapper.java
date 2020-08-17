@@ -87,4 +87,8 @@ public interface THallQueueMapper {
     int agentNum(THallQueue tHallQueue);
 
     THallQueue getCallNum(@Param("ordinal")String ordinal);
+
+    int selectSize();
+
+    List<THallQueue> selectAllPage(int startRow, int endRow, @Param("ordinal")String ordinal,@Param("windowName") String windowName,@Param("agent") String agent,@Param("businessType") String businessType, @Param("remarks") String remarks,@Param("bName")String bName, Date queryStart, Date queryEnd);
 }

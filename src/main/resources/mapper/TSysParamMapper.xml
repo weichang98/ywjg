@@ -12,7 +12,7 @@
 
     <!--通过主键修改数据-->
     <update id="updateById" parameterType="com.hjy.system.entity.TSysParam">
-        update "liuchun"."t_sys_param"
+        update t_sys_param
         <set>
             <if test="paramKey != null and paramKey != ''">
                 "param_key" = #{paramKey,jdbcType=VARCHAR},
@@ -24,23 +24,24 @@
                 "operator_people" = #{operatorPeople,jdbcType=VARCHAR},
             </if>
             <if test="operatorTime != null">
-                "operator_time" = #{operatorTime,jdbcType=TIMESTAMP},
+                "operator_time" = #{operatorTime,jdbcType=DATE},
             </if>
         </set>
         where "pk_param_id" = #{pkParamId,jdbcType=VARCHAR}
     </update>
 
-    <!--查询所有行数据-->
+    <!--No problem 查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.system.entity.TSysParam">
-        select * from "liuchun"."t_sys_param"
+        select * from t_sys_param
     </select>
-
+    <!--No problem 通过关键字查询单条数据-->
     <select id="selectById" resultType="com.hjy.system.entity.TSysParam">
-        select * from "liuchun"."t_sys_param"
-        where  "pk_param_id"='${pkParamId}'
+        select * from t_sys_param
+        where  "pk_param_id" = '${pkParamId}'
     </select>
+    <!--No problem 通过关键字查询单条参数值-->
     <select id="selectParamById" resultType="java.lang.String">
-        select "t_sys_param"."param_value" from "liuchun"."t_sys_param"
+        select "param_value" from t_sys_param
         where  "pk_param_id" = #{pkParamId,jdbcType=VARCHAR}
     </select>
 

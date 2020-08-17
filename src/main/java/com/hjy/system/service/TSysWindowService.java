@@ -54,5 +54,6 @@ public interface TSysWindowService {
      * @return list
      */
      List<TSysWindow> selectAllByEntity(TSysWindow tSysWindow)throws Exception;
-     
+
+    List<String> selectWindowName();
 }

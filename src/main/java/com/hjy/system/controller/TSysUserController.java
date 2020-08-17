@@ -102,7 +102,6 @@ public class TSysUserController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("PageResult",result);
             //部门
-            List<TSysDept> depts = tSysDeptService.selectAll();
             List<String> deptName = tSysDeptService.selectDeptUnit();
             jsonObject.put("depts",deptName);
             return new CommonResult(200,"success","查询数据成功!",jsonObject);

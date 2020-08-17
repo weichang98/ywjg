@@ -28,7 +28,6 @@ public interface TSysUserMapper {
      * @param tSysUser 实例对象
      * @return 影响行数
      */
-    int insert(TSysUser tSysUser);
     int insertSelective(TSysUser tSysUser);
 
     /**

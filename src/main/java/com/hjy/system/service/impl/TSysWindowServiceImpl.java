@@ -48,7 +48,6 @@ public class TSysWindowServiceImpl implements TSysWindowService {
     public int insert(String parm) throws Exception{
         TSysWindow tSysWindow = new TSysWindow();
         JSONObject jsonObject = JSON.parseObject(parm);
-        System.err.println(parm);
         String deptName=String.valueOf(jsonObject.get("deptName"));
         String windowName=String.valueOf(jsonObject.get("windowName"));
         String ip=String.valueOf(jsonObject.get("ip"));
@@ -76,7 +75,6 @@ public class TSysWindowServiceImpl implements TSysWindowService {
         if(com != null || com != ""){
             tSysWindow.setCom(com);
         }
-        System.err.println("implement：---"+tSysWindow);
         //业务类型
         JSONArray jsonArray = jsonObject.getJSONArray("businessTypes");
         String businesstypes = jsonArray.toString();
@@ -92,7 +90,6 @@ public class TSysWindowServiceImpl implements TSysWindowService {
                 }
             });
             List<TSysBusinesstype> businesstypeList2 = businesstypeList;
-            System.err.println("排序后的TSysBusinesstype："+businesstypeList2);
             for(TSysBusinesstype obj:businesstypeList2){
                 if(obj.getTypeLevel().equals("1")){
                     businessType.append(obj.getTypeName());
@@ -196,5 +193,10 @@ public class TSysWindowServiceImpl implements TSysWindowService {
     @Override
     public List<TSysWindow> selectAllByEntity(TSysWindow tSysWindow) throws Exception{
         return this.tSysWindowMapper.selectAllByEntity(tSysWindow);
+    }
+
+    @Override
+    public List<String> selectWindowName() {
+        return tSysWindowMapper.selectWindowName();
     }
 }

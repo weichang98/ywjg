@@ -146,7 +146,6 @@ public class THallTakenumberServiceImpl implements THallTakenumberService {
         takenumber.setFlag(0);
         takenumber.setGetTime(new Date());
         this.insert(takenumber);
-        System.err.println("取号：您的号码是:" + ordinal + "号!");
         //*****取号**************************************
 
         //*****存储排队信息*******

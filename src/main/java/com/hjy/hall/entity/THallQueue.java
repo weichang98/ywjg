@@ -95,6 +95,10 @@ public class THallQueue implements Serializable {
      */
     private Integer handleNum;
     /**
+     * 前方等候人数
+     */
+    private Integer waitNum;
+    /**
      * 代办次数
      */
     private Integer agentNum;

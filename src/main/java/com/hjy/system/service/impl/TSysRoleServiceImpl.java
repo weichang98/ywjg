@@ -174,7 +174,6 @@ public class TSysRoleServiceImpl implements TSysRoleService {
 
     @Override
     public int addUserRoleByList(String fk_role_id, List<String> idList) {
-        System.err.println("idList"+idList);
         List<ReUserRole> userRoles = new ArrayList<>();
         for (String s:idList){
             ReUserRole userRole = new ReUserRole();

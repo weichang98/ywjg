@@ -98,7 +98,6 @@ public class TListInfoServiceImpl implements TListInfoService {
 
     @Override
     public int insertFile(TListInfo tListInfo, MultipartFile[] files)throws Exception {
-        tListInfo.setPkListId(IDUtils.currentTimeMillis());
         tListInfo.setCreateTime(new Date());
         if(files!=null){
             String []strings = MyFileUtil.FileUtil(tListInfo.getListType(),files,tListInfo.getIdCard());
@@ -108,7 +107,20 @@ public class TListInfoServiceImpl implements TListInfoService {
             tListInfo.setApplyBook(null);
             tListInfo.setCodeCertificates(null);
         }
-        return tListInfoMapper.insertSelective(tListInfo);
+        //先查询此人是否在黑名单或者红名单中
+        TListInfo obj = tListInfoMapper.selectByIdCard(tListInfo.getIdCard());
+        if(obj ==null){
+            //新增数据
+            tListInfo.setPkListId(IDUtils.currentTimeMillis());
+            return tListInfoMapper.insertSelective(tListInfo);
+        }else {
+            //修改数据
+            tListInfo.setPkListId(obj.getPkListId());
+            return tListInfoMapper.updateById(tListInfo);
+        }
+
+
+
     }
 
     @Override

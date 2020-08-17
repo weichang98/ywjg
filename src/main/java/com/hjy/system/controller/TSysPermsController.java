@@ -59,7 +59,6 @@ public class TSysPermsController {
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tSysPerms.setModifyUsername(activeUser.getFullName());
         tSysPerms.setFkUserId(activeUser.getUserId());
-        System.err.println(tSysPerms);
         try {
             //
             tSysPermsService.insert(tSysPerms);
@@ -80,7 +79,6 @@ public class TSysPermsController {
         try {
             //
             List<TSysPerms> tSysPermsList = tSysPermsService.selectAll();
-            System.err.println(tSysPermsList);
             return new CommonResult(200,"success","查询数据成功!",tSysPermsList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -97,7 +95,6 @@ public class TSysPermsController {
         try {
             //
             List<TSysPerms> tSysPermsList = tSysPermsService.selectAllByEntity(tSysPerms);
-            System.err.println(tSysPermsList);
             return new CommonResult(200,"success","查询数据成功!",tSysPermsList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -138,7 +135,6 @@ public class TSysPermsController {
         try {
             //
             TSysPerms tSysPerms = tSysPermsService.selectById(idStr);
-            System.err.println(tSysPerms);
             return new CommonResult(200,"success","数据获取成功!",tSysPerms);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -156,7 +152,6 @@ public class TSysPermsController {
 //    @RequiresPermissions({"perms:update"})
     @PutMapping("/system/perms/update")
     public CommonResult tSysPermsUpdate(@RequestBody TSysPerms tSysPerms) throws FebsException{
-        System.err.println(tSysPerms);
         try {
             //
             tSysPermsService.updateById(tSysPerms);

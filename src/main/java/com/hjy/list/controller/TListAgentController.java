@@ -53,7 +53,6 @@ public class TListAgentController {
      */
     @PostMapping("/agentInfo/add")
     public CommonResult tListAgentAdd(@RequestBody TListAgent tListAgent, HttpSession session) throws FebsException{
-        System.err.println(tListAgent);
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tListAgent.setAgent(activeUser.getFullName());
         try {
@@ -76,7 +75,6 @@ public class TListAgentController {
         try {
             //
             List<TListAgent> tListAgentList = tListAgentService.selectAll();
-            System.err.println(tListAgentList);
             return new CommonResult(200,"success","查询数据成功!",tListAgentList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -93,7 +91,6 @@ public class TListAgentController {
         try {
             //
             List<TListAgent> tListAgentList = tListAgentService.selectAllByEntity(tListAgent);
-            System.err.println(tListAgentList);
             return new CommonResult(200,"success","查询数据成功!",tListAgentList);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -134,7 +131,6 @@ public class TListAgentController {
         try {
             //
             TListAgent tListAgent = tListAgentService.selectById(idStr);
-            System.err.println(tListAgent);
             return new CommonResult(200,"success","数据获取成功!",tListAgent);
         } catch (Exception e) {
             String message = "数据获取失败";
@@ -152,7 +148,6 @@ public class TListAgentController {
 //    @RequiresPermissions({"agentInfo:update"})
     @PutMapping("/agentInfo/update")
     public CommonResult tListAgentUpdate(@RequestBody TListAgent tListAgent) throws FebsException{
-        System.err.println(tListAgent);
         try {
             //
             tListAgentService.updateById(tListAgent);

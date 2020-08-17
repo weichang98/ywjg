@@ -35,7 +35,6 @@ public class TSysParamServiceImpl implements TSysParamService {
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tSysParam.setOperatorPeople(activeUser.getFullName());
         tSysParam.setOperatorTime(new Date());
-        System.err.println(tSysParam);
         return tSysParamMapper.updateById(tSysParam);
     }
 

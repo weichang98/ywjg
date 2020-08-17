@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hjy.hall.dao.THallTakenumberMapper">
 
-<sql id="BaseColumnList" >
+    <sql id="BaseColumnList" >
         pk_takeNum_id,
         ordinal,
         flag,
@@ -10,114 +10,113 @@
   </sql>
     <!--通过主键查询单个-->
     <select id="selectById" resultType="com.hjy.hall.entity.THallTakenumber" parameterType="com.hjy.hall.entity.THallTakenumber">
-        select
-          pk_takeNum_id, ordinal, is_vip, flag, get_time        from "c##root"."t_hall_takeNumber"
-        where "pk_takeNum_id" = #{pkTakenumId,jdbcType=VARCHAR}
+        select * from t_hall_takeNumber
+        where pk_takeNum_id = #{pkTakenumId,jdbcType=VARCHAR}
     </select>
     <!--通过实体作为筛选条件查询-->
     <select id="selectAllByEntity" resultType="com.hjy.hall.entity.THallTakenumber" parameterType="com.hjy.hall.entity.THallTakenumber">
-        select * from "c##root"."t_hall_takeNumber"
+        select * from t_hall_takeNumber
         <where>
             <if test="pkTakenumId != null and pkTakenumId != ''">
-                and "pk_takeNum_id" = #{pkTakenumId,jdbcType=VARCHAR}
+                and pk_takeNum_id = #{pkTakenumId,jdbcType=VARCHAR}
             </if>
             <if test="ordinal != null and ordinal != ''">
-                and "ordinal" = #{ordinal,jdbcType=VARCHAR}
+                and ordinal = #{ordinal,jdbcType=VARCHAR}
             </if>
             <if test="flag != null">
-                and "flag" = #{flag,jdbcType=INTEGER}
+                and flag = #{flag,jdbcType=INTEGER}
             </if>
             <if test="getTime != null">
-                and "get_time" = #{getTime,jdbcType=DATE}
+                and get_time = #{getTime,jdbcType=DATE}
             </if>
         </where>
     </select>
 
-    <!--新增所有列-->
-    <insert id="insert">
-        insert into "c##root"."t_hall_takeNumber"(ordinal, is_vip, flag, get_time)
-        values (#{ordinal}, #{isVip}, #{flag}, #{getTime})
-    </insert>
     <insert id="insertSelective" parameterType="com.hjy.hall.entity.THallTakenumber">
-        insert into "c##root"."t_hall_takeNumber"
+        insert into t_hall_takeNumber
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pkTakenumId != null and pkTakenumId != ''">
-                "pk_takeNum_id",
+                pk_takeNum_id,
             </if>
-        <if test="ordinal != null and ordinal != ''">
-                "ordinal",
-        </if>
-        <if test="flag != null">
-                "flag",
-        </if>
-        <if test="getTime != null">
-                "get_time",
-        </if>
+            <if test="ordinal != null and ordinal != ''">
+                ordinal,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+            <if test="getTime != null">
+                get_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pkTakenumId != null and pkTakenumId != ''">
-                 #{pkTakenumId,jdbcType=VARCHAR},
+                #{pkTakenumId,jdbcType=VARCHAR},
             </if>
-                    <if test="ordinal != null and ordinal != ''">
+            <if test="ordinal != null and ordinal != ''">
                 #{ordinal,jdbcType=VARCHAR},
             </if>
-                    <if test="flag != null">
+            <if test="flag != null">
                 #{flag,jdbcType=INTEGER},
             </if>
-                    <if test="getTime != null">
+            <if test="getTime != null">
                 #{getTime,jdbcType=DATE},
             </if>
-                </trim>
+        </trim>
     </insert>
 
     <!--通过主键修改数据-->
     <update id="updateById" parameterType="com.hjy.hall.entity.THallTakenumber">
-        update "c##root"."t_hall_takeNumber"
+        update t_hall_takeNumber
         <set>
             <if test="ordinal != null and ordinal != ''">
-                "ordinal" = #{ordinal,jdbcType=VARCHAR},
+                ordinal = #{ordinal,jdbcType=VARCHAR},
             </if>
             <if test="flag != null">
-                "flag" = #{flag,jdbcType=INTEGER},
+                flag = #{flag,jdbcType=INTEGER},
             </if>
             <if test="getTime != null">
-                "get_time" = #{getTime,jdbcType=DATE},
+                get_time = #{getTime,jdbcType=DATE},
             </if>
         </set>
-        where "pk_takeNum_id" = #{pkTakenumId,jdbcType=VARCHAR}
+        where pk_takeNum_id = #{pkTakenumId,jdbcType=VARCHAR}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById" parameterType="com.hjy.hall.entity.THallTakenumber">
-        delete from "c##root"."t_hall_takeNumber" where "pk_takeNum_id" = #{pkTakenumId,jdbcType=VARCHAR}
+        delete from t_hall_takeNumber where pk_takeNum_id = #{pkTakenumId,jdbcType=VARCHAR}
     </delete>
     <delete id="deleteAll">
-        delete from "c##root"."t_hall_takeNumber"
+        delete from t_hall_takeNumber
     </delete>
     <!--查询所有行数据-->
     <select id="selectAll" resultType="com.hjy.hall.entity.THallTakenumber">
-        select * from "c##root"."t_hall_takeNumber"
+        select * from t_hall_takeNumber
     </select>
-    <select id="count" resultType="INTEGER">
-      select count(*) from "c##root"."t_hall_takeNumber"
+    <select id="count" resultType="java.lang.Integer">
+      select count(*) from t_hall_takeNumber
     </select>
 
     <select id="queryNumList" resultType="java.lang.String" parameterType="java.lang.String">
-  select * from
-        (select "ordinal" from "c##root"."t_hall_takeNumber"
+        select * from
+        (select ordinal from t_hall_takeNumber
         <where>
             <if test="ordinal != null and ordinal != ''">
-                and "ordinal" like  '${ordinal}%'
+                and ordinal like  '${ordinal}%'
             </if>
         </where>
-        and "flag" = 0
-        ORDER BY "ordinal")
+        and flag = 0
+        ORDER BY ordinal)
         where rownum=1
     </select>
-
+    <!--No problem 通过排队号查询取号数据-->
     <select id="getByOrdinal" resultType="com.hjy.hall.entity.THallTakenumber">
-      select * from "c##root"."t_hall_takeNumber"
-      where "ordinal" = #{Ordinal,jdbcType=VARCHAR}
+      select * from t_hall_takeNumber
+      where ordinal = #{Ordinal,jdbcType=VARCHAR}
+    </select>
+<!--No problem 查询前方等候人数-->
+    <select id="selectWaitNum" resultType="java.lang.Integer">
+        select count(*) from t_hall_takeNumber
+        where flag = 0
     </select>
 
 </mapper>

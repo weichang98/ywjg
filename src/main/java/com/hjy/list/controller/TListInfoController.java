@@ -62,7 +62,6 @@ public class TListInfoController {
     public CommonResult tListInfoAdd(@RequestBody TListInfo tListInfo,@RequestParam(value = "file", required = false) MultipartFile[] files,HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tListInfo.setOperator(activeUser.getFullName());
-        System.err.println(tListInfo);
         try {
             //
 //            tListInfoService.insert(tListInfo);
@@ -84,7 +83,6 @@ public class TListInfoController {
         try {
             //
             PageResult result = tListInfoService.selectAllPage(param);
-            System.err.println(result);
             return new CommonResult(200,"success","查询数据成功!",result);
         } catch (Exception e) {
             String message = "查询数据失败";
@@ -147,7 +145,6 @@ public class TListInfoController {
 //    @RequiresPermissions({"list:update"})
     @PutMapping("/list/info/update")
     public CommonResult tListInfoUpdate(@RequestBody TListInfo tListInfo) throws FebsException{
-        System.err.println(tListInfo);
         try {
             //
             tListInfoService.updateById(tListInfo);
@@ -169,7 +166,6 @@ public class TListInfoController {
     public CommonResult tListInfoApproval(@RequestBody TListInfo tListInfo, HttpSession session) throws FebsException{
         ActiveUser activeUser = (ActiveUser) session.getAttribute("activeUser");
         tListInfo.setApprovalPeople(activeUser.getFullName());
-        System.err.println(tListInfo);
         try {
             //
             tListInfoService.updateById(tListInfo);

@@ -7,6 +7,7 @@ import com.hjy.common.exception.FebsException;
 import com.hjy.common.utils.IDUtils;
 import com.hjy.common.utils.IPUtil;
 import com.hjy.common.utils.TokenUtil;
+import com.hjy.common.utils.page.PageResult;
 import com.hjy.common.utils.typeTransUtil;
 import com.hjy.hall.entity.Statistics;
 import com.hjy.hall.entity.THallQueue;
@@ -270,7 +271,6 @@ public class THallQueueController {
             String ip = token.getIp();
             TSysWindow window = tHallQueueService.selectWindowByIp(ip);
             String windowName = window.getWindowName();
-            System.err.println("叫号窗口："+windowName);
             //业务方法
             THallQueue queue = tHallQueueService.call(window,session);
             if (queue == null) {
@@ -280,7 +280,6 @@ public class THallQueueController {
             int agentNum = tHallQueueService.agentNum(queue);
             queue.setAgentNum(agentNum);
             queue.setHandleNum(handleNum);
-            System.err.println("叫号的办理业务信息：" + queue);
             return new CommonResult(200, "success", windowName + ":" + queue.getOrdinal(), queue);
         } catch (Exception e) {
             String message = "叫号失败";
@@ -440,7 +439,6 @@ public class THallQueueController {
             SysToken token = tHallQueueService.findByToken(tokenStr);
             String ip = token.getIp();
             TSysWindow window = tHallQueueService.selectWindowByIp(ip);
-            System.err.println("window" + window);
             map = tHallQueueService.downNum(window, param,session);
             return map;
         } catch (Exception e) {
@@ -470,20 +468,18 @@ public class THallQueueController {
     }
 
     /**
-     * 查询当日排队信息
-     *
+     * 查询排队信息,默认为当日，可通过筛选框对所有数据进行搜索
      * @return 排队数据
      */
-    @GetMapping("/hall/queue/listToday")
-    public CommonResult listToday() throws FebsException {
+    @PostMapping("/hall/queue/listToday")
+    public CommonResult listToday(@RequestBody String param) throws FebsException {
         try {
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-            String startStr=sdf.format(new Date());
-            String endStr=sdf.format(new Date());
-            List<THallQueue> tHallQueueList = tHallQueueService.queryByTime(startStr,endStr);
-            return new CommonResult(200, "success", "查询数据成功!", tHallQueueList);
+            PageResult result = tHallQueueService.selectAllPage(param);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("PageResult",result);
+            return new CommonResult(200, "success", "查询排队信息数据成功!", jsonObject);
         } catch (Exception e) {
-            String message = "查询数据失败";
+            String message = "查询排队信息数据失败";
             log.error(message, e);
             throw new FebsException(message);
         }
