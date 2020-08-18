@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +34,6 @@ public class THallMakecardController {
     @GetMapping(value = "/tHallMakecard/addPage")
     public CommonResult tHallMakecardAddPage() throws FebsException {
         try {
-            //
             return new CommonResult(200, "success", "成功!", null);
         } catch (Exception e) {
             String message = "失败";
@@ -52,7 +52,6 @@ public class THallMakecardController {
     public CommonResult tHallMakecardAdd(@RequestBody THallMakecard tHallMakecard) throws FebsException {
         System.err.println(tHallMakecard);
         try {
-            //
             tHallMakecardService.insert(tHallMakecard);
             return new CommonResult(200, "success", "数据添加成功!", null);
         } catch (Exception e) {
@@ -70,7 +69,6 @@ public class THallMakecardController {
     @GetMapping("/tHallMakecard/list")
     public CommonResult tHallMakecardList() throws FebsException {
         try {
-            //
             List<THallMakecard> tHallMakecardList = tHallMakecardService.selectAll();
             System.err.println(tHallMakecardList);
             return new CommonResult(200, "success", "查询数据成功!", tHallMakecardList);
@@ -89,7 +87,6 @@ public class THallMakecardController {
     @GetMapping("/tHallMakecard/listByEntity")
     public CommonResult tHallMakecardListByEntity(@RequestBody THallMakecard tHallMakecard) throws FebsException {
         try {
-            //
             List<THallMakecard> tHallMakecardList = tHallMakecardService.selectAllByEntity(tHallMakecard);
             System.err.println(tHallMakecardList);
             return new CommonResult(200, "success", "查询数据成功!", tHallMakecardList);
@@ -110,7 +107,6 @@ public class THallMakecardController {
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr = String.valueOf(jsonObject.get("pk_card_id"));
         try {
-            //
             tHallMakecardService.deleteById(idStr);
             return new CommonResult(200, "success", "数据删除成功!", null);
         } catch (Exception e) {
@@ -130,7 +126,6 @@ public class THallMakecardController {
         JSONObject jsonObject = JSON.parseObject(parm);
         String idStr = String.valueOf(jsonObject.get("pk_card_id"));
         try {
-            //
             THallMakecard tHallMakecard = tHallMakecardService.selectById(idStr);
             System.err.println(tHallMakecard);
             return new CommonResult(200, "success", "数据获取成功!", tHallMakecard);
@@ -151,11 +146,54 @@ public class THallMakecardController {
     public CommonResult tHallMakecardUpdate(@RequestBody THallMakecard tHallMakecard) throws FebsException {
         System.err.println(tHallMakecard);
         try {
-            //
             tHallMakecardService.updateById(tHallMakecard);
             return new CommonResult(200, "success", "修改成功!", null);
         } catch (Exception e) {
             String message = "修改失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 开始制证
+     *
+     * @return 开始结果
+     */
+    @PostMapping("/tHallMakecard/make")
+    public CommonResult make(@RequestBody String parm) throws FebsException {
+        JSONObject jsonObject = JSON.parseObject(parm);
+        String idStr = String.valueOf(jsonObject.get("pk_card_id"));
+        try {
+            THallMakecard tHallMakecard = tHallMakecardService.selectById(idStr);
+            tHallMakecard.setStatus("1");
+            tHallMakecard.setStartTime(new Date());
+            tHallMakecardService.updateById(tHallMakecard);
+            return new CommonResult(200, "success", "开始制证!", null);
+        } catch (Exception e) {
+            String message = "开始失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
+    /**
+     * 制证完成
+     *
+     * @return 制证结果
+     */
+    @PostMapping("/tHallMakecard/makeDown")
+    public CommonResult makeDown(@RequestBody String parm) throws FebsException {
+        JSONObject jsonObject = JSON.parseObject(parm);
+        String idStr = String.valueOf(jsonObject.get("pk_card_id"));
+        try {
+            THallMakecard tHallMakecard = tHallMakecardService.selectById(idStr);
+            tHallMakecard.setStatus("2");
+            tHallMakecard.setEndTime(new Date());
+            tHallMakecardService.updateById(tHallMakecard);
+            return new CommonResult(200, "success", "制证完成!", null);
+        } catch (Exception e) {
+            String message = "完成制证失败";
             log.error(message, e);
             throw new FebsException(message);
         }

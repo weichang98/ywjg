@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * (THallMakecard)实体类
@@ -45,7 +46,7 @@ public class THallMakecard implements Serializable {
     /**
      * 创建时间
      */
-    private Object createTime;
+    private Date createTime;
     /**
      * 操作人
      */
@@ -57,13 +58,13 @@ public class THallMakecard implements Serializable {
     /**
      * 开始时间
      */
-    private Object startTime;
+    private Date startTime;
     /**
      * 制作完成时间
      */
-    private Object endTime;
+    private Date endTime;
     /**
      * 领证时间
      */
-    private Object getTime;
+    private Date getTime;
 }
